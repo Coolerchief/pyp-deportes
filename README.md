@@ -5,7 +5,7 @@ Stack previsto: Next.js estático + Supabase + Cloudflare (ver `docs/02-TRD.md`)
 
 ## Ver la primera pantalla (Inicio)
 
-Con GitHub Pages activo: `https://TU_USUARIO.github.io/pyp-deportes-coapa/`
+Con GitHub Pages activo: `https://coolerchief.github.io/pyp-deportes/`
 
 Local: abre `index.html` en el navegador (en pantalla ancha muestra la versión de escritorio de 1440 px; en móvil, la de 390 px).
 Referencia: `design/screenshots/movil/inicio.png` y `design/screenshots/escritorio/inicio.png`.
