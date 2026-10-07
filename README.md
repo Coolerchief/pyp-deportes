@@ -27,9 +27,6 @@ Referencia: `design/screenshots/movil/inicio.png` y `design/screenshots/escritor
 | Rama | Uso |
 |---|---|
 | `main` | Versión estable / publicada (GitHub Pages) |
-| `develop` | Integración del desarrollo |
-| `feature/pantalla-inicio` | Primera pantalla (Inicio) y vista previa |
-| `feature/fase-0-preparacion` | Tarea T0.1 en adelante (`docs/06-IMPLEMENTATION-PLAN.md`) |
-| `hotfix/*` | Correcciones urgentes desde `main` |
+| `develop` | Desarrollo e integración de cambios |
 
-Flujo: `feature/*` → PR a `develop` → PR de `develop` a `main`. Commits en inglés (`feat:`, `fix:`, `docs:`, `chore:`).
+Flujo: se trabaja en `develop`; cuando algo queda probado, se pasa a `main` con un Pull Request. Commits en inglés (`feat:`, `fix:`, `docs:`, `chore:`).
