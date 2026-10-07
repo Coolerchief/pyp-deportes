@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Búsqueda</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,600;1,800;1,900&amp;family=Barlow:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#FFFFFF;font-family:'Barlow',Arial,sans-serif;color:#0F1C2E}
+a{color:#CF2C1E}a:hover{color:#0F1C2E}
+.placa{clip-path:polygon(var(--o,11px) 0,100% 0,calc(100% - var(--o,11px)) 100%,0 100%)}
+.cancha{background-color:#0F1C2E;background-image:repeating-linear-gradient(103deg,rgba(255,255,255,0) 0 28px,rgba(255,255,255,.07) 28px 34px,rgba(255,255,255,0) 34px 40px,rgba(255,255,255,.07) 40px 52px,rgba(255,255,255,0) 52px 120px)}
+.scroll-x{overflow-x:auto;scrollbar-width:none}
+</style>
+</helmet>
+<div style="position:relative;width:390px;height:1820px;overflow:hidden;background:#FFFFFF;display:flex;flex-direction:column">
+<header style="height:64px;flex-shrink:0;background:#0F1C2E;display:flex;align-items:center;gap:4px;padding:0 6px;box-sizing:border-box">
+<a href="Main.dc.html" aria-label="Volver" style="width:44px;height:44px;color:#FFFFFF;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></a>
+<label style="flex-grow:1;min-width:0;display:flex;align-items:center;gap:8px;height:44px;padding:0 0 0 12px;box-sizing:border-box;background:#FFFFFF;border-radius:2px;color:#5F6673"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg><input value="balón" aria-label="Buscar" style="flex-grow:1;min-width:0;border:0;outline:0;font:400 16px 'Barlow',Arial,sans-serif;color:#0F1C2E"><button aria-label="Borrar búsqueda" style="width:44px;height:44px;flex-shrink:0;border:0;background:transparent;color:#3B4454;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></label>
+<a href="CotizacionVacia.dc.html" aria-label="Mi cotización" style="position:relative;width:48px;height:44px;flex-shrink:0;color:#FFFFFF;display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path></svg></a>
+</header>
+<section style="padding:24px 16px 0;display:flex;flex-direction:column;gap:6px">
+<h1 style="margin:0;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:900;font-style:italic;font-size:36px;line-height:.95;text-transform:uppercase;color:#0F1C2E;">Resultados para “balón”</h1>
+<p style="margin:0;font-size:15px;line-height:1.45;color:#5F6673;">4 productos</p>
+</section>
+<div class="scroll-x" style="display:flex;gap:8px;padding:16px 16px 0"><a href="#" class="placa" style="--o:8px;flex-shrink:0;display:inline-flex;align-items:center;height:36px;padding:0 18px;background:#0F1C2E;color:#FFFFFF;font-weight:600;font-size:14px;text-decoration:none">Todo</a><a href="#" style="flex-shrink:0;display:inline-flex;align-items:center;height:36px;padding:0 12px;border:1px solid #7E8592;border-radius:2px;box-sizing:border-box;color:#0F1C2E;font-weight:500;font-size:14px;text-decoration:none">Balones</a></div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid #E4E1D8">
+<a href="Filtros.dc.html" style="display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;box-shadow:inset 0 0 0 2px #0F1C2E;color:#0F1C2E;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:17px;letter-spacing:.04em;text-transform:uppercase"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>Filtrar</a>
+<button style="display:inline-flex;align-items:center;gap:4px;height:40px;border:0;background:transparent;font:600 15px 'Barlow',Arial,sans-serif;color:#0F1C2E">Relevancia<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+</div>
+<section style="padding:16px;display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:12px;row-gap:28px">
+<article style="display:flex;flex-direction:column;gap:8px">
+<a href="FichaSimple.dc.html" style="display:flex;flex-direction:column;gap:4px;text-decoration:none;color:#0F1C2E">
+<div style="position:relative;background:#F5F3EE"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="/_blob/ce026e91558da57b2b2fea0a5c080a09" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Balones</span></div></div>
+<span style="margin-top:6px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#5F6673">Cruzeiro</span>
+<span style="font-weight:600;font-size:16px;line-height:1.3">Balón Soccer Cruzeiro</span>
+<span style="font-size:14px;color:#5F6673">3 tamaños</span>
+</a>
+<div><a href="FichaSimple.dc.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;height:40px;background:transparent;color:#0F1C2E;box-shadow:inset 0 0 0 2px #0F1C2E;padding:0 20px;">Ver tallas</a></div>
+</article><article style="display:flex;flex-direction:column;gap:8px">
+<a href="FichaSimple.dc.html" style="display:flex;flex-direction:column;gap:4px;text-decoration:none;color:#0F1C2E">
+<div style="position:relative;background:#F5F3EE"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="/_blob/ce026e91558da57b2b2fea0a5c080a09" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Balones</span></div></div>
+<span style="margin-top:6px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#5F6673">Molten</span>
+<span style="font-weight:600;font-size:16px;line-height:1.3">Balón Fútbol Molten</span>
+<span style="font-size:14px;color:#5F6673">Tamaño 5 · Blanco/Rojo</span>
+</a>
+<div><a href="FichaSimple.dc.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;height:40px;background:transparent;color:#0F1C2E;box-shadow:inset 0 0 0 2px #0F1C2E;padding:0 20px;">Ver tallas</a></div>
+</article><article style="display:flex;flex-direction:column;gap:8px">
+<a href="FichaSimple.dc.html" style="display:flex;flex-direction:column;gap:4px;text-decoration:none;color:#0F1C2E">
+<div style="position:relative;background:#F5F3EE"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="/_blob/ce026e91558da57b2b2fea0a5c080a09" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Balones</span></div></div>
+<span style="margin-top:6px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#5F6673">Adidas</span>
+<span style="font-weight:600;font-size:16px;line-height:1.3">Balón de Fútbol Adidas #5 EPP CLB</span>
+<span style="font-size:14px;color:#5F6673">Tamaño 5 · Blanco/Negro</span>
+</a>
+<div><a href="FichaSimple.dc.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;height:40px;background:transparent;color:#0F1C2E;box-shadow:inset 0 0 0 2px #0F1C2E;padding:0 20px;">Ver tallas</a></div>
+</article><article style="display:flex;flex-direction:column;gap:8px">
+<a href="FichaSimple.dc.html" style="display:flex;flex-direction:column;gap:4px;text-decoration:none;color:#0F1C2E">
+<div style="position:relative;background:#F5F3EE"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="/_blob/ce026e91558da57b2b2fea0a5c080a09" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Balones</span></div></div>
+<span style="margin-top:6px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#5F6673">Molten</span>
+<span style="font-weight:600;font-size:16px;line-height:1.3">Balón Básquet Molten BG4000</span>
+<span style="font-size:14px;color:#5F6673">2 tamaños</span>
+</a>
+<div><a href="FichaSimple.dc.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;height:40px;background:transparent;color:#0F1C2E;box-shadow:inset 0 0 0 2px #0F1C2E;padding:0 20px;">Ver tallas</a></div>
+</article>
+</section>
+<section style="margin-top:32px;background:#F5F3EE;padding:32px 16px;display:flex;flex-direction:column;gap:14px">
+<h2 style="margin:0;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:900;font-style:italic;font-size:28px;line-height:.95;text-transform:uppercase;color:#0F1C2E;">¿No encuentras lo que buscas?</h2>
+<p style="margin:0;font-size:16px;line-height:1.45;color:#3B4454;">Escríbenos y te decimos si lo tenemos en tienda.</p>
+<a href="#" class="placa" style="--o:11px;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;height:48px;background:#25D366;color:#0F1C2E;padding:0 32px;width:100%;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path><path d="M9.5 9.5c.4 1.8 1.7 3.2 3.5 3.8"></path></svg>Pregunta por WhatsApp</a>
+</section>
+<footer class="cancha" style="flex-grow:1;padding:48px 16px 32px;display:flex;flex-direction:column;gap:24px;color:#FFFFFF">
+<img src="/_blob/9daaa7509cfb8cb7fd535fb5db97d6f1" alt="P&amp;P Deportes Coapa" style="width:150px">
+<div style="display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.45">
+<span style="display:flex;gap:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4F53C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>Calz. del Hueso 921, local 42, Granjas Coapa, Tlalpan, CDMX</span>
+<span style="display:flex;gap:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4F53C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>[HORARIO] Lun–Vie 10:00–19:00 · Sáb 10:00–17:00</span>
+<span style="display:flex;gap:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4F53C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>55 6582 2426</span>
+</div>
+<nav aria-label="Pie de página" style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;font-size:15px">
+<a href="Catalogo.dc.html" style="color:#FFFFFF">Catálogo</a><a href="Uniformes.dc.html" style="color:#FFFFFF">Uniformes</a>
+<a href="Equipos.dc.html" style="color:#FFFFFF">Equipos estrenando</a><a href="Visitanos.dc.html" style="color:#FFFFFF">Visítanos</a>
+<a href="#" style="color:#FFFFFF">Instagram @pyp_coapa</a><a href="#" style="color:#FFFFFF">Facebook /pypcoapa</a>
+<a href="Privacidad.dc.html" style="color:#FFFFFF">Aviso de privacidad</a>
+</nav>
+<div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #3B4454;padding-top:16px">
+<span style="font-size:13px;color:#FFFFFF">© 2026 P&amp;P Deportes Coapa</span><svg width="12.77" height="28" viewBox="0 0 18.24 40" aria-hidden="true"><polygon fill="#D4F53C" points="9.24,0 11.64,0 2.4,40 0,40"></polygon><polygon fill="#D4F53C" points="13.84,0 18.24,0 9,40 4.6,40"></polygon></svg>
+</div>
+</footer>
+<a href="#" aria-label="Escríbenos por WhatsApp" style="position:absolute;right:16px;top:772px;width:56px;height:56px;border-radius:9999px;background:#25D366;color:#0F1C2E;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(15,28,46,.18)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path><path d="M9.5 9.5c.4 1.8 1.7 3.2 3.5 3.8"></path></svg></a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 390, "height": 1820}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

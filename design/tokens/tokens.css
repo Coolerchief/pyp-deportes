@@ -1,0 +1,52 @@
+/* P&P Deportes Coapa — tokens de diseño. Generado desde tokens.json. */
+:root {
+  --rojo: #E63323; /* Rojo Arranque. CTA principal, placas, diagonales y acentos. Texto blanco encima solo a 19px bold o más (4.32:1, AA grande). Rojo como texto: solo titulares de 24px o más. */
+  --rojo-profundo: #CF2C1E; /* Derivado para accesibilidad. Texto rojo pequeño (eyebrows, enlaces, errores) sobre blanco (5.21:1) y gis (4.70:1); hover y pressed del botón primario. */
+  --noche: #0F1C2E; /* Azul Noche. Texto principal sobre blanco (17.13:1) y gis (15.45:1); fondo de header, footer, secciones oscuras y botón secundario. */
+  --lima: #D4F53C; /* Lima Casaca. Solo acento: placa NUEVO, diagonales sobre noche, contador de piezas y anillo de foco. Texto noche encima (13.81:1). Nunca texto sobre blanco o gis (1.24:1) ni fondo dominante. */
+  --gis: #F5F3EE; /* Fondo claro de secciones y marco de fotos de producto. */
+  --blanco: #FFFFFF; /* Fondo de página y tarjetas; texto calado sobre noche, grafito y rojo. */
+  --grafito: #3B4454; /* Texto secundario sobre blanco (9.81:1) y gis (8.85:1). */
+  --grafito-suave: #5F6673; /* Derivado. Texto terciario, ayudas de formulario y metadatos sobre blanco (5.78:1) y gis (5.21:1). */
+  --concreto: #9AA1AC; /* Líneas y detalles decorativos. No es color de texto (2.60:1 sobre blanco) ni de bordes de controles. */
+  --borde-control: #7E8592; /* Derivado. Borde de inputs, casillas y steppers: 3.71:1 sobre blanco, 3.35:1 sobre gis. */
+  --linea: #E4E1D8; /* Divisores suaves entre filas y tarjetas; decorativo. */
+  --exito: #1F7A45; /* Confirmaciones (check de agregado) sobre blanco (5.35:1). Siempre con ícono y texto. */
+  --whatsapp: #25D366; /* Solo el botón de WhatsApp, con glifo y texto noche (8.64:1). Blanco encima no cumple (1.98:1). */
+
+  --space-1: 4px; /* Separación entre ícono y texto. */
+  --space-2: 8px; /* Separación dentro de chips y placas. */
+  --space-3: 12px; /* Canal de la rejilla en móvil; relleno de filas. */
+  --space-4: 16px; /* Margen lateral en móvil; relleno de tarjetas. */
+  --space-6: 24px; /* Canal de la rejilla en escritorio; separación de bloques. */
+  --space-8: 32px; /* Margen lateral en escritorio. */
+  --space-12: 48px; /* Separación entre secciones en móvil. */
+  --space-16: 64px; /* Separación entre secciones en escritorio. */
+  --space-24: 96px; /* Hero y cierres de página. */
+
+  --radius-0: 0px; /* Por defecto: botones, placas, tarjetas, imágenes. La marca es angular. */
+  --radius-sm: 2px; /* Inputs, casillas y chips de filtro. */
+  --radius-full: 9999px; /* Solo el botón flotante de WhatsApp y avatares. */
+
+  --shadow-card: 0 1px 2px rgba(15, 28, 46, 0.08); /* Tarjetas sobre gis. */
+  --shadow-float: 0 8px 24px rgba(15, 28, 46, 0.18); /* Drawer de cotización, botón flotante, barra de cotización. */
+
+  --angle-brand: 13deg; /* Ángulo de marca: placas, diagonales, cortes. Desplazamiento horizontal = alto × 0.2309. */
+
+  --font-display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  --font-sans: "Barlow", Arial, sans-serif;
+}
+
+.display { font-family: var(--font-display); font-size: 80px; line-height: 0.9; font-weight: 900; font-style: italic; text-transform: uppercase; } /* Hero y frase de marca. 48px en móvil. */
+.h1 { font-family: var(--font-display); font-size: 56px; line-height: 0.95; font-weight: 900; font-style: italic; text-transform: uppercase; } /* Título de página. 40px en móvil. */
+.h2 { font-family: var(--font-display); font-size: 40px; line-height: 1; font-weight: 800; font-style: italic; text-transform: uppercase; } /* Títulos de sección. 30px en móvil. */
+.h3 { font-family: var(--font-display); font-size: 26px; line-height: 1.05; font-weight: 800; font-style: italic; text-transform: uppercase; } /* Bloques y tarjetas destacadas. 22px en móvil. */
+.h4 { font-family: var(--font-display); font-size: 20px; line-height: 1.1; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; } /* Subtítulos. 18px en móvil. */
+.eyebrow { font-family: var(--font-display); font-size: 13px; line-height: 1.2; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; } /* Etiqueta sobre titulares, en rojo-profundo o grafito-suave; lima solo sobre noche. */
+.button { font-family: var(--font-display); font-size: 19px; line-height: 1; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; } /* Botones y placas de acción. 19px mínimo para cumplir AA grande sobre rojo. */
+.number { font-family: var(--font-display); font-size: 36px; line-height: 1; font-weight: 900; font-style: italic; text-transform: uppercase; } /* Totales de piezas, folio y futuros precios. 28px en móvil. */
+.body-lg { font-family: var(--font-sans); font-size: 18px; line-height: 1.45; font-weight: 400; } /* Introducciones y hero. */
+.body { font-family: var(--font-sans); font-size: 16px; line-height: 1.45; font-weight: 400; } /* Texto general y formularios. */
+.body-strong { font-family: var(--font-sans); font-size: 16px; line-height: 1.45; font-weight: 600; } /* Nombres de producto en tarjetas. */
+.small { font-family: var(--font-sans); font-size: 14px; line-height: 1.4; font-weight: 400; } /* Metadatos y ayudas, en grafito-suave. */
+.caption { font-family: var(--font-sans); font-size: 12px; line-height: 1.35; font-weight: 500; } /* Leyendas y legales. Mínimo absoluto en pantalla. */
