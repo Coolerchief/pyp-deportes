@@ -1,0 +1,117 @@
+/* P&P Deportes Coapa — estilos de componentes. Usa las variables de tokens.css. */
+body { margin: 0; font-family: var(--font-sans); background: var(--blanco); color: var(--noche); }
+.pyp-stage { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; padding: var(--space-4); }
+.pyp-stage--gis { background: var(--gis); }
+.pyp-stage--noche { background: var(--noche); }
+.pyp-stage--col { flex-direction: column; align-items: stretch; }
+
+/* Placa: paralelogramo a 13°. --pyp-o = alto × 0.2309 */
+.pyp-placa { clip-path: polygon(var(--pyp-o) 0, 100% 0, calc(100% - var(--pyp-o)) 100%, 0 100%); }
+
+/* Button */
+.pyp-btn { --pyp-h: 48px; --pyp-o: 11px; position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  height: var(--pyp-h); padding: 0 calc(var(--space-6) + var(--pyp-o)); border: 0; cursor: pointer;
+  font-family: var(--font-display); font-weight: 700; font-size: 19px; letter-spacing: .04em; text-transform: uppercase; line-height: 1;
+  transition: background-color 150ms cubic-bezier(.2,.8,.2,1), transform 150ms; text-decoration: none; }
+.pyp-btn--lg { --pyp-h: 56px; --pyp-o: 13px; }
+.pyp-btn--sm { --pyp-h: 40px; --pyp-o: 9px; padding: 0 calc(var(--space-4) + var(--pyp-o)); }
+.pyp-btn--primary { background: var(--rojo); color: var(--blanco); clip-path: polygon(var(--pyp-o) 0, 100% 0, calc(100% - var(--pyp-o)) 100%, 0 100%); }
+.pyp-btn--primary:hover { background: var(--rojo-profundo); }
+.pyp-btn--secondary { background: var(--noche); color: var(--blanco); clip-path: polygon(var(--pyp-o) 0, 100% 0, calc(100% - var(--pyp-o)) 100%, 0 100%); }
+.pyp-btn--secondary:hover { background: var(--grafito); }
+.pyp-btn--whatsapp { background: var(--whatsapp); color: var(--noche); clip-path: polygon(var(--pyp-o) 0, 100% 0, calc(100% - var(--pyp-o)) 100%, 0 100%); }
+.pyp-btn--outline { background: transparent; color: var(--noche); box-shadow: inset 0 0 0 2px var(--noche); padding: 0 var(--space-6); }
+.pyp-btn--ghost { background: transparent; color: var(--rojo-profundo); padding: 0 var(--space-2); }
+.pyp-btn--ghost:hover { text-decoration: underline; text-underline-offset: 4px; }
+.pyp-btn:active { transform: translateY(1px); }
+.pyp-btn[disabled] { opacity: .4; cursor: not-allowed; }
+/* Foco: anillo lima con contorno noche (visible sobre claro y oscuro). En placas el recorte oculta outline: se envuelve. */
+.pyp-focus { outline: 3px solid var(--lima); outline-offset: 2px; box-shadow: 0 0 0 5px var(--noche); }
+.pyp-btn:focus-visible { outline: 3px solid var(--lima); outline-offset: 3px; }
+.pyp-btn-wrap:focus-within { outline: 3px solid var(--lima); outline-offset: 3px; box-shadow: 0 0 0 6px var(--noche); }
+.pyp-ico { width: 20px; height: 20px; flex: none; }
+
+/* Badge */
+.pyp-badge { --pyp-o: 6px; display: inline-flex; align-items: center; height: 24px; padding: 0 calc(var(--space-2) + var(--pyp-o));
+  font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  clip-path: polygon(var(--pyp-o) 0, 100% 0, calc(100% - var(--pyp-o)) 100%, 0 100%); }
+.pyp-badge--new { background: var(--lima); color: var(--noche); }
+.pyp-badge--custom { background: var(--rojo); color: var(--blanco); }
+.pyp-badge--info { background: var(--noche); color: var(--blanco); }
+
+/* Chip de filtro */
+.pyp-chip { display: inline-flex; align-items: center; gap: var(--space-2); height: 36px; padding: 0 var(--space-3); border-radius: var(--radius-sm);
+  border: 1px solid var(--borde-control); background: var(--blanco); color: var(--noche); font: 500 14px/1 var(--font-sans); cursor: pointer; }
+.pyp-chip--on { --pyp-o: 8px; border: 0; border-radius: 0; background: var(--noche); color: var(--blanco); padding: 0 calc(var(--space-3) + var(--pyp-o));
+  clip-path: polygon(var(--pyp-o) 0, 100% 0, calc(100% - var(--pyp-o)) 100%, 0 100%); font-weight: 600; }
+
+/* Doble diagonal */
+.pyp-dd { display: inline-block; vertical-align: middle; }
+
+/* Patrón cancha: franjas a 13° de la vertical sobre noche o rojo */
+.pyp-cancha { background-color: var(--noche);
+  background-image: repeating-linear-gradient(103deg, rgba(255,255,255,0) 0 28px, rgba(255,255,255,.07) 28px 34px, rgba(255,255,255,0) 34px 40px, rgba(255,255,255,.07) 40px 52px, rgba(255,255,255,0) 52px 120px); }
+.pyp-cancha--rojo { background-color: var(--rojo); }
+
+/* Imagen genérica de categoría (4:5) */
+.pyp-ph { position: relative; aspect-ratio: 4 / 5; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.pyp-ph img { width: 30%; }
+.pyp-ph span { position: absolute; left: 0; right: 0; bottom: var(--space-4); text-align: center; color: var(--lima);
+  font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .15em; text-transform: uppercase; }
+
+/* Tarjeta de producto */
+.pyp-card { width: 220px; background: var(--blanco); display: flex; flex-direction: column; }
+.pyp-card__img { position: relative; background: var(--gis); }
+.pyp-card__img > img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.pyp-card__img > .pyp-ph { width: 100%; }
+.pyp-card__badges { position: absolute; top: var(--space-2); left: var(--space-2); display: flex; gap: var(--space-1); }
+.pyp-card__body { padding: var(--space-3) 0 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.pyp-card__brand { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .15em; text-transform: uppercase; color: var(--grafito-suave); }
+.pyp-card__name { font: 600 16px/1.35 var(--font-sans); color: var(--noche); margin: 0; }
+.pyp-card__meta { font: 400 14px/1.4 var(--font-sans); color: var(--grafito-suave); }
+.pyp-card__action { margin-top: var(--space-2); }
+
+/* Campos */
+.pyp-field { display: flex; flex-direction: column; gap: var(--space-1); max-width: 340px; }
+.pyp-label { font: 600 14px/1.3 var(--font-sans); color: var(--noche); }
+.pyp-input { height: 48px; padding: 0 var(--space-3); border: 1px solid var(--borde-control); border-radius: var(--radius-sm); background: var(--blanco);
+  font: 400 16px/1 var(--font-sans); color: var(--noche); }
+.pyp-input:focus { outline: 3px solid var(--lima); outline-offset: 0; border-color: var(--noche); box-shadow: 0 0 0 4px var(--noche); }
+.pyp-input--error { border: 2px solid var(--rojo-profundo); }
+.pyp-help { font: 400 14px/1.4 var(--font-sans); color: var(--grafito-suave); }
+.pyp-error { font: 500 14px/1.4 var(--font-sans); color: var(--rojo-profundo); }
+.pyp-prefix { display: flex; }
+.pyp-prefix b { display: flex; align-items: center; padding: 0 var(--space-3); background: var(--gis); border: 1px solid var(--borde-control); border-right: 0; border-radius: var(--radius-sm) 0 0 var(--radius-sm); font: 600 16px var(--font-sans); }
+.pyp-prefix .pyp-input { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; flex: 1; }
+
+/* Matriz de tallas */
+.pyp-matrix { width: 360px; background: var(--blanco); }
+.pyp-matrix__head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: var(--space-2); border-bottom: 2px solid var(--noche); }
+.pyp-matrix__row { display: grid; grid-template-columns: 56px 1fr 72px; align-items: center; gap: var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--linea); }
+.pyp-size { font-family: var(--font-display); font-weight: 700; font-size: 18px; }
+.pyp-stepper { justify-self: start; display: inline-flex; border: 1px solid var(--borde-control); border-radius: var(--radius-sm); height: 44px; }
+.pyp-stepper button { width: 44px; border: 0; background: var(--gis); font: 600 20px/1 var(--font-sans); color: var(--noche); cursor: pointer; }
+.pyp-stepper input { width: 56px; border: 0; border-left: 1px solid var(--borde-control); border-right: 1px solid var(--borde-control); text-align: center; font: 600 16px var(--font-sans); color: var(--noche); }
+.pyp-sub { text-align: right; font: 400 14px var(--font-sans); color: var(--grafito-suave); }
+.pyp-shortcuts { display: flex; gap: var(--space-2); flex-wrap: wrap; padding: var(--space-3) 0; }
+.pyp-total { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding-top: var(--space-3); }
+.pyp-number { font-family: var(--font-display); font-weight: 900; font-style: italic; font-size: 28px; line-height: 1; text-transform: uppercase; }
+
+/* Barra de cotización (móvil) */
+.pyp-quotebar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); width: 360px; padding: var(--space-3) var(--space-4);
+  background: var(--noche); color: var(--blanco); box-shadow: 0 8px 24px rgba(15, 28, 46, 0.18); box-sizing: border-box; }
+.pyp-quotebar__t { font: 600 14px/1.3 var(--font-sans); }
+.pyp-quotebar__n { --pyp-o: 6px; display: inline-block; margin-left: var(--space-1); padding: 2px calc(var(--space-2) + var(--pyp-o)); background: var(--lima); color: var(--noche);
+  font-family: var(--font-display); font-weight: 900; font-style: italic; font-size: 16px; clip-path: polygon(var(--pyp-o) 0, 100% 0, calc(100% - var(--pyp-o)) 100%, 0 100%); }
+
+/* Botón flotante de WhatsApp */
+.pyp-fab { width: 56px; height: 56px; border-radius: 9999px; background: var(--whatsapp); display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 24px rgba(15, 28, 46, 0.18); border: 0; cursor: pointer; }
+.pyp-fab svg { width: 28px; height: 28px; }
+
+/* Encabezado de sección */
+.pyp-sh { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-4); width: 100%; }
+.pyp-eyebrow { font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: .15em; text-transform: uppercase; color: var(--rojo-profundo); margin: 0 0 var(--space-1); }
+.pyp-h2 { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 40px; line-height: 1; text-transform: uppercase; margin: 0; color: var(--noche); }
+.pyp-link { font: 600 16px var(--font-sans); color: var(--rojo-profundo); text-decoration: none; }
+.pyp-link:hover { text-decoration: underline; text-underline-offset: 4px; }

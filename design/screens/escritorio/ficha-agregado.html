@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P&amp;P Deportes · Escritorio · Ficha · Agregado</title>
+<style>
+@font-face{font-family:'Barlow Condensed';src:url('../../fonts/barlow-condensed-latin-600-normal.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'Barlow Condensed';src:url('../../fonts/barlow-condensed-latin-700-normal.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Barlow Condensed';src:url('../../fonts/barlow-condensed-latin-600-italic.woff2') format('woff2');font-weight:600;font-style:italic;font-display:swap}
+@font-face{font-family:'Barlow Condensed';src:url('../../fonts/barlow-condensed-latin-800-italic.woff2') format('woff2');font-weight:800;font-style:italic;font-display:swap}
+@font-face{font-family:'Barlow Condensed';src:url('../../fonts/barlow-condensed-latin-900-italic.woff2') format('woff2');font-weight:900;font-style:italic;font-display:swap}
+@font-face{font-family:'Barlow';src:url('../../fonts/barlow-latin-400-normal.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Barlow';src:url('../../fonts/barlow-latin-500-normal.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Barlow';src:url('../../fonts/barlow-latin-600-normal.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+body{margin:0;background:#FFFFFF;font-family:'Barlow',Arial,sans-serif;color:#0F1C2E}
+a{color:#CF2C1E}a:hover{color:#0F1C2E}
+.placa{clip-path:polygon(var(--o,11px) 0,100% 0,calc(100% - var(--o,11px)) 100%,0 100%)}
+.cancha{background-color:#0F1C2E;background-image:repeating-linear-gradient(103deg,rgba(255,255,255,0) 0 28px,rgba(255,255,255,.07) 28px 34px,rgba(255,255,255,0) 34px 40px,rgba(255,255,255,.07) 40px 52px,rgba(255,255,255,0) 52px 120px)}
+.scroll-x{overflow-x:auto;scrollbar-width:none}
+/* Solo para la vista de referencia: centra la pantalla sobre un fondo neutro */
+html{background:#E4E1D8}body{background:transparent;display:flex;justify-content:center}
+</style>
+</head>
+<body>
+<div style="position:relative;width:1440px;height:900px;overflow:hidden;background:#FFFFFF;display:flex;flex-direction:column">
+<header style="height:72px;flex-shrink:0;background:#0F1C2E;display:flex;align-items:center;gap:32px;padding:0 112px">
+<a href="inicio.html" aria-label="P&amp;P Deportes Coapa, inicio" style="display:flex;flex-shrink:0"><img src="../../assets/logos/logo-horizontal-negativo.svg" alt="P&amp;P Deportes Coapa" style="width:196px;display:block"></a>
+<nav aria-label="Principal" style="display:flex;gap:20px;flex-shrink:0"><a href="menu.html" style="display:inline-flex;align-items:center;gap:4px;height:72px;padding:0 4px;white-space:nowrap;color:#FFFFFF;text-decoration:none;font-weight:600;font-size:16px;">Deportes<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><a href="menu.html" style="display:inline-flex;align-items:center;gap:4px;height:72px;padding:0 4px;white-space:nowrap;color:#FFFFFF;text-decoration:none;font-weight:600;font-size:16px;box-shadow:inset 0 -4px 0 #E63323;">Categorías<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><a href="uniformes.html" style="display:inline-flex;align-items:center;gap:4px;height:72px;padding:0 4px;white-space:nowrap;color:#FFFFFF;text-decoration:none;font-weight:600;font-size:16px;">Uniformes</a><a href="equipos.html" style="display:inline-flex;align-items:center;gap:4px;height:72px;padding:0 4px;white-space:nowrap;color:#FFFFFF;text-decoration:none;font-weight:600;font-size:16px;">Equipos</a><a href="visitanos.html" style="display:inline-flex;align-items:center;gap:4px;height:72px;padding:0 4px;white-space:nowrap;color:#FFFFFF;text-decoration:none;font-weight:600;font-size:16px;">Visítanos</a></nav>
+<div role="search" style="display:flex;align-items:center;gap:8px;flex-grow:1;min-width:0;height:44px;padding:0 12px;box-sizing:border-box;background:#FFFFFF;border-radius:2px;color:#5F6673"><a href="busqueda.html" aria-label="Buscar" style="display:flex;align-items:center;height:44px;color:#5F6673"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></a><input placeholder="Busca en el catálogo" aria-label="Buscar" style="flex-grow:1;min-width:0;border:0;outline:0;font:400 15px 'Barlow',Arial,sans-serif;color:#0F1C2E"></div>
+<a href="cotizacion-1-lista.html" style="display:inline-flex;align-items:center;gap:10px;height:44px;flex-shrink:0;white-space:nowrap;color:#FFFFFF;text-decoration:none;font-weight:600;font-size:16px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path></svg>Mi cotización<span class="placa" style="--o:5px;min-width:30px;height:24px;padding:0 8px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;background:#D4F53C;color:#0F1C2E;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:900;font-style:italic;font-size:16px">42</span></a>
+</header>
+<div style="padding:20px 112px 0;font-size:14px;color:#5F6673"><a href="inicio.html" style="color:#5F6673">Inicio</a> / <a href="catalogo.html" style="color:#5F6673">Uniformes</a> / <span style="color:#0F1C2E">Uniforme de Fútbol Completo</span></div>
+<section style="padding:24px 112px 0;display:grid;grid-template-columns:repeat(12, minmax(0, 1fr));gap:48px;align-items:start">
+<div style="grid-column:span 7;display:flex;gap:16px">
+<div style="display:flex;flex-direction:column;gap:12px"><button aria-label="Ver foto 1" style="padding:0;border:2px solid #0F1C2E;background:transparent;width:88px;cursor:pointer"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="../../assets/logos/monograma-mono-blanco.svg" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase"></span></div></button><button aria-label="Ver foto 2" style="padding:0;border:1px solid #E4E1D8;background:transparent;width:88px;cursor:pointer"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="../../assets/logos/monograma-mono-blanco.svg" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase"></span></div></button><button aria-label="Ver foto 3" style="padding:0;border:1px solid #E4E1D8;background:transparent;width:88px;cursor:pointer"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="../../assets/logos/monograma-mono-blanco.svg" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase"></span></div></button></div>
+<div style="flex-grow:1;display:flex;flex-direction:column;gap:10px"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="../../assets/logos/monograma-mono-blanco.svg" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Uniformes</span></div><span style="font-size:14px;color:#5F6673;text-align:center">Foto próximamente</span></div>
+</div>
+<div style="grid-column:span 5;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;gap:6px"><span class="placa" style="--o:6px;display:inline-flex;align-items:center;height:22px;padding:0 12px;background:#D4F53C;color:#0F1C2E;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase">Nuevo</span><span class="placa" style="--o:6px;display:inline-flex;align-items:center;height:22px;padding:0 12px;background:#E63323;color:#FFFFFF;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase">Personalizable</span></div>
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:#5F6673">P&amp;P · SKU UNI-001</span>
+<h1 style="margin:0;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:900;font-style:italic;font-size:52px;line-height:.92;text-transform:uppercase">Uniforme de fútbol completo</h1>
+<p style="margin:0;font-size:17px;line-height:1.45;color:#3B4454">Jersey + short + medias con escudo, nombre y número. Hecho a la medida de tu equipo.</p>
+<section aria-label="Cantidad por talla" style="margin-top:12px;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:8px;border-bottom:2px solid #0F1C2E">
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:13px;letter-spacing:.15em;text-transform:uppercase">Cantidad por talla</span><span style="font-size:13px;color:#5F6673">Infantil 6–14 · Adulto CH–XXG</span></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;padding:12px 0">
+
+<button hidden data-preset="12" data-variant="on" class="placa" style="--o:8px;height:36px;padding:0 18px;border:0;background:#0F1C2E;color:#FFFFFF;font:600 14px 'Barlow',Arial,sans-serif;cursor:pointer">Equipo de 12</button>
+<button data-preset="12" data-variant="off" style="height:36px;padding:0 12px;border:1px solid #7E8592;border-radius:2px;background:#FFFFFF;color:#0F1C2E;font:500 14px 'Barlow',Arial,sans-serif;cursor:pointer">Equipo de 12</button>
+
+<button data-preset="18" data-variant="on" class="placa" style="--o:8px;height:36px;padding:0 18px;border:0;background:#0F1C2E;color:#FFFFFF;font:600 14px 'Barlow',Arial,sans-serif;cursor:pointer">Equipo de 18</button>
+<button hidden data-preset="18" data-variant="off" style="height:36px;padding:0 12px;border:1px solid #7E8592;border-radius:2px;background:#FFFFFF;color:#0F1C2E;font:500 14px 'Barlow',Arial,sans-serif;cursor:pointer">Equipo de 18</button>
+
+<button hidden data-preset="24" data-variant="on" class="placa" style="--o:8px;height:36px;padding:0 18px;border:0;background:#0F1C2E;color:#FFFFFF;font:600 14px 'Barlow',Arial,sans-serif;cursor:pointer">Equipo de 24</button>
+<button data-preset="24" data-variant="off" style="height:36px;padding:0 12px;border:1px solid #7E8592;border-radius:2px;background:#FFFFFF;color:#0F1C2E;font:500 14px 'Barlow',Arial,sans-serif;cursor:pointer">Equipo de 24</button>
+</div>
+<div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:24px">
+
+<div style="display:grid;grid-template-columns:40px auto minmax(0, 1fr);align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E4E1D8">
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px">6</span>
+<div style="display:flex;height:40px;border:1px solid #7E8592;border-radius:2px">
+<button data-act="dec" aria-label="Restar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">−</button>
+<input value="0" data-size="6" inputmode="numeric" aria-label="Cantidad talla 6" style="width:48px;border:0;border-left:1px solid #7E8592;border-right:1px solid #7E8592;text-align:center;font:600 16px 'Barlow',Arial,sans-serif;color:#0F1C2E">
+<button data-act="inc" aria-label="Sumar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">+</button></div>
+<span style="text-align:right;font-size:13px;color:#5F6673" data-sub>—</span>
+</div>
+
+<div style="display:grid;grid-template-columns:40px auto minmax(0, 1fr);align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E4E1D8">
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px">8</span>
+<div style="display:flex;height:40px;border:1px solid #7E8592;border-radius:2px">
+<button data-act="dec" aria-label="Restar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">−</button>
+<input value="0" data-size="8" inputmode="numeric" aria-label="Cantidad talla 8" style="width:48px;border:0;border-left:1px solid #7E8592;border-right:1px solid #7E8592;text-align:center;font:600 16px 'Barlow',Arial,sans-serif;color:#0F1C2E">
+<button data-act="inc" aria-label="Sumar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">+</button></div>
+<span style="text-align:right;font-size:13px;color:#5F6673" data-sub>—</span>
+</div>
+
+<div style="display:grid;grid-template-columns:40px auto minmax(0, 1fr);align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E4E1D8">
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px">10</span>
+<div style="display:flex;height:40px;border:1px solid #7E8592;border-radius:2px">
+<button data-act="dec" aria-label="Restar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">−</button>
+<input value="0" data-size="10" inputmode="numeric" aria-label="Cantidad talla 10" style="width:48px;border:0;border-left:1px solid #7E8592;border-right:1px solid #7E8592;text-align:center;font:600 16px 'Barlow',Arial,sans-serif;color:#0F1C2E">
+<button data-act="inc" aria-label="Sumar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">+</button></div>
+<span style="text-align:right;font-size:13px;color:#5F6673" data-sub>—</span>
+</div>
+
+<div style="display:grid;grid-template-columns:40px auto minmax(0, 1fr);align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E4E1D8">
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px">12</span>
+<div style="display:flex;height:40px;border:1px solid #7E8592;border-radius:2px">
+<button data-act="dec" aria-label="Restar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">−</button>
+<input value="0" data-size="12" inputmode="numeric" aria-label="Cantidad talla 12" style="width:48px;border:0;border-left:1px solid #7E8592;border-right:1px solid #7E8592;text-align:center;font:600 16px 'Barlow',Arial,sans-serif;color:#0F1C2E">
+<button data-act="inc" aria-label="Sumar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">+</button></div>
+<span style="text-align:right;font-size:13px;color:#5F6673" data-sub>—</span>
+</div>
+
+<div style="display:grid;grid-template-columns:40px auto minmax(0, 1fr);align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E4E1D8">
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px">14</span>
+<div style="display:flex;height:40px;border:1px solid #7E8592;border-radius:2px">
+<button data-act="dec" aria-label="Restar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">−</button>
+<input value="0" data-size="14" inputmode="numeric" aria-label="Cantidad talla 14" style="width:48px;border:0;border-left:1px solid #7E8592;border-right:1px solid #7E8592;text-align:center;font:600 16px 'Barlow',Arial,sans-serif;color:#0F1C2E">
+<button data-act="inc" aria-label="Sumar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">+</button></div>
+<span style="text-align:right;font-size:13px;color:#5F6673" data-sub>—</span>
+</div>
+
+<div style="display:grid;grid-template-columns:40px auto minmax(0, 1fr);align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E4E1D8">
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px">CH</span>
+<div style="display:flex;height:40px;border:1px solid #7E8592;border-radius:2px">
+<button data-act="dec" aria-label="Restar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">−</button>
+<input value="3" data-size="CH" inputmode="numeric" aria-label="Cantidad talla CH" style="width:48px;border:0;border-left:1px solid #7E8592;border-right:1px solid #7E8592;text-align:center;font:600 16px 'Barlow',Arial,sans-serif;color:#0F1C2E">
+<button data-act="inc" aria-label="Sumar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">+</button></div>
+<span style="text-align:right;font-size:13px;color:#5F6673" data-sub>3 pzs</span>
+</div>
+
+<div style="display:grid;grid-template-columns:40px auto minmax(0, 1fr);align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E4E1D8">
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px">M</span>
+<div style="display:flex;height:40px;border:1px solid #7E8592;border-radius:2px">
+<button data-act="dec" aria-label="Restar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">−</button>
+<input value="6" data-size="M" inputmode="numeric" aria-label="Cantidad talla M" style="width:48px;border:0;border-left:1px solid #7E8592;border-right:1px solid #7E8592;text-align:center;font:600 16px 'Barlow',Arial,sans-serif;color:#0F1C2E">
+<button data-act="inc" aria-label="Sumar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">+</button></div>
+<span style="text-align:right;font-size:13px;color:#5F6673" data-sub>6 pzs</span>
+</div>
+
+<div style="display:grid;grid-template-columns:40px auto minmax(0, 1fr);align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E4E1D8">
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px">G</span>
+<div style="display:flex;height:40px;border:1px solid #7E8592;border-radius:2px">
+<button data-act="dec" aria-label="Restar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">−</button>
+<input value="6" data-size="G" inputmode="numeric" aria-label="Cantidad talla G" style="width:48px;border:0;border-left:1px solid #7E8592;border-right:1px solid #7E8592;text-align:center;font:600 16px 'Barlow',Arial,sans-serif;color:#0F1C2E">
+<button data-act="inc" aria-label="Sumar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">+</button></div>
+<span style="text-align:right;font-size:13px;color:#5F6673" data-sub>6 pzs</span>
+</div>
+
+<div style="display:grid;grid-template-columns:40px auto minmax(0, 1fr);align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E4E1D8">
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px">XG</span>
+<div style="display:flex;height:40px;border:1px solid #7E8592;border-radius:2px">
+<button data-act="dec" aria-label="Restar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">−</button>
+<input value="3" data-size="XG" inputmode="numeric" aria-label="Cantidad talla XG" style="width:48px;border:0;border-left:1px solid #7E8592;border-right:1px solid #7E8592;text-align:center;font:600 16px 'Barlow',Arial,sans-serif;color:#0F1C2E">
+<button data-act="inc" aria-label="Sumar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">+</button></div>
+<span style="text-align:right;font-size:13px;color:#5F6673" data-sub>3 pzs</span>
+</div>
+
+<div style="display:grid;grid-template-columns:40px auto minmax(0, 1fr);align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E4E1D8">
+<span style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px">XXG</span>
+<div style="display:flex;height:40px;border:1px solid #7E8592;border-radius:2px">
+<button data-act="dec" aria-label="Restar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">−</button>
+<input value="0" data-size="XXG" inputmode="numeric" aria-label="Cantidad talla XXG" style="width:48px;border:0;border-left:1px solid #7E8592;border-right:1px solid #7E8592;text-align:center;font:600 16px 'Barlow',Arial,sans-serif;color:#0F1C2E">
+<button data-act="inc" aria-label="Sumar" style="width:40px;border:0;background:#F5F3EE;font:600 18px 'Barlow',Arial,sans-serif;color:#0F1C2E;cursor:pointer">+</button></div>
+<span style="text-align:right;font-size:13px;color:#5F6673" data-sub>—</span>
+</div>
+</div>
+<label style="display:flex;align-items:center;gap:12px;min-height:44px;margin-top:14px;font-size:16px;font-weight:600;cursor:pointer">
+<input type="checkbox" checked data-act="perso" style="width:22px;height:22px;accent-color:#0F1C2E">Quiero personalizarlo</label>
+<div data-if="perso" style="display:contents">
+<textarea aria-label="Detalles de personalización" placeholder="Escudo, nombres, números, colores del club…" style="margin-top:6px;height:88px;padding:12px;box-sizing:border-box;border:1px solid #7E8592;border-radius:2px;font:400 16px/1.45 'Barlow',Arial,sans-serif;color:#0F1C2E;resize:none"></textarea></div>
+<div style="margin-top:16px;background:#F5F3EE;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+<div><div style="font-size:13px;color:#5F6673">Total</div><div style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:900;font-style:italic;font-size:34px;line-height:1;text-transform:uppercase"><span data-total>18 piezas</span></div></div>
+<div data-if="hasTotal" style="display:contents"><a href="ficha-agregado.html" class="placa" style="--o:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:56px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;background:#E63323;color:#FFFFFF;padding:0 36px;">Agregar a mi cotización</a></div>
+<div data-if="empty" style="display:none"><span style="max-width:220px;font-size:14px;color:#5F6673">Indica cuántas piezas necesitas por talla</span></div>
+</div>
+<div style="margin-top:12px"><a href="#" class="placa" style="--o:11px;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;background:#25D366;color:#0F1C2E;padding:0 32px;width:100%"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path><path d="M9.5 9.5c.4 1.8 1.7 3.2 3.5 3.8"></path></svg>Preguntar por este producto</a></div>
+</section>
+</div>
+</section>
+<section style="padding:64px 112px 0;display:grid;grid-template-columns:repeat(12, minmax(0, 1fr));gap:48px">
+<div style="grid-column:span 7;display:flex;flex-direction:column;gap:12px">
+<h2 style="margin:0;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:22px;letter-spacing:.02em;text-transform:uppercase">Especificaciones</h2>
+<dl style="margin:0;display:grid;grid-template-columns:160px minmax(0, 1fr);font-size:16px;line-height:1.45">
+<dt style="padding:12px 0;border-bottom:1px solid #E4E1D8;color:#5F6673">Incluye</dt><dd style="margin:0;padding:12px 0;border-bottom:1px solid #E4E1D8">Jersey, short y medias</dd>
+<dt style="padding:12px 0;border-bottom:1px solid #E4E1D8;color:#5F6673">Técnicas</dt><dd style="margin:0;padding:12px 0;border-bottom:1px solid #E4E1D8">Sublimación · Vinil · Bordado</dd>
+<dt style="padding:12px 0;border-bottom:1px solid #E4E1D8;color:#5F6673">Tallas</dt><dd style="margin:0;padding:12px 0;border-bottom:1px solid #E4E1D8">6 a 14 infantil · CH a XXG adulto</dd>
+<dt style="padding:12px 0;border-bottom:1px solid #E4E1D8;color:#5F6673">Colores</dt><dd style="margin:0;padding:12px 0;border-bottom:1px solid #E4E1D8">A elegir con tu asesor</dd>
+<dt style="padding:12px 0;border-bottom:1px solid #E4E1D8;color:#5F6673">Tela</dt><dd style="margin:0;padding:12px 0;border-bottom:1px solid #E4E1D8">[POR CONFIRMAR]</dd></dl>
+</div>
+<div style="grid-column:span 5"><aside style="background:#F5F3EE;padding:24px 28px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap"><svg width="20.06" height="44" viewBox="0 0 18.24 40" aria-hidden="true"><polygon fill="#E63323" points="9.24,0 11.64,0 2.4,40 0,40"></polygon><polygon fill="#E63323" points="13.84,0 18.24,0 9,40 4.6,40"></polygon></svg>
+<div style="flex-grow:1"><p style="margin:0;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:800;font-style:italic;font-size:26px;line-height:1;text-transform:uppercase">¿Compras para tu liga o escuela?</p>
+<p style="margin:6px 0 0;font-size:16px;line-height:1.45;color:#3B4454">Precio especial por volumen. Arma tu lista con cantidades por talla y te cotizamos por WhatsApp.</p></div>
+<a href="#" class="placa" style="--o:11px;display:inline-flex;align-items:flex-start;flex-wrap:wrap;justify-content:center;gap:8px;height:48px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;background:#25D366;color:#0F1C2E;padding:0 32px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path><path d="M9.5 9.5c.4 1.8 1.7 3.2 3.5 3.8"></path></svg>Hablar con un asesor</a></aside></div>
+</section>
+<section style="padding:64px 112px 80px;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between"><div><p style="margin:0;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:#CF2C1E;">Complementa</p><h2 style="margin:0;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:800;font-style:italic;font-size:40px;line-height:.95;text-transform:uppercase;color:#0F1C2E;margin-top:6px">Completa el uniforme</h2></div><a href="catalogo.html" style="font-weight:600;font-size:16px;color:#CF2C1E;text-decoration:none">Ver todo →</a></div>
+<div style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:24px">
+<article style="display:flex;flex-direction:column;gap:8px">
+<a href="ficha-uniforme.html" style="display:flex;flex-direction:column;gap:4px;text-decoration:none;color:#0F1C2E">
+<div style="position:relative;background:#F5F3EE"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="../../assets/logos/monograma-mono-blanco.svg" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Uniformes</span></div></div>
+<span style="margin-top:6px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#5F6673">P&amp;P</span>
+<span style="font-weight:600;font-size:16px;line-height:1.3">Jersey de Fútbol Sublimado</span>
+<span style="font-size:14px;color:#5F6673">10 tallas</span>
+</a>
+<div><a href="ficha-uniforme.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;background:transparent;color:#0F1C2E;box-shadow:inset 0 0 0 2px #0F1C2E;padding:0 20px;">Ver tallas</a></div>
+</article>
+<article style="display:flex;flex-direction:column;gap:8px">
+<a href="ficha-uniforme.html" style="display:flex;flex-direction:column;gap:4px;text-decoration:none;color:#0F1C2E">
+<div style="position:relative;background:#F5F3EE"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="../../assets/logos/monograma-mono-blanco.svg" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Ropa deportiva</span></div></div>
+<span style="margin-top:6px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#5F6673">P&amp;P</span>
+<span style="font-weight:600;font-size:16px;line-height:1.3">Medias de Fútbol</span>
+<span style="font-size:14px;color:#5F6673">3 tallas · 8 colores</span>
+</a>
+<div><a href="ficha-uniforme.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;background:transparent;color:#0F1C2E;box-shadow:inset 0 0 0 2px #0F1C2E;padding:0 20px;">Ver tallas</a></div>
+</article>
+<article style="display:flex;flex-direction:column;gap:8px">
+<a href="ficha-uniforme.html" style="display:flex;flex-direction:column;gap:4px;text-decoration:none;color:#0F1C2E">
+<div style="position:relative;background:#F5F3EE"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="../../assets/logos/monograma-mono-blanco.svg" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Ropa deportiva</span></div></div>
+<span style="margin-top:6px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#5F6673">P&amp;P</span>
+<span style="font-weight:600;font-size:16px;line-height:1.3">Short Liso Económico</span>
+<span style="font-size:14px;color:#5F6673">9 tallas · 6 colores</span>
+</a>
+<div><a href="ficha-uniforme.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;background:transparent;color:#0F1C2E;box-shadow:inset 0 0 0 2px #0F1C2E;padding:0 20px;">Ver tallas</a></div>
+</article>
+<article style="display:flex;flex-direction:column;gap:8px">
+<a href="ficha-uniforme.html" style="display:flex;flex-direction:column;gap:4px;text-decoration:none;color:#0F1C2E">
+<div style="position:relative;background:#F5F3EE"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="../../assets/logos/monograma-mono-blanco.svg" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Protecciones</span></div></div>
+<span style="margin-top:6px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#5F6673">Cruzeiro</span>
+<span style="font-weight:600;font-size:16px;line-height:1.3">Espinillera Cruzeiro Chaton Infantil</span>
+<span style="font-size:14px;color:#5F6673">2 tallas</span>
+</a>
+<div><a href="ficha-uniforme.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;background:transparent;color:#0F1C2E;box-shadow:inset 0 0 0 2px #0F1C2E;padding:0 20px;">Ver tallas</a></div>
+</article>
+</div>
+</section>
+<footer class="cancha" style="flex-grow:1;padding:64px 112px 40px;display:flex;flex-direction:column;gap:48px;color:#FFFFFF">
+<div style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:32px">
+<div style="display:flex;flex-direction:column;gap:16px"><img src="../../assets/logos/logo-vertical-negativo.svg" alt="P&amp;P Deportes Coapa" style="width:170px"><p style="margin:0;font-size:15px;line-height:1.45">Tienda deportiva y taller de uniformes del sur de la Ciudad de México. Desde 1969.</p></div>
+<div style="display:flex;flex-direction:column;gap:12px"><p style="margin:0;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:14px;letter-spacing:.15em;text-transform:uppercase;color:#D4F53C">Catálogo</p><a href="catalogo.html" style="color:#FFFFFF;font-size:15px;text-decoration:none">Fútbol</a><a href="catalogo.html" style="color:#FFFFFF;font-size:15px;text-decoration:none">Básquetbol</a><a href="catalogo.html" style="color:#FFFFFF;font-size:15px;text-decoration:none">Voleibol</a><a href="catalogo.html" style="color:#FFFFFF;font-size:15px;text-decoration:none">Box</a><a href="catalogo.html" style="color:#FFFFFF;font-size:15px;text-decoration:none">Fitness y gimnasio</a></div>
+<div style="display:flex;flex-direction:column;gap:12px"><p style="margin:0;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:14px;letter-spacing:.15em;text-transform:uppercase;color:#D4F53C">P&amp;P</p><a href="uniformes.html" style="color:#FFFFFF;font-size:15px;text-decoration:none">Uniformes personalizados</a><a href="equipos.html" style="color:#FFFFFF;font-size:15px;text-decoration:none">Equipos estrenando</a><a href="visitanos.html" style="color:#FFFFFF;font-size:15px;text-decoration:none">Nosotros</a><a href="aviso-de-privacidad.html" style="color:#FFFFFF;font-size:15px;text-decoration:none">Aviso de privacidad</a></div>
+<div style="display:flex;flex-direction:column;gap:12px;font-size:15px;line-height:1.45"><p style="margin:0;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:14px;letter-spacing:.15em;text-transform:uppercase;color:#D4F53C">Visítanos</p>
+<span>Calz. del Hueso 921, local 42<br>Granjas Coapa, Tlalpan, CDMX</span><span>[HORARIO] Lun–Vie 10:00–19:00<br>Sáb 10:00–17:00</span><span>55 6582 2426</span><span>@pyp_coapa · /pypcoapa</span></div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #3B4454;padding-top:20px">
+<span style="font-size:14px">© 2026 P&amp;P Deportes Coapa</span><svg width="14.59" height="32" viewBox="0 0 18.24 40" aria-hidden="true"><polygon fill="#D4F53C" points="9.24,0 11.64,0 2.4,40 0,40"></polygon><polygon fill="#D4F53C" points="13.84,0 18.24,0 9,40 4.6,40"></polygon></svg></div>
+</footer>
+<div role="dialog" aria-label="Agregado a tu cotización" style="position:absolute;top:80px;right:112px;width:400px;background:#FFFFFF;border-top:4px solid #D4F53C;box-shadow:0 12px 32px rgba(15,28,46,.24);display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 8px 8px 16px;border-bottom:1px solid #E4E1D8"><h2 style="margin:0;display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:800;font-style:italic;font-size:22px;text-transform:uppercase"><span style="width:28px;height:28px;flex-shrink:0;border-radius:9999px;background:#D4F53C;color:#0F1C2E;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Agregado a tu cotización</h2><a href="ficha-uniforme.html" aria-label="Cerrar" style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#0F1C2E"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></a></div>
+<div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+<div style="display:grid;grid-template-columns:72px minmax(0, 1fr);gap:12px;align-items:start">
+<div style="width:72px"><div class="cancha" style="position:relative;aspect-ratio:4 / 5;display:flex;align-items:center;justify-content:center;"><img src="../../assets/logos/monograma-mono-blanco.svg" alt="" style="width:30%"><span style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#D4F53C;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase"></span></div></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:16px;line-height:1.3">Uniforme de Fútbol Completo</span>
+<span style="font-size:13px;color:#5F6673">UNI-001 · con personalización</span>
+<span style="margin-top:4px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:900;font-style:italic;font-size:20px;text-transform:uppercase">18 piezas</span></div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px"><span style="height:32px;display:inline-flex;align-items:center;padding:0 10px;border:1px solid #7E8592;border-radius:2px;font-size:14px"><b style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-size:16px;margin-right:6px">CH</b>× 3</span><span style="height:32px;display:inline-flex;align-items:center;padding:0 10px;border:1px solid #7E8592;border-radius:2px;font-size:14px"><b style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-size:16px;margin-right:6px">M</b>× 6</span><span style="height:32px;display:inline-flex;align-items:center;padding:0 10px;border:1px solid #7E8592;border-radius:2px;font-size:14px"><b style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-size:16px;margin-right:6px">G</b>× 6</span><span style="height:32px;display:inline-flex;align-items:center;padding:0 10px;border:1px solid #7E8592;border-radius:2px;font-size:14px"><b style="font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-size:16px;margin-right:6px">XG</b>× 3</span></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:12px;border-top:1px solid #E4E1D8;font-size:15px"><span style="color:#3B4454">Tu lista</span><span style="font-weight:600">3 productos · 42 piezas</span></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;padding:12px 16px 20px;border-top:1px solid #E4E1D8">
+<a href="cotizacion-1-lista.html" class="placa" style="--o:11px;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;height:48px;background:#E63323;color:#FFFFFF;padding:0 32px;width:100%;">Ver mi cotización</a>
+<a href="catalogo.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;text-decoration:none;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;line-height:1;height:48px;background:transparent;color:#0F1C2E;box-shadow:inset 0 0 0 2px #0F1C2E;padding:0 20px;width:100%;">Seguir viendo el catálogo</a>
+</div>
+</div>
+</div>
+<script>
+/* Demo de la matriz de cantidades (solo referencia; la app real usa el store de cotización, TRD §6.3). */
+(function () {
+  var dist = { 12: [2, 4, 4, 2], 18: [3, 6, 6, 3], 24: [4, 8, 8, 4] }, adult = ['CH', 'M', 'G', 'XG'];
+  var inputs = [].slice.call(document.querySelectorAll('input[data-size]'));
+  function refresh(preset) {
+    var total = 0;
+    inputs.forEach(function (i) {
+      var n = Math.max(0, Math.min(9999, parseInt(i.value, 10) || 0));
+      i.value = n; total += n;
+      var sub = i.parentElement.parentElement.querySelector('[data-sub]');
+      if (sub) sub.textContent = n > 0 ? n + ' pzs' : '\u2014';
+    });
+    document.querySelectorAll('[data-total]').forEach(function (e) { e.textContent = total === 1 ? '1 pieza' : total + ' piezas'; });
+    document.querySelectorAll('[data-if="hasTotal"]').forEach(function (e) { e.style.display = total > 0 ? 'contents' : 'none'; });
+    document.querySelectorAll('[data-if="empty"]').forEach(function (e) { e.style.display = total === 0 ? 'contents' : 'none'; });
+    document.querySelectorAll('[data-preset]').forEach(function (b) {
+      var active = String(preset) === b.getAttribute('data-preset');
+      b.hidden = (b.getAttribute('data-variant') === 'on') !== active;
+    });
+  }
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-act="inc"],[data-act="dec"],[data-preset]');
+    if (!b) return;
+    if (b.hasAttribute('data-preset')) {
+      var n = b.getAttribute('data-preset'), d = dist[n];
+      inputs.forEach(function (i) { var k = adult.indexOf(i.getAttribute('data-size')); i.value = k >= 0 ? d[k] : 0; });
+      refresh(n);
+    } else {
+      var i = b.parentElement.querySelector('input');
+      i.value = (parseInt(i.value, 10) || 0) + (b.getAttribute('data-act') === 'inc' ? 1 : -1);
+      refresh(null);
+    }
+  });
+  inputs.forEach(function (i) { i.addEventListener('change', function () { refresh(null); }); });
+  var p = document.querySelector('[data-act="perso"]');
+  if (p) p.addEventListener('change', function () {
+    document.querySelectorAll('[data-if="perso"]').forEach(function (e) { e.style.display = p.checked ? 'contents' : 'none'; });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,490 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Busqueda.dc.html": {
+      "h": 1820,
+      "is_interactive": true,
+      "title": "Búsqueda",
+      "w": 390,
+      "x": 3760,
+      "y": 0
+    },
+    "Catalogo.dc.html": {
+      "h": 2900,
+      "is_interactive": true,
+      "title": "Catálogo · Fútbol",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "Confirmacion.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Confirmación",
+      "w": 390,
+      "x": 2820,
+      "y": 0
+    },
+    "Cotizacion.dc.html": {
+      "h": 1240,
+      "is_interactive": true,
+      "title": "Cotización · 1 Lista",
+      "w": 390,
+      "x": 1880,
+      "y": 0
+    },
+    "CotizacionDatos.dc.html": {
+      "h": 1720,
+      "is_interactive": true,
+      "title": "Cotización · 2 Datos",
+      "w": 390,
+      "x": 2350,
+      "y": 0
+    },
+    "CotizacionVacia.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Cotización · vacía",
+      "w": 390,
+      "x": 4230,
+      "y": 0
+    },
+    "D-Busqueda.dc.html": {
+      "h": 1400,
+      "is_interactive": true,
+      "title": "Escritorio · Búsqueda",
+      "w": 1440,
+      "x": 7600,
+      "y": 5400
+    },
+    "D-Catalogo.dc.html": {
+      "h": 3100,
+      "is_interactive": true,
+      "title": "Escritorio · Catálogo",
+      "w": 1440,
+      "x": 1520,
+      "y": 5400
+    },
+    "D-Confirmacion.dc.html": {
+      "h": 820,
+      "is_interactive": true,
+      "title": "Escritorio · Confirmación",
+      "w": 1440,
+      "x": 10640,
+      "y": 5400
+    },
+    "D-Cotizacion.dc.html": {
+      "h": 1650,
+      "is_interactive": true,
+      "title": "Escritorio · Cotización · 2 Datos",
+      "w": 1440,
+      "x": 4560,
+      "y": 5400
+    },
+    "D-CotizacionVacia.dc.html": {
+      "h": 1430,
+      "is_interactive": true,
+      "title": "Escritorio · Cotización vacía",
+      "w": 1440,
+      "x": 9120,
+      "y": 5400
+    },
+    "D-Equipos.dc.html": {
+      "h": 1970,
+      "is_interactive": true,
+      "title": "Escritorio · Equipos",
+      "w": 1440,
+      "x": 13680,
+      "y": 5400
+    },
+    "D-Ficha.dc.html": {
+      "h": 2750,
+      "is_interactive": true,
+      "title": "Escritorio · Ficha",
+      "w": 1440,
+      "x": 3040,
+      "y": 5400
+    },
+    "D-Inicio.dc.html": {
+      "h": 4590,
+      "is_interactive": true,
+      "title": "Escritorio · Inicio",
+      "w": 1440,
+      "x": 0,
+      "y": 5400
+    },
+    "D-Menu.dc.html": {
+      "h": 720,
+      "is_interactive": true,
+      "title": "Escritorio · Menú",
+      "w": 1440,
+      "x": 6080,
+      "y": 5400
+    },
+    "D-Privacidad.dc.html": {
+      "h": 1930,
+      "is_interactive": true,
+      "title": "Escritorio · Aviso de privacidad",
+      "w": 1440,
+      "x": 16720,
+      "y": 5400
+    },
+    "D-Uniformes.dc.html": {
+      "h": 3380,
+      "is_interactive": true,
+      "title": "Escritorio · Uniformes",
+      "w": 1440,
+      "x": 12160,
+      "y": 5400
+    },
+    "D-Visitanos.dc.html": {
+      "h": 1910,
+      "is_interactive": true,
+      "title": "Escritorio · Visítanos",
+      "w": 1440,
+      "x": 15200,
+      "y": 5400
+    },
+    "Equipos.dc.html": {
+      "h": 2410,
+      "is_interactive": true,
+      "title": "Equipos estrenando",
+      "w": 390,
+      "x": 5170,
+      "y": 0
+    },
+    "Ficha.dc.html": {
+      "h": 3350,
+      "is_interactive": true,
+      "title": "Ficha · Uniforme",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "Filtros.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Filtros",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 5000,
+      "is_interactive": true,
+      "title": "Inicio",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "Menu.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Menú",
+      "w": 390,
+      "x": 3290,
+      "y": 0
+    },
+    "Privacidad.dc.html": {
+      "h": 1810,
+      "is_interactive": true,
+      "title": "Aviso de privacidad",
+      "w": 390,
+      "x": 6110,
+      "y": 0
+    },
+    "Uniformes.dc.html": {
+      "h": 4430,
+      "is_interactive": true,
+      "title": "Uniformes a tu medida",
+      "w": 390,
+      "x": 4700,
+      "y": 0
+    },
+    "Visitanos.dc.html": {
+      "h": 2280,
+      "is_interactive": true,
+      "title": "Visítanos",
+      "w": 390,
+      "x": 5640,
+      "y": 0
+    },
+    "FichaSimple.dc.html": {
+      "h": 2490,
+      "is_interactive": true,
+      "title": "Ficha · Balón (sin personalizar)",
+      "w": 390,
+      "x": 6580,
+      "y": 0
+    },
+    "Agregado.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Ficha · Agregado a la cotización",
+      "w": 390,
+      "x": 7050,
+      "y": 0
+    },
+    "Personalizar.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Cotización · Editar personalización",
+      "w": 390,
+      "x": 7520,
+      "y": 0
+    },
+    "CotizacionDatosError.dc.html": {
+      "h": 1550,
+      "is_interactive": true,
+      "title": "Cotización · 2 Datos con errores",
+      "w": 390,
+      "x": 7990,
+      "y": 0
+    },
+    "CatalogoSinResultados.dc.html": {
+      "h": 1350,
+      "is_interactive": true,
+      "title": "Catálogo · sin resultados",
+      "w": 390,
+      "x": 8460,
+      "y": 0
+    },
+    "CatalogoCargando.dc.html": {
+      "h": 2200,
+      "is_interactive": true,
+      "title": "Catálogo · cargando",
+      "w": 390,
+      "x": 8930,
+      "y": 0
+    },
+    "CatalogoOrden.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Catálogo · ordenar",
+      "w": 390,
+      "x": 9400,
+      "y": 0
+    },
+    "BusquedaSinResultados.dc.html": {
+      "h": 1320,
+      "is_interactive": true,
+      "title": "Búsqueda · sin resultados",
+      "w": 390,
+      "x": 9870,
+      "y": 0
+    },
+    "NoEncontrada.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Página no encontrada",
+      "w": 390,
+      "x": 10340,
+      "y": 0
+    },
+    "MenuCategorias.dc.html": {
+      "h": 920,
+      "is_interactive": true,
+      "title": "Menú · Categorías",
+      "w": 390,
+      "x": 10810,
+      "y": 0
+    },
+    "D-FichaSimple.dc.html": {
+      "h": 2340,
+      "is_interactive": true,
+      "title": "Escritorio · Ficha · Balón",
+      "w": 1440,
+      "x": 18240,
+      "y": 5400
+    },
+    "D-Agregado.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Escritorio · Ficha · Agregado",
+      "w": 1440,
+      "x": 19760,
+      "y": 5400
+    },
+    "D-CotizacionLista.dc.html": {
+      "h": 1300,
+      "is_interactive": true,
+      "title": "Escritorio · Cotización · 1 Lista",
+      "w": 1440,
+      "x": 21280,
+      "y": 5400
+    },
+    "D-Personalizar.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Escritorio · Editar personalización",
+      "w": 1440,
+      "x": 22800,
+      "y": 5400
+    },
+    "D-CotizacionError.dc.html": {
+      "h": 1480,
+      "is_interactive": true,
+      "title": "Escritorio · Cotización con errores",
+      "w": 1440,
+      "x": 24320,
+      "y": 5400
+    },
+    "D-CatalogoSinResultados.dc.html": {
+      "h": 1700,
+      "is_interactive": true,
+      "title": "Escritorio · Catálogo sin resultados",
+      "w": 1440,
+      "x": 25840,
+      "y": 5400
+    },
+    "D-CatalogoCargando.dc.html": {
+      "h": 2510,
+      "is_interactive": true,
+      "title": "Escritorio · Catálogo cargando",
+      "w": 1440,
+      "x": 27360,
+      "y": 5400
+    },
+    "D-CatalogoOrden.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Escritorio · Catálogo · ordenar",
+      "w": 1440,
+      "x": 28880,
+      "y": 5400
+    },
+    "D-BusquedaSinResultados.dc.html": {
+      "h": 1440,
+      "is_interactive": true,
+      "title": "Escritorio · Búsqueda sin resultados",
+      "w": 1440,
+      "x": 30400,
+      "y": 5400
+    },
+    "D-NoEncontrada.dc.html": {
+      "h": 820,
+      "is_interactive": true,
+      "title": "Escritorio · Página no encontrada",
+      "w": 1440,
+      "x": 31920,
+      "y": 5400
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-09-29T22:01:02Z",
+    "v": 1
+  },
+  "designSystems": [
+    {
+      "artifact": "https://claude.ai/artifact/4ifFuFDAVzfqz3jxcsm1M4",
+      "copiedAt": "2026-09-29T22:01:02Z",
+      "namespace": "pyp",
+      "title": "P&P Deportes Coapa",
+      "version": "1790718372-282a"
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "escritorio": {
+      "kind": "title1",
+      "maxW": 6000,
+      "text": "Escritorio · 1440 px",
+      "w": 240,
+      "x": 0,
+      "y": 5100
+    },
+    "escritorioSecciones": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "Escritorio · menú, búsqueda y secciones",
+      "w": 240,
+      "x": 6080,
+      "y": 5100
+    },
+    "flujo": {
+      "kind": "title1",
+      "maxW": 3210,
+      "text": "Móvil · catálogo → cotización por WhatsApp",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "secciones": {
+      "kind": "title1",
+      "maxW": 3210,
+      "text": "Móvil · menú, búsqueda y secciones",
+      "w": 240,
+      "x": 3290,
+      "y": -300
+    },
+    "estados": {
+      "kind": "title1",
+      "maxW": 4620,
+      "text": "Móvil · variantes y estados",
+      "w": 240,
+      "x": 6580,
+      "y": -300
+    },
+    "escritorioEstados": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "Escritorio · variantes y estados",
+      "w": 240,
+      "x": 18240,
+      "y": 5100
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Catalogo.dc.html",
+    "Filtros.dc.html",
+    "Ficha.dc.html",
+    "Cotizacion.dc.html",
+    "CotizacionDatos.dc.html",
+    "Confirmacion.dc.html",
+    "D-Inicio.dc.html",
+    "D-Catalogo.dc.html",
+    "D-Ficha.dc.html",
+    "D-Cotizacion.dc.html",
+    "Menu.dc.html",
+    "Busqueda.dc.html",
+    "CotizacionVacia.dc.html",
+    "Uniformes.dc.html",
+    "Equipos.dc.html",
+    "Visitanos.dc.html",
+    "Privacidad.dc.html",
+    "D-Menu.dc.html",
+    "D-Busqueda.dc.html",
+    "D-CotizacionVacia.dc.html",
+    "D-Confirmacion.dc.html",
+    "D-Uniformes.dc.html",
+    "D-Equipos.dc.html",
+    "D-Visitanos.dc.html",
+    "D-Privacidad.dc.html",
+    "FichaSimple.dc.html",
+    "Agregado.dc.html",
+    "Personalizar.dc.html",
+    "CotizacionDatosError.dc.html",
+    "CatalogoSinResultados.dc.html",
+    "CatalogoCargando.dc.html",
+    "CatalogoOrden.dc.html",
+    "BusquedaSinResultados.dc.html",
+    "NoEncontrada.dc.html",
+    "MenuCategorias.dc.html",
+    "D-FichaSimple.dc.html",
+    "D-Agregado.dc.html",
+    "D-CotizacionLista.dc.html",
+    "D-Personalizar.dc.html",
+    "D-CotizacionError.dc.html",
+    "D-CatalogoSinResultados.dc.html",
+    "D-CatalogoCargando.dc.html",
+    "D-CatalogoOrden.dc.html",
+    "D-BusquedaSinResultados.dc.html",
+    "D-NoEncontrada.dc.html"
+  ],
+  "pages": [],
+  "title": "P&P Deportes — Pantallas"
+}
