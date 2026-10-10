@@ -72,6 +72,8 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T0.1 (monorepo pnpm: `apps/web`, `packages/shared`, `supabase/`, `workers/cron`; `pnpm build` genera `apps/web/out/`). Pendiente de T0.1: `test:db` no se probó en local por falta de Docker; `db:import` llega con T1.5.
 
+**Hecho:** T0.2 (Tailwind v4 con los tokens en `@theme`, fuentes Barlow con `next/font/local`, 13 estilos `type-*`, estilos base; hoja de muestra en `/dev/tokens`).
+
 
 | Fase | Objetivo | Tareas |
 |---|---|---|
@@ -84,7 +86,7 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 | 6 · Calidad | Pruebas de punta a punta, accesibilidad, rendimiento, respaldos | 5 |
 | 7 · Salida a producción | Datos reales, cambio de dominio (13 pasos) | — |
 
-**Siguiente paso:** tarea T0.2 (Tailwind v4 con tokens y fuentes). Las cuentas del apartado D se necesitan a partir de T0.6.
+**Siguiente paso:** tarea T0.3 (componentes de marca y página `/dev/marca`). Las cuentas del apartado D se necesitan a partir de T0.6.
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
