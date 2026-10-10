@@ -1,7 +1,7 @@
 # 00 · Estado del proyecto y pendientes
 
 > Índice de la documentación y lista de lo que falta. Se actualiza cada vez que cambia un documento o el diseño.
-> **Última actualización:** 1-oct-2026.
+> **Última actualización:** 9-oct-2026.
 
 ## 1. Qué es
 
@@ -68,7 +68,10 @@ Completa. Los seis documentos y `CLAUDE.md` están escritos. Se actualizan cuand
 - Google Analytics 4 y Search Console.
 
 ### E. Construcción
-Todo por hacer. El detalle está en `06-IMPLEMENTATION-PLAN.md`:
+En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
+
+**Hecho:** T0.1 (monorepo pnpm: `apps/web`, `packages/shared`, `supabase/`, `workers/cron`; `pnpm build` genera `apps/web/out/`). Pendiente de T0.1: `test:db` no se probó en local por falta de Docker; `db:import` llega con T1.5.
+
 
 | Fase | Objetivo | Tareas |
 |---|---|---|
@@ -81,7 +84,7 @@ Todo por hacer. El detalle está en `06-IMPLEMENTATION-PLAN.md`:
 | 6 · Calidad | Pruebas de punta a punta, accesibilidad, rendimiento, respaldos | 5 |
 | 7 · Salida a producción | Datos reales, cambio de dominio (13 pasos) | — |
 
-**Siguiente paso:** conseguir las cuentas del apartado D y arrancar la tarea T0.1.
+**Siguiente paso:** tarea T0.2 (Tailwind v4 con tokens y fuentes). Las cuentas del apartado D se necesitan a partir de T0.6.
 
 ## 5. Reglas vigentes que cambian cómo se construye
 

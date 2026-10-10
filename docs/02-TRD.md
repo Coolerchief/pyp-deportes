@@ -76,7 +76,7 @@ flowchart LR
 | Gestor de paquetes | pnpm | 10.x | |
 | Framework | Next.js (App Router) | 16.x | `output: 'export'`, `trailingSlash: false` |
 | UI | React | 19.x | |
-| Lenguaje | TypeScript | 5.x, `strict: true` | |
+| Lenguaje | TypeScript | 5.x, `strict: true` | Fijado en `~5.9` (TypeScript 7 aún no se adopta) |
 | Estilos | Tailwind CSS | 4.x | Tokens de marca en `@theme` (ver `03-UI-UX.md`) |
 | Componentes admin | shadcn/ui + Radix | última | Solo en `/admin`; el sitio público usa componentes propios de marca |
 | Tipografía | Barlow + Barlow Condensed | vía `next/font/google` (autoalojadas en build) | |
@@ -91,8 +91,9 @@ flowchart LR
 | Anti-spam | Cloudflare Turnstile | — | Modo "managed", invisible cuando se puede |
 | Hosting | Cloudflare Workers + static assets | Wrangler 4.x | `_redirects` y `_headers` soportados |
 | Analítica | Google Analytics 4 detrás de `track()` | — | Nombres de eventos de e-commerce estándar |
-| Pruebas | Vitest · Testing Library · Playwright · pgTAP (`supabase test db`) | última | |
-| Calidad | ESLint · Prettier · `tsc --noEmit` | | |
+| Pruebas | Vitest · Testing Library · Playwright · pgTAP (`supabase test db`) | última | Playwright sirve `apps/web/out` con `serve` |
+| Calidad | ESLint · Prettier · `tsc --noEmit` | ESLint 9 | Un solo `eslint.config.mjs` en la raíz con `eslint-config-next` y `eslint-config-prettier` |
+| Entorno local | `.venv` (Python) con `nodeenv` | — | Node 24 y pnpm aislados dentro del proyecto; ver `README.md` |
 | CI/CD | GitHub Actions | | Repo privado |
 
 ## 4. Planes gratuitos: límites y consumo esperado
