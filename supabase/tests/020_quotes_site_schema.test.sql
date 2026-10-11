@@ -3,6 +3,13 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
+-- Start from empty tables so fixtures never collide with pyp-dev's data; the rollback at the end
+-- puts everything back.
+truncate table public.products, public.brands, public.categories, public.sports, public.stores,
+  public.customers, public.quote_requests, public.gallery_items, public.site_media,
+  public.site_texts, public.settings, public.publish_runs, public.system_heartbeats,
+  public.folio_counters, public.staff_members cascade;
+
 select plan(14);
 
 select tables_are(

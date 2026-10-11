@@ -3,6 +3,13 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
+-- Start from empty tables so fixtures never collide with pyp-dev's data; the rollback at the end
+-- puts everything back.
+truncate table public.products, public.brands, public.categories, public.sports, public.stores,
+  public.customers, public.quote_requests, public.gallery_items, public.site_media,
+  public.site_texts, public.settings, public.publish_runs, public.system_heartbeats,
+  public.folio_counters, public.staff_members cascade;
+
 select plan(51);
 
 set constraints all immediate;
@@ -10,9 +17,9 @@ set constraints all immediate;
 -- Fixtures ------------------------------------------------------------------------------------
 
 insert into auth.users (id, email, aud, role)
-values ('00000000-0000-0000-0000-0000000000e1', 'editor@pyp.test', 'authenticated', 'authenticated'),
-       ('00000000-0000-0000-0000-0000000000e2', 'admin@pyp.test', 'authenticated', 'authenticated'),
-       ('00000000-0000-0000-0000-0000000000e3', 'nadie@pyp.test', 'authenticated', 'authenticated');
+values ('00000000-0000-0000-0000-0000000000e1', 'editor-040@tests.pyp.test', 'authenticated', 'authenticated'),
+       ('00000000-0000-0000-0000-0000000000e2', 'admin-040@tests.pyp.test', 'authenticated', 'authenticated'),
+       ('00000000-0000-0000-0000-0000000000e3', 'nadie-040@tests.pyp.test', 'authenticated', 'authenticated');
 insert into public.staff_members (user_id, role, full_name)
 values ('00000000-0000-0000-0000-0000000000e1', 'editor', 'Editora'),
        ('00000000-0000-0000-0000-0000000000e2', 'admin', 'Admin');
