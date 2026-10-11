@@ -1,0 +1,17 @@
+{
+  "cssWidth": 200,
+  "scale": 4,
+  "quality": 82,
+  "categories": [
+    { "slug": "uniformes", "name": "Uniformes" },
+    { "slug": "balones", "name": "Balones" },
+    { "slug": "ropa-deportiva", "name": "Ropa deportiva" },
+    { "slug": "material-entrenamiento", "name": "Material de entrenamiento" },
+    { "slug": "protecciones", "name": "Protecciones" },
+    { "slug": "box-y-combate", "name": "Box y combate" },
+    { "slug": "fitness-y-gimnasio", "name": "Fitness y gimnasio" },
+    { "slug": "natacion", "name": "Natación" },
+    { "slug": "accesorios", "name": "Accesorios y arbitraje" },
+    { "slug": "primeros-auxilios", "name": "Primeros auxilios" }
+  ]
+}

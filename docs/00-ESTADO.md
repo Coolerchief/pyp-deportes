@@ -1,7 +1,7 @@
 # 00 · Estado del proyecto y pendientes
 
 > Índice de la documentación y lista de lo que falta. Se actualiza cada vez que cambia un documento o el diseño.
-> **Última actualización:** 9-oct-2026.
+> **Última actualización:** 11-oct-2026.
 
 ## 1. Qué es
 
@@ -32,7 +32,7 @@ Catálogo web de P&P Deportes Coapa: sin precios, el cliente arma una lista con 
 | 22 pantallas de escritorio (1440 px) | ✅ |
 | Paquete exportado para VS Code (`design/`): HTML, PNG, tokens, fuentes, logos | ✅ |
 | Pantallas del panel de administración | ⬜ Falta |
-| Imágenes genéricas de las 10 categorías como archivos | ⬜ Falta (se generan en la fase 1) |
+| Imágenes genéricas de las 10 categorías como archivos | ✅ `apps/web/public/img/placeholder/` (T0.5) |
 | Página de marca, confirmación sin folio, header compacto, ficha con color y talla | ⬜ Opcional (se resuelven con los componentes existentes) |
 
 ## 4. Qué falta, en orden
@@ -92,7 +92,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T0.4 (componentes base en `apps/web/components/ui`: `Button`, `Badge`, `Chip`, `FormField`, `Sheet`, `EmptyState`, `Skeleton`, `SectionHeader`; hoja `/dev/componentes`; pruebas de teclado de `Sheet`). Badge `custom` en `noche` por contraste.
 
-**Siguiente paso:** tarea T0.5 (imágenes genéricas de categoría en WebP). Las cuentas del apartado D se necesitan a partir de T0.6.
+**Hecho:** T0.5 (10 imágenes genéricas WebP 800 × 1000 en `apps/web/public/img/placeholder/<slug>.webp`, generadas con `pnpm placeholders` desde `ImagenGenerica` vía la hoja `/dev/genericas`; la salida es idéntica byte a byte entre corridas; prueba que verifica los 10 archivos).
+
+**Siguiente paso:** tarea T0.6 (CI completo y despliegue a Cloudflare Workers). Las cuentas del apartado D se necesitan a partir de aquí.
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
