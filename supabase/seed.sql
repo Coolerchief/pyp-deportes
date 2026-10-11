@@ -1,0 +1,1 @@
+-- Seed data (settings, texts, media slots, store, taxonomy, dev admin). Written in T1.6.

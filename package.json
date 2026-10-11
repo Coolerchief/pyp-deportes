@@ -1,0 +1,40 @@
+{
+  "name": "pyp-deportes",
+  "private": true,
+  "packageManager": "pnpm@10.20.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @pyp/web dev",
+    "build": "pnpm --filter @pyp/web build",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "test": "pnpm -r test && node --test \"scripts/*.test.mjs\"",
+    "test:e2e": "pnpm --filter @pyp/web test:e2e",
+    "test:db": "node scripts/supabase-dev.mjs test",
+    "db:link": "node scripts/supabase-dev.mjs link",
+    "db:reset": "node scripts/supabase-dev.mjs reset",
+    "db:types": "node scripts/supabase-dev.mjs types",
+    "db:import": "node scripts/supabase-dev.mjs import"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "pg": "^8.23.1",
+    "prettier": "^3.9.9",
+    "supabase": "^2.120.0",
+    "typescript": "~5.9.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "supabase",
+      "unrs-resolver",
+      "workerd"
+    ]
+  }
+}

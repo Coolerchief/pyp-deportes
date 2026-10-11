@@ -54,7 +54,7 @@ Colores de marca (*M-14*) + variantes funcionales derivadas **solo** para cumpli
 
 ### 2.2 Tipografía
 
-Familias (*M-16*): **Barlow Condensed** (titulares, precios, números, etiquetas, botones) y **Barlow** (texto). Autoalojadas con `next/font/google`. Pesos a cargar: Barlow Condensed 600, 700 (normal) y 600, 800, 900 (itálica); Barlow 400, 500, 600.
+Familias (*M-16*): **Barlow Condensed** (titulares, precios, números, etiquetas, botones) y **Barlow** (texto). Autoalojadas con `next/font/local` desde `apps/web/app/fonts/` (`app/fonts.ts`). Pesos a cargar: Barlow Condensed 600, 700 (normal) y 600, 800, 900 (itálica); Barlow 400, 500, 600.
 
 | Estilo | Familia · peso | Móvil | ≥ 1024 px | Interlineado | Mayúsculas / tracking | Uso |
 |---|---|---|---|---|---|---|
@@ -65,7 +65,7 @@ Familias (*M-16*): **Barlow Condensed** (titulares, precios, números, etiquetas
 | `h4` | Condensed 700 | 18 px | 20 px | 1.1 | Sí · 0.02em | Subtítulos, nombre en tarjetas grandes |
 | `eyebrow` | Condensed 700 | 13 px | 13 px | 1.2 | Sí · 0.15em | Etiqueta sobre títulos (en `rojo-profundo`) |
 | `button` | Condensed 700 | 19 px | 19 px | 1 | Sí · 0.04em | Botones (≥ 19 px para cumplir AA grande sobre rojo) |
-| `number` | Condensed 900 itálica | 28 px | 36 px | 1 | — | Totales de piezas, folio, futuros precios |
+| `number` | Condensed 900 itálica | 28 px | 36 px | 1 | Sí · 0 | Totales de piezas, folio, futuros precios |
 | `body-lg` | Barlow 400 | 18 px | 18 px | 1.45 | No | Introducciones |
 | `body` | Barlow 400 | 16 px | 16 px | 1.45 | No | Texto general, formularios |
 | `body-strong` | Barlow 600 | 16 px | 16 px | 1.45 | No | Nombres de producto en tarjetas |
@@ -114,6 +114,15 @@ Cuadrícula de productos: 2 columnas en móvil · 3 en `sm` · 4 en `lg` (con fi
   --ease-brand: cubic-bezier(.2,.8,.2,1);
 }
 ```
+
+Implementado en `apps/web/app/globals.css`:
+
+- Colores con `@theme static` y `--color-*: initial`: la paleta por defecto de Tailwind no existe, solo los 13 tokens (`bg-rojo`, `text-noche`…).
+- Espaciado: la escala por defecto de Tailwind (base 4 px) ya coincide con `space-N` (`p-4` = 16 px, `gap-6` = 24 px).
+- Los 13 estilos de texto son utilidades `type-<estilo>` (`type-display`, `type-h1`… `type-caption`), con tamaño móvil y el de escritorio a partir de `lg`.
+- `container-page`: márgenes de 16/24/32 px y contenedor de 1216 px desde `xl` (§2.4).
+- Base: `body` con `type-body`, `bg-blanco` y `text-noche`; foco visible global (anillo `lima` de 3 px con contorno `noche`); `prefers-reduced-motion` anula animaciones.
+- `app/theme.test.ts` compara el tema con `design/tokens/tokens.json`. La hoja de muestra está en `/dev/tokens` (solo con `pnpm dev`).
 
 Solo tema claro en v1 (el header, footer y secciones oscuras usan `noche` como superficie, no un modo oscuro). Respaldo tipográfico según el manual: Arial Narrow para titulares y Arial para texto (*M-16*).
 

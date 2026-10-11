@@ -1,0 +1,191 @@
+@import 'tailwindcss';
+
+/* Brand tokens (UI/UX §2, design/tokens/tokens.css). Only these colors exist.
+   `static` keeps every token as a CSS variable for brand components that read them. */
+@theme static {
+  --color-*: initial;
+  --color-rojo: #e63323;
+  --color-rojo-profundo: #cf2c1e;
+  --color-noche: #0f1c2e;
+  --color-lima: #d4f53c;
+  --color-gis: #f5f3ee;
+  --color-blanco: #ffffff;
+  --color-grafito: #3b4454;
+  --color-grafito-suave: #5f6673;
+  --color-concreto: #9aa1ac;
+  --color-borde-control: #7e8592;
+  --color-linea: #e4e1d8;
+  --color-exito: #1f7a45;
+  --color-whatsapp: #25d366;
+
+  --radius-sm: 2px;
+
+  --shadow-card: 0 1px 2px rgb(15 28 46 / 0.08);
+  --shadow-float: 0 8px 24px rgb(15 28 46 / 0.18);
+
+  --ease-brand: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Font families point at the next/font variables set on <html>; app/fonts.ts adds the
+   manual's fallbacks (Arial Narrow for headlines, Arial for text). */
+@theme inline {
+  --font-display: var(--font-barlow-condensed);
+  --font-sans: var(--font-barlow);
+}
+
+:root {
+  --angle-brand: 13deg;
+  --tan13: 0.2309;
+}
+
+/* Type scale: 13 styles, mobile size first and desktop size from lg (1024 px). */
+@utility type-display {
+  font-family: var(--font-display);
+  font-size: 48px;
+  line-height: 0.9;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  @variant lg {
+    font-size: 80px;
+  }
+}
+@utility type-h1 {
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 0.95;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  @variant lg {
+    font-size: 56px;
+  }
+}
+@utility type-h2 {
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  @variant lg {
+    font-size: 40px;
+  }
+}
+@utility type-h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.05;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  @variant lg {
+    font-size: 26px;
+  }
+}
+@utility type-h4 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  @variant lg {
+    font-size: 20px;
+  }
+}
+@utility type-eyebrow {
+  font-family: var(--font-display);
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+@utility type-button {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+@utility type-number {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  @variant lg {
+    font-size: 36px;
+  }
+}
+@utility type-body-lg {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.45;
+  font-weight: 400;
+}
+@utility type-body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.45;
+  font-weight: 400;
+}
+@utility type-body-strong {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.45;
+  font-weight: 600;
+}
+@utility type-small {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+@utility type-caption {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 500;
+}
+
+/* Page container (UI/UX §2.4): 16 / 24 / 32 px side margins, 1216 px content from xl. */
+@utility container-page {
+  width: 100%;
+  max-width: calc(1216px + 2 * 32px);
+  margin-inline: auto;
+  padding-inline: 16px;
+  @variant sm {
+    padding-inline: 24px;
+  }
+  @variant lg {
+    padding-inline: 32px;
+  }
+}
+
+@layer base {
+  body {
+    @apply type-body bg-blanco text-noche antialiased;
+  }
+
+  /* Visible focus on every interactive element: lima ring with a noche outline. */
+  :focus-visible {
+    outline: 3px solid var(--color-lima);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px var(--color-noche);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

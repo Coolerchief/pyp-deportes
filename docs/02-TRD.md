@@ -76,10 +76,11 @@ flowchart LR
 | Gestor de paquetes | pnpm | 10.x | |
 | Framework | Next.js (App Router) | 16.x | `output: 'export'`, `trailingSlash: false` |
 | UI | React | 19.x | |
-| Lenguaje | TypeScript | 5.x, `strict: true` | |
+| Lenguaje | TypeScript | 5.x, `strict: true` | Fijado en `~5.9` (TypeScript 7 aún no se adopta) |
 | Estilos | Tailwind CSS | 4.x | Tokens de marca en `@theme` (ver `03-UI-UX.md`) |
 | Componentes admin | shadcn/ui + Radix | última | Solo en `/admin`; el sitio público usa componentes propios de marca |
-| Tipografía | Barlow + Barlow Condensed | vía `next/font/google` (autoalojadas en build) | |
+| Tipografía | Barlow + Barlow Condensed | vía `next/font/local` (autoalojadas) | Los 8 `woff2` del paquete de diseño (licencia OFL) copiados a `apps/web/app/fonts/`: solo las caras que usa la escala, sin descargar de Google en el build |
+| Estilos (build) | `@tailwindcss/postcss` | 4.x | Plugin de PostCSS de Tailwind v4 |
 | Estado del cliente | Zustand + `persist` | 5.x | Lista de cotización y datos del solicitante |
 | Formularios | React Hook Form + Zod | última | Esquemas Zod compartidos con Edge Functions |
 | Búsqueda | MiniSearch | 7.x | Índice construido en el navegador desde `catalog.json`; `autoSuggest` para "¿Quisiste decir…?" |
@@ -91,8 +92,10 @@ flowchart LR
 | Anti-spam | Cloudflare Turnstile | — | Modo "managed", invisible cuando se puede |
 | Hosting | Cloudflare Workers + static assets | Wrangler 4.x | `_redirects` y `_headers` soportados |
 | Analítica | Google Analytics 4 detrás de `track()` | — | Nombres de eventos de e-commerce estándar |
-| Pruebas | Vitest · Testing Library · Playwright · pgTAP (`supabase test db`) | última | |
-| Calidad | ESLint · Prettier · `tsc --noEmit` | | |
+| Pruebas | Vitest · Testing Library · Playwright · pgTAP (`supabase test db`) | última | Playwright sirve `apps/web/out` con `serve` |
+| Calidad | ESLint · Prettier · `tsc --noEmit` | ESLint 9 | Un solo `eslint.config.mjs` en la raíz con `eslint-config-next` y `eslint-config-prettier` |
+| Pruebas de BD sin Docker | `pg` (node-postgres) | 8.x | Solo desarrollo: `scripts/pgtap.mjs` ejecuta los archivos pgTAP contra pyp-dev porque `supabase test db --linked` necesita Docker |
+| Entorno local | `.venv` (Python) con `nodeenv` | — | Node 24 y pnpm aislados dentro del proyecto; ver `README.md` |
 | CI/CD | GitHub Actions | | Repo privado |
 
 ## 4. Planes gratuitos: límites y consumo esperado
@@ -349,7 +352,7 @@ sequenceDiagram
 
 - `deploy.yml`: `on: workflow_dispatch` y `push` a `main`. `concurrency: { group: deploy-prod, cancel-in-progress: true }`.
 - `ci.yml` en cada PR: lint, typecheck, Vitest, build, Playwright contra el build estático (`npx serve out`) y `supabase test db` con la BD local de la CLI.
-- **Entornos:** `local` (Supabase CLI + `next dev`) y `production`. Un proyecto Supabase de *staging* es opcional (el Free permite 2 proyectos).
+- **Entornos:** `local` (`next dev` contra el proyecto remoto **pyp-dev**; sin Docker no hay Supabase local) y `production`. El plan Free permite 2 proyectos: pyp-dev y producción. Detalle en `06-IMPLEMENTATION-PLAN.md`, fase 1, "Modo sin Docker".
 - El build **falla** si `settings.whatsapp_sales_number` es el placeholder y `SITE_ENV=production` (evita publicar el número de ejemplo; PRD §11), y **avisa** (sin fallar) de cada texto que siga entre corchetes (`[PEDIDO MÍNIMO]`, `[HISTORIA DE LA TIENDA]`…).
 
 ## 11. SEO técnico
@@ -401,6 +404,11 @@ sequenceDiagram
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | cliente | — |
 | `NEXT_PUBLIC_GA_ID` | cliente | opcional |
 | `SITE_ENV` | build | `local` · `production` |
+| `SUPABASE_DEV_PROJECT_REF` | scripts `db:*` (solo desarrollo) | referencia de pyp-dev |
+| `SUPABASE_PROD_PROJECT_REF` | scripts `db:*` (solo para bloquearlo) | referencia de producción |
+| `SUPABASE_DB_PASSWORD` | scripts `db:reset`, `test:db` (solo desarrollo) | contraseña de Postgres de pyp-dev |
+
+En desarrollo, todas viven en `.env.local` de la raíz (plantilla `.env.example`); `next.config.ts` lo carga y las variables reales del entorno (CI, despliegue) tienen prioridad.
 
 Todo lo que el negocio pueda cambiar (WhatsApp, horario, textos de portada, flags) vive en la tabla `settings` y `stores`, **no** en variables de entorno.
 
