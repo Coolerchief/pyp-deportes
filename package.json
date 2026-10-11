@@ -11,11 +11,13 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --parallel typecheck",
-    "test": "pnpm -r test",
+    "test": "pnpm -r test && node --test \"scripts/*.test.mjs\"",
     "test:e2e": "pnpm --filter @pyp/web test:e2e",
-    "test:db": "supabase test db",
-    "db:reset": "supabase db reset",
-    "db:types": "supabase gen types typescript --local > packages/shared/database.types.ts"
+    "test:db": "node scripts/supabase-dev.mjs test",
+    "db:link": "node scripts/supabase-dev.mjs link",
+    "db:reset": "node scripts/supabase-dev.mjs reset",
+    "db:types": "node scripts/supabase-dev.mjs types",
+    "db:import": "node scripts/supabase-dev.mjs import"
   },
   "devDependencies": {
     "eslint": "^9.39.5",

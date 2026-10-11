@@ -33,7 +33,7 @@ Tamaño: **S** (una sesión corta) · **M** (una sesión completa) · **L** (con
 | # | Qué | Para qué |
 |---|---|---|
 | P1 | Repositorio privado en GitHub | Código y despliegue |
-| P2 | Proyecto de Supabase (plan Free, región más cercana a México) | Base de datos, acceso y funciones |
+| P2 | Dos proyectos de Supabase (plan Free, región más cercana a México): **pyp-dev** para desarrollo y el de producción | Base de datos, acceso y funciones (ver "Modo sin Docker" en la fase 1) |
 | P3 | Cuenta de Cloudflare con Workers, R2 (buckets `pyp-media` y `pyp-backups`) y un sitio de Turnstile | Hospedaje, fotos, anti-spam |
 | P4 | Acceso al DNS de `pypdeportescoapa.com` y copia de todos sus registros (sobre todo los de correo) | Cambio de dominio en la fase 7 |
 | P5 | Propiedad de Google Analytics 4 y acceso a Search Console | Analítica y SEO |
@@ -79,6 +79,22 @@ Las fases 2–3 y la 4 pueden avanzar en paralelo una vez terminada la 1.
 ### Fase 1 · Datos
 
 **Objetivo:** base de datos completa, segura y con el catálogo inicial cargado.
+
+#### Modo sin Docker
+
+La máquina de desarrollo no tiene Docker, así que no hay Supabase local. Se trabaja así:
+
+| Qué | Cómo |
+|---|---|
+| Base de desarrollo | Proyecto remoto **pyp-dev** (Supabase Free). Es desechable: `pnpm db:reset` borra sus datos y reaplica migraciones y semilla |
+| Producción | Otro proyecto. **Nunca** se enlaza desde una máquina de desarrollo; se actualiza desde GitHub Actions (T1.8 y fase 7) |
+| Configuración | `.env.local` en la raíz (plantilla `.env.example`): `SUPABASE_DEV_PROJECT_REF`, `SUPABASE_PROD_PROJECT_REF` (solo para bloquearlo), `SUPABASE_DB_PASSWORD` y las variables `NEXT_PUBLIC_*` de pyp-dev. Lo leen los scripts y `next.config.ts` |
+| Candado | `scripts/supabase-dev.mjs` corre todos los comandos `db:*` y `test:db` con `--linked` y aborta si el proyecto enlazado (`supabase/.temp/project-ref`) no es `SUPABASE_DEV_PROJECT_REF` o es el de producción |
+| Enlace | `supabase login` una vez por máquina y luego `pnpm db:link`, que solo enlaza la referencia de pyp-dev |
+| Comandos | `pnpm db:reset` → `supabase db reset --linked` · `pnpm db:types` → `supabase gen types --linked` · `pnpm test:db` → `supabase test db --linked` · `pnpm db:import <csv>` → importador de T1.5 contra pyp-dev |
+| CI | Trabajo `db` de `.github/workflows/ci.yml`: `supabase db start` + `supabase test db` en un Postgres desechable del runner, con las migraciones y la semilla del commit. No usa secretos ni toca pyp-dev |
+
+En esta fase, "`supabase db reset` corre sin errores" significa `pnpm db:reset` sobre pyp-dev **y** el trabajo `db` de CI en verde. El admin de desarrollo de la semilla (`admin@pyp.test`) también existe en pyp-dev.
 
 | Tarea | Qué se hace | Leer | Hecho cuando | Tam. |
 |---|---|---|---|---|

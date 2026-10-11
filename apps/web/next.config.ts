@@ -1,4 +1,11 @@
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import type { NextConfig } from 'next';
+
+// One env file at the repo root (.env.local, pointing at pyp-dev) serves the db scripts and the
+// site. Real environment variables (CI, deploy) win because loadEnvFile never overrides them.
+const rootEnvFile = resolve(process.cwd(), '../../.env.local');
+if (existsSync(rootEnvFile)) process.loadEnvFile(rootEnvFile);
 
 const isDev = process.env.NODE_ENV === 'development';
 

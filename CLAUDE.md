@@ -26,17 +26,20 @@ No agregues dependencias sin anotarlas en `docs/02-TRD.md` §3.
 ## Comandos
 
 ```bash
-pnpm dev            # sitio en http://localhost:3000 (requiere `supabase start`)
+pnpm dev            # sitio en http://localhost:3000 (datos de pyp-dev vía .env.local)
 pnpm build          # genera apps/web/out, catalog.json y _redirects
 pnpm lint
 pnpm typecheck
-pnpm test           # Vitest
+pnpm test           # Vitest + pruebas de scripts/
 pnpm test:e2e       # Playwright contra el build estático
-pnpm test:db        # pgTAP (supabase test db)
-pnpm db:reset       # migraciones + semilla en local
-pnpm db:types       # regenera packages/shared/database.types.ts
-pnpm db:import docs/data/catalogo-inicial.csv
+pnpm db:link        # enlaza la CLI con pyp-dev (solo pyp-dev)
+pnpm test:db        # pgTAP contra pyp-dev (--linked)
+pnpm db:reset       # migraciones + semilla en pyp-dev (borra sus datos)
+pnpm db:types       # regenera packages/shared/database.types.ts desde pyp-dev
+pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev (T1.5)
 ```
+
+**Modo sin Docker.** No hay base de datos local: los comandos `db:*` y `test:db` usan el proyecto remoto de desarrollo **pyp-dev** con `--linked`, a través de `scripts/supabase-dev.mjs`, que aborta si el proyecto enlazado no es `SUPABASE_DEV_PROJECT_REF`. La configuración vive en `.env.local` de la raíz (plantilla: `.env.example`). En GitHub Actions, el trabajo `db` corre pgTAP contra un Postgres desechable del runner. Detalle: `docs/06-IMPLEMENTATION-PLAN.md`, fase 1.
 
 Antes de dar una tarea por terminada: `pnpm lint && pnpm typecheck && pnpm test`.
 
@@ -60,9 +63,10 @@ design/              Referencia visual exportada de Claude Design (no es código
 5. **Un fallo técnico nunca impide enviar la lista por WhatsApp.** Si guardar falla, se abre WhatsApp sin folio.
 6. **Móvil manda.** Se implementa primero la vista de 390 px; la de escritorio es la misma acomodada a lo ancho.
 7. **La llave `service_role` nunca llega al navegador ni al build público.**
-8. **Cambios de esquema solo con migraciones nuevas.** Después: `pnpm db:types` y prueba pgTAP si se toca seguridad. No edites migraciones ya aplicadas.
-9. **Reglas de negocio compartidas en `packages/shared`**, con pruebas.
-10. **Todo producto tiene al menos una variante;** la lista de cotización siempre guarda `variantId`.
+8. **Nunca se enlaza el proyecto de producción** desde una máquina de desarrollo ni con `supabase link`. Solo pyp-dev, y siempre con `pnpm db:link`.
+9. **Cambios de esquema solo con migraciones nuevas.** Después: `pnpm db:types` y prueba pgTAP si se toca seguridad. No edites migraciones ya aplicadas.
+10. **Reglas de negocio compartidas en `packages/shared`**, con pruebas.
+11. **Todo producto tiene al menos una variante;** la lista de cotización siempre guarda `variantId`.
 
 ## Convenciones de código
 

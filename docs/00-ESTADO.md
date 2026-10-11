@@ -86,6 +86,8 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 | 6 · Calidad | Pruebas de punta a punta, accesibilidad, rendimiento, respaldos | 5 |
 | 7 · Salida a producción | Datos reales, cambio de dominio (13 pasos) | — |
 
+**Hecho:** modo sin Docker (scripts `db:*` contra pyp-dev con candado, `.env.local`, trabajo `db` de CI con pgTAP). Falta que una persona haga `supabase login` y `pnpm db:link`.
+
 **Siguiente paso:** tarea T0.3 (componentes de marca y página `/dev/marca`). Las cuentas del apartado D se necesitan a partir de T0.6.
 
 ## 5. Reglas vigentes que cambian cómo se construye
