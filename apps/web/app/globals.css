@@ -26,6 +26,29 @@
   --ease-brand: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+/* Sheet motion (UI/UX §2.3): 250 ms with the brand curve; reduced motion cancels it below. */
+@theme {
+  --animate-sheet-up: sheet-up 250ms var(--ease-brand);
+  --animate-sheet-side: sheet-side 250ms var(--ease-brand);
+  --animate-fade-in: fade-in 250ms var(--ease-brand);
+
+  @keyframes sheet-up {
+    from {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes sheet-side {
+    from {
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
 /* Font families point at the next/font variables set on <html>; app/fonts.ts adds the
    manual's fallbacks (Arial Narrow for headlines, Arial for text). */
 @theme inline {
@@ -150,6 +173,32 @@
   font-size: 12px;
   line-height: 1.35;
   font-weight: 500;
+}
+
+/* Component text styles outside the 13-style scale, taken from design/tokens/components.css. */
+@utility type-badge {
+  font-family: var(--font-display);
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+@utility type-chip {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 500;
+}
+
+/* Focus ring for plate-shaped controls: clip-path cuts the control's own outline, so the
+   wrapper draws it when the control inside has keyboard focus. */
+@utility focus-placa {
+  &:has(:focus-visible) {
+    outline: 3px solid var(--color-lima);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px var(--color-noche);
+  }
 }
 
 /* Placa (UI/UX §4): parallelogram at 13°; --placa-o = height × 0.2309 (components/brand/Placa). */

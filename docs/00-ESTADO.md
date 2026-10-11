@@ -90,7 +90,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T0.3 (componentes de marca en `apps/web/components/brand`: `Logo`, `Placa`, `DobleDiagonal`, `PatronCancha`, `CorteA13`, `ImagenGenerica`; hoja `/dev/marca`; pruebas de render). CorteA13 en móvil va a ≈7° como el diseño (decidido el 10-oct-2026).
 
-**Siguiente paso:** tarea T0.4 (componentes base). Las cuentas del apartado D se necesitan a partir de T0.6.
+**Hecho:** T0.4 (componentes base en `apps/web/components/ui`: `Button`, `Badge`, `Chip`, `FormField`, `Sheet`, `EmptyState`, `Skeleton`, `SectionHeader`; hoja `/dev/componentes`; pruebas de teclado de `Sheet`). Badge `custom` en `noche` por contraste.
+
+**Siguiente paso:** tarea T0.5 (imágenes genéricas de categoría en WebP). Las cuentas del apartado D se necesitan a partir de T0.6.
 
 ## 5. Reglas vigentes que cambian cómo se construye
 

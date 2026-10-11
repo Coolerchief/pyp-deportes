@@ -122,8 +122,9 @@ Implementado en `apps/web/app/globals.css`:
 - Los 13 estilos de texto son utilidades `type-<estilo>` (`type-display`, `type-h1`… `type-caption`), con tamaño móvil y el de escritorio a partir de `lg`.
 - `container-page`: márgenes de 16/24/32 px y contenedor de 1216 px desde `xl` (§2.4).
 - Base: `body` con `type-body`, `bg-blanco` y `text-noche`; foco visible global (anillo `lima` de 3 px con contorno `noche`); `prefers-reduced-motion` anula animaciones.
+- Utilidades de componentes: `type-badge` (Condensed 700, 12 px, 0.12em) y `type-chip` (Barlow 500, 14 px), tomadas de `design/tokens/components.css`; `focus-placa` dibuja el anillo de foco en el contenedor de los controles con forma de placa, porque el `clip-path` recorta el `outline`.
 - Utilidades de marca: `placa` (recorte a 13° con `--placa-o`) y `cancha` (franjas del PatrónCancha; se combina con `bg-noche` o `bg-rojo`). Se usan a través de `components/brand`.
-- `app/theme.test.ts` compara el tema con `design/tokens/tokens.json`. Las hojas de muestra están en `/dev/tokens` y `/dev/marca` (solo con `pnpm dev`).
+- `app/theme.test.ts` compara el tema con `design/tokens/tokens.json`. Las hojas de muestra están en `/dev/tokens`, `/dev/marca` y `/dev/componentes` (solo con `pnpm dev`).
 
 Solo tema claro en v1 (el header, footer y secciones oscuras usan `noche` como superficie, no un modo oscuro). Respaldo tipográfico según el manual: Arial Narrow para titulares y Arial para texto (*M-16*).
 
@@ -197,7 +198,7 @@ Cada componente lista **anatomía → variantes → estados → reglas**. Nombre
 | Variante | Fondo / texto | Uso |
 |---|---|---|
 | `new` | lima / noche | "NUEVO" (máx. 1 por tarjeta) |
-| `custom` | rojo / blanco (texto 12 px bold: solo decorativo; el mismo dato está en texto accesible en la ficha) | "PERSONALIZABLE" |
+| `custom` | noche / blanco. El diseño la pone en rojo con texto blanco de 12 px, pero eso no cumple el contraste de §2.1; se decidió `noche` (10-oct-2026). Queda igual que `info`: la distingue el texto | "PERSONALIZABLE" |
 | `info` | noche / blanco | "ENVÍO A ACORDAR", "POR VOLUMEN" |
 
 En las pantallas los badges miden 22 px de alto con texto de 11 px; en código se usa el componente del sistema (24 px / 12 px).
