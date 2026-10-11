@@ -82,7 +82,7 @@ flowchart LR
 | Tipografía | Barlow + Barlow Condensed | vía `next/font/local` (autoalojadas) | Los 8 `woff2` del paquete de diseño (licencia OFL) copiados a `apps/web/app/fonts/`: solo las caras que usa la escala, sin descargar de Google en el build |
 | Estilos (build) | `@tailwindcss/postcss` | 4.x | Plugin de PostCSS de Tailwind v4 |
 | Estado del cliente | Zustand + `persist` | 5.x | Lista de cotización y datos del solicitante |
-| Formularios | React Hook Form + Zod | última | Esquemas Zod compartidos con Edge Functions |
+| Formularios | React Hook Form + Zod | Zod 4.x | Esquemas Zod compartidos con Edge Functions; Zod es dependencia de `packages/shared` |
 | Búsqueda | MiniSearch | 7.x | Índice construido en el navegador desde `catalog.json`; `autoSuggest` para "¿Quisiste decir…?" |
 | Íconos | lucide-react · simple-icons (solo el glifo de WhatsApp) | última | Trazo 2 px, 20/24 px (`03-UI-UX.md` §5) |
 | CSV/Excel | Papa Parse · SheetJS (`xlsx`) | última | Importador del admin |
@@ -307,7 +307,8 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 - Esquema completo de comercio desde v1 (detalle en `05-BACKEND-SCHEMA.md`).
 - **Migraciones SQL versionadas** en `supabase/migrations`; nada se cambia a mano en el dashboard.
 - **RLS activado en todas las tablas.** Lectura pública solo de contenido publicado; escritura solo de personal; `quote_requests` y `customers` sin acceso anónimo directo.
-- Tipos TS generados con `supabase gen types typescript` → `packages/shared/database.types.ts`.
+- Tipos TS generados con `supabase gen types typescript` → `packages/shared/database.types.ts` (se exportan como `Database` y `Json` desde `@pyp/shared`).
+- **`packages/shared` (T1.7)**: `QuoteRequesterSchema` y `QuoteSubmissionSchema` (con `createQuote…Schema({ now })` para fijar el reloj en pruebas), `quoteErrorSummary` (texto del resumen de errores), `ImportRowSchema` e `ImportResultSchema`, `CatalogJsonSchema`, folio (`formatFolio`, `parseFolio`, `isFolio`), fechas de CDMX (`mexicoCityDate`, `mexicoCityYear`), texto (`normalizeText`, `slugify`, `variantSku`, `variantLabel`, idénticos a sus funciones SQL) y los valores y etiquetas de los enums. El código se revisa sin tipos de Node ni DOM (`tsconfig.json`) para que corra en Deno; las pruebas, con Node (`tsconfig.test.json`). Los imports internos no llevan extensión: las Edge Functions lo importarán con el bundler de Supabase o un mapa de imports (T3).
 
 ### 9.2 Edge Functions
 
