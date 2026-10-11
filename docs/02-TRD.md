@@ -91,7 +91,7 @@ flowchart LR
 | Backend | Supabase (Postgres 15+, Auth, Edge Functions en Deno) | CLI última | Migraciones en `supabase/migrations` |
 | Almacenamiento | Cloudflare R2 (API S3) | — | Firma con `aws4fetch` en la Edge Function |
 | Anti-spam | Cloudflare Turnstile | — | Modo "managed", invisible cuando se puede |
-| Hosting | Cloudflare Workers + static assets | Wrangler 4.x | `_redirects` y `_headers` soportados |
+| Hosting | Cloudflare Workers + static assets | Wrangler 4.x | `_redirects` y `_headers` soportados; `wrangler` es dependencia de desarrollo de `apps/web` y de `workers/cron` |
 | Analítica | Google Analytics 4 detrás de `track()` | — | Nombres de eventos de e-commerce estándar |
 | Pruebas | Vitest · Testing Library · Playwright · pgTAP (`supabase test db`) | última | Playwright sirve `apps/web/out` con `serve`; las pruebas de componentes usan `jsdom`, `@testing-library/jest-dom`, `@testing-library/user-event` y `@vitejs/plugin-react` |
 | Calidad | ESLint · Prettier · `tsc --noEmit` | ESLint 9 | Un solo `eslint.config.mjs` en la raíz con `eslint-config-next` y `eslint-config-prettier` |
@@ -351,8 +351,9 @@ sequenceDiagram
   A->>D: consulta publish_runs (estado visible en el admin)
 ```
 
-- `deploy.yml`: `on: workflow_dispatch` y `push` a `main`. `concurrency: { group: deploy-prod, cancel-in-progress: true }`.
-- `ci.yml` en cada PR: lint, typecheck, Vitest, build, Playwright contra el build estático (`npx serve out`) y `supabase test db` con la BD local de la CLI.
+- `deploy.yml`: `on: workflow_dispatch` y `push` a `main`. `concurrency: { group: deploy-prod, cancel-in-progress: true }`. Corre `pnpm build` y `wrangler deploy` desde `apps/web` con los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` del repositorio; publica en el entorno `production` de GitHub con la URL de `workers.dev`.
+- `apps/web/wrangler.jsonc`: Worker `pyp-deportes` solo de *static assets* (sin código de servidor) que sirve `apps/web/out`; `html_handling: drop-trailing-slash` (coincide con `trailingSlash: false`) y `not_found_handling: 404-page` (sirve `404.html`). `_headers` vive en `apps/web/public/`.
+- `ci.yml` en cada PR y en cada push a `main` y `develop`, con dos trabajos: `web` (lint, typecheck, Vitest, build y Playwright contra el build estático con `serve out`) y `db` (`supabase db start` + `supabase test db` en un Postgres desechable del runner). Lighthouse CI (§14) se agrega cuando existan las páginas públicas.
 - **Entornos:** `local` (`next dev` contra el proyecto remoto **pyp-dev**; sin Docker no hay Supabase local) y `production`. El plan Free permite 2 proyectos: pyp-dev y producción. Detalle en `06-IMPLEMENTATION-PLAN.md`, fase 1, "Modo sin Docker".
 - El build **falla** si `settings.whatsapp_sales_number` es el placeholder y `SITE_ENV=production` (evita publicar el número de ejemplo; PRD §11), y **avisa** (sin fallar) de cada texto que siga entre corchetes (`[PEDIDO MÍNIMO]`, `[HISTORIA DE LA TIENDA]`…).
 

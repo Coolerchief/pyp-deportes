@@ -63,7 +63,7 @@ Completa. Los seis documentos y `CLAUDE.md` están escritos. Se actualizan cuand
 ### D. Cuentas y accesos (para la fase 0 del plan)
 - Repositorio de GitHub (privado).
 - Proyecto de Supabase (plan Free).
-- Cuenta de Cloudflare: Workers, R2, Turnstile.
+- Cuenta de Cloudflare: Workers, R2, Turnstile. ✅ Cuenta y token de Workers en los secretos de GitHub (11-oct-2026); R2 y Turnstile se configuran más adelante.
 - Acceso al DNS de `pypdeportescoapa.com` (hoy en el hosting de WordPress) y copia de sus registros, sobre todo los de correo.
 - Google Analytics 4 y Search Console.
 
@@ -94,7 +94,7 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T0.5 (10 imágenes genéricas WebP 800 × 1000 en `apps/web/public/img/placeholder/<slug>.webp`, generadas con `pnpm placeholders` desde `ImagenGenerica` vía la hoja `/dev/genericas`; la salida es idéntica byte a byte entre corridas; prueba que verifica los 10 archivos).
 
-**Siguiente paso:** tarea T0.6 (CI completo y despliegue a Cloudflare Workers). Las cuentas del apartado D se necesitan a partir de aquí.
+**En curso:** T0.6. Listo: `ci.yml` con los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP); `deploy.yml` (push a `main` o manual → `wrangler deploy`); `apps/web/wrangler.jsonc` (Worker `pyp-deportes`, solo *static assets*); `_headers` con caché inmutable de `/_next/static/*`. Secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` cargados en GitHub (11-oct-2026). Falta: primer push a `main` que publique en `workers.dev`.
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
