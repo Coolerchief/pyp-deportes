@@ -88,7 +88,7 @@ La máquina de desarrollo no tiene Docker, así que no hay Supabase local. Se tr
 |---|---|
 | Base de desarrollo | Proyecto remoto **pyp-dev** (Supabase Free). Es desechable: `pnpm db:reset` borra sus datos y reaplica migraciones y semilla |
 | Producción | Otro proyecto. **Nunca** se enlaza desde una máquina de desarrollo; se actualiza desde GitHub Actions (T1.8 y fase 7) |
-| Configuración | `.env.local` en la raíz (plantilla `.env.example`): `SUPABASE_DEV_PROJECT_REF`, `SUPABASE_PROD_PROJECT_REF` (solo para bloquearlo), `SUPABASE_DB_PASSWORD` y las variables `NEXT_PUBLIC_*` de pyp-dev. Lo leen los scripts y `next.config.ts` |
+| Configuración | `.env.local` en la raíz (plantilla `.env.example`): `SUPABASE_DEV_PROJECT_REF`, `SUPABASE_PROD_PROJECT_REF` (solo para bloquearlo), `SUPABASE_DB_PASSWORD`, `SUPABASE_DEV_ADMIN_PASSWORD` (contraseña del admin de desarrollo) y las variables `NEXT_PUBLIC_*` de pyp-dev. Lo leen los scripts y `next.config.ts` |
 | Candado | `scripts/supabase-dev.mjs` corre todos los comandos `db:*` y `test:db` con `--linked` y aborta si el proyecto enlazado (`supabase/.temp/project-ref`) no es `SUPABASE_DEV_PROJECT_REF` o es el de producción |
 | Enlace | `supabase login` una vez por máquina y luego `pnpm db:link`, que solo enlaza la referencia de pyp-dev |
 | Comandos | `pnpm db:reset` → `supabase db reset --linked` · `pnpm db:types` → `supabase gen types --linked` · `pnpm test:db` → `scripts/pgtap.mjs` (ver abajo) · `pnpm db:import <csv>` → importador de T1.5 contra pyp-dev |

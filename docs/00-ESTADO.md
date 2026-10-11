@@ -108,7 +108,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T1.5 (`admin_import_products` y `scripts/import-catalog.mjs`). En pyp-dev (11-oct-2026), `pnpm db:import docs/data/catalogo-inicial.csv` dejó 56 productos y 313 variantes (tallas × colores); la segunda corrida actualizó los 56 sin duplicar nada. 17 pruebas pgTAP del importador. Las pruebas pgTAP ahora vacían las tablas al empezar (`truncate … cascade` dentro de su transacción) para no chocar con los datos de pyp-dev. Hasta T1.6 las categorías creadas por el importador usan `Talla` como nombre de la opción 1.
 
-**Siguiente paso:** tarea T1.6 (datos semilla).
+**Hecho:** T1.6 (`supabase/seed.sql`: 6 ajustes, 4 textos con los textos de las pantallas y sus corchetes pendientes, 8 espacios de foto, tienda Coapa, 7 deportes, 10 categorías y 34 subcategorías con su `size_label`, 15 marcas y el admin de desarrollo `admin@pyp.test` sin contraseña en el repo). `pnpm db:setup` deja pyp-dev listo con un comando; aplicado el 11-oct-2026: 56 productos importados sobre la taxonomía de la semilla, sin crear categorías ni marcas extra. 14 pruebas pgTAP de la semilla. **Pendiente del usuario:** definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:reset` (o `db:setup`) para poder entrar como admin.
+
+**Siguiente paso:** tarea T1.7 (tipos generados y esquemas Zod compartidos).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 

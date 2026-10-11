@@ -24,7 +24,7 @@ pnpm install
 pnpm exec playwright install chromium               # desde apps/web, solo para pruebas E2E
 ```
 
-Después de activar el entorno: `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:e2e` y `pnpm placeholders` (regenera las imágenes genéricas de categoría). Base de datos (sin Docker, contra el proyecto remoto pyp-dev): copia `.env.example` a `.env.local`, llénalo, corre `node_modules\.bin\supabase login` una vez y luego `pnpm db:link`. Después: `pnpm db:reset`, `pnpm db:types`, `pnpm test:db`. Nunca enlaces el proyecto de producción.
+Después de activar el entorno: `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:e2e` y `pnpm placeholders` (regenera las imágenes genéricas de categoría). Base de datos (sin Docker, contra el proyecto remoto pyp-dev): copia `.env.example` a `.env.local`, llénalo, corre `node_modules\.bin\supabase login` una vez y luego `pnpm db:link`. Después: `pnpm db:setup` (borra pyp-dev, aplica migraciones y semilla, e importa el catálogo inicial), `pnpm db:types`, `pnpm test:db`. Para poder entrar con el admin de desarrollo (`admin@pyp.test`) define `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` antes de correr `db:setup` o `db:reset`. Nunca enlaces el proyecto de producción.
 
 ## Contenido
 

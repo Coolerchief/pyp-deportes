@@ -17,6 +17,7 @@
     "test:db": "node scripts/supabase-dev.mjs test",
     "db:link": "node scripts/supabase-dev.mjs link",
     "db:reset": "node scripts/supabase-dev.mjs reset",
+    "db:setup": "node scripts/supabase-dev.mjs setup",
     "db:types": "node scripts/supabase-dev.mjs types",
     "db:import": "node scripts/supabase-dev.mjs import"
   },

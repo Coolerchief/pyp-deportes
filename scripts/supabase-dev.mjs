@@ -8,6 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import pg from 'pg';
 import { runFolioConcurrency } from './folio-concurrency.mjs';
 import { importCatalog } from './import-catalog.mjs';
 import { runPgTap } from './pgtap.mjs';
@@ -90,6 +91,31 @@ function poolerConnection() {
   return { connectionString: url.href, ssl: { rejectUnauthorized: false } };
 }
 
+const DEV_ADMIN_EMAIL = 'admin@pyp.test';
+
+async function setDevAdminPassword() {
+  const password = process.env.SUPABASE_DEV_ADMIN_PASSWORD;
+  if (!password) {
+    console.log(
+      `⚠ Sin SUPABASE_DEV_ADMIN_PASSWORD en .env.local: ${DEV_ADMIN_EMAIL} existe pero no puede entrar.`,
+    );
+    return;
+  }
+  const client = new pg.Client(poolerConnection());
+  await client.connect();
+  try {
+    const { rowCount } = await client.query(
+      `update auth.users set encrypted_password = extensions.crypt($1, extensions.gen_salt('bf'))
+        where email = $2`,
+      [password, DEV_ADMIN_EMAIL],
+    );
+    if (rowCount !== 1) fail(`No se encontró ${DEV_ADMIN_EMAIL}; ¿corrió seed.sql?`);
+    console.log(`✓ Contraseña de ${DEV_ADMIN_EMAIL} lista (de SUPABASE_DEV_ADMIN_PASSWORD).`);
+  } finally {
+    await client.end();
+  }
+}
+
 function guard(env) {
   const error = checkLinkedProject({ ...env, linkedRef: readLinkedRef() });
   if (error) fail(error);
@@ -107,10 +133,17 @@ const commands = {
     }
     supabase(['link', '--project-ref', env.devRef]);
   },
-  // Re-applies every migration and seed.sql on pyp-dev (destructive: wipes its data).
-  reset(env, args) {
+  // Re-applies every migration and seed.sql on pyp-dev (destructive: wipes its data), then gives
+  // the seed's development admin its password from .env.local (never in the public repo).
+  async reset(env, args) {
     guard(env);
     supabase(['db', 'reset', '--linked', ...args]);
+    await setDevAdminPassword();
+  },
+  // One command for a ready development database: reset + seed + initial catalog.
+  async setup(env, args) {
+    await commands.reset(env, args);
+    await commands.import(env, ['docs/data/catalogo-inicial.csv']);
   },
   types(env) {
     guard(env);
