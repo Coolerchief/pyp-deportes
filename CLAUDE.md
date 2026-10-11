@@ -25,11 +25,14 @@ No agregues dependencias sin anotarlas en `docs/02-TRD.md` §3.
 
 ## Comandos
 
+Node 24 y pnpm viven en `.venv` (nodeenv): activa el entorno antes de cualquier comando (`source .venv/Scripts/activate` en Git Bash, `.venv\Scripts\Activate.ps1` en PowerShell). Sin activarlo, Playwright no encuentra sus navegadores. Las dependencias se instalan solo con el entorno activo. Detalle: `README.md`.
+
 ```bash
-pnpm dev            # sitio en http://localhost:3000 (datos de pyp-dev vía .env.local)
-pnpm build          # genera apps/web/out, catalog.json y _redirects
+pnpm dev            # sitio en http://localhost:3000; en desarrollo también /dev/tokens, /dev/marca, /dev/componentes, /dev/genericas
+pnpm build          # genera apps/web/out (catalog.json llega en T2.1 y _redirects en T5.6)
 pnpm lint
 pnpm typecheck
+pnpm format         # Prettier sobre todo el repo
 pnpm test           # Vitest + pruebas de scripts/
 pnpm test:e2e       # Playwright contra el build estático
 pnpm placeholders   # regenera las 10 imágenes genéricas de categoría (public/img/placeholder)
@@ -37,8 +40,10 @@ pnpm db:link        # enlaza la CLI con pyp-dev (solo pyp-dev)
 pnpm test:db        # pgTAP contra pyp-dev (scripts/pgtap.mjs; cada prueba: begin…rollback y create extension pgtap)
 pnpm db:reset       # migraciones + semilla en pyp-dev (borra sus datos)
 pnpm db:types       # regenera packages/shared/database.types.ts desde pyp-dev
-pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev (T1.5)
+pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev (hasta T1.5 solo avisa que falta el importador)
 ```
+
+**Despliegue.** `.github/workflows/deploy.yml` publica en Cloudflare Workers (`apps/web/wrangler.jsonc`) con cada push a `main` o a mano desde Actions. No subas ni fusiones nada a `main` sin que el usuario lo pida. `ci.yml` corre los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP) en cada PR.
 
 **Modo sin Docker.** No hay base de datos local: los comandos `db:*` y `test:db` usan el proyecto remoto de desarrollo **pyp-dev** con `--linked`, a través de `scripts/supabase-dev.mjs`, que aborta si el proyecto enlazado no es `SUPABASE_DEV_PROJECT_REF`. La configuración vive en `.env.local` de la raíz (plantilla: `.env.example`). En GitHub Actions, el trabajo `db` corre pgTAP contra un Postgres desechable del runner. Detalle: `docs/06-IMPLEMENTATION-PLAN.md`, fase 1.
 
@@ -47,10 +52,17 @@ Antes de dar una tarea por terminada: `pnpm lint && pnpm typecheck && pnpm test`
 ## Estructura
 
 ```
-apps/web/            Next.js: sitio público en app/(public), panel en app/admin
-packages/shared/     Esquemas Zod, tipos, folio, normalización de texto (sin dependencias de Node)
+apps/web/            Next.js: sitio público en app/(public), panel en app/admin (fase 4)
+  app/dev/           Hojas de muestra (page.dev.tsx): solo existen con `next dev`, nunca en el build
+  components/brand/  Logo, Placa, DobleDiagonal, PatronCancha, CorteA13, ImagenGenerica
+  components/ui/     Button, Badge, Chip, FormField, Sheet, EmptyState, Skeleton, SectionHeader
+  scripts/           Generador de imágenes genéricas (placeholders.json + generate-placeholders.mjs)
+  wrangler.jsonc     Worker de static assets que sirve apps/web/out
+packages/shared/     Esquemas Zod, tipos, folio, normalización de texto (sin dependencias de Node); database.types.ts generado
 supabase/            migrations/, functions/, seed.sql, tests/
+scripts/             supabase-dev.mjs (candado pyp-dev) y pgtap.mjs, con sus pruebas
 workers/cron/        Latido, publicación nocturna, respaldo
+.github/workflows/   ci.yml y deploy.yml
 docs/                Documentación (fuente de verdad)
 design/              Referencia visual exportada de Claude Design (no es código de la app)
 ```
@@ -72,7 +84,7 @@ design/              Referencia visual exportada de Claude Design (no es código
 ## Convenciones de código
 
 - Código, identificadores, commits y nombres de tablas en **inglés**. Interfaz y contenido en **español de México**, de "tú".
-- Componentes de marca desde `components/brand` (`Placa`, `DobleDiagonal`, `PatronCancha`, `ImagenGenerica`). No recrees estilos de marca a mano.
+- Componentes de marca desde `components/brand` (`Logo`, `Placa`, `DobleDiagonal`, `PatronCancha`, `CorteA13`, `ImagenGenerica`) y utilidades `placa`, `cancha`, `focus-placa`. No recrees estilos de marca a mano. Componentes base desde `components/ui`.
 - Colores y tipografía solo desde los tokens de Tailwind (`docs/03-UI-UX.md` §2). Nada de valores hexadecimales sueltos.
 - Los componentes no leen flags directamente: usan `useCommerceMode()`.
 - `design/` es referencia visual: no importes de ahí código ni estilos en línea.
