@@ -94,6 +94,7 @@ flowchart LR
 | Analítica | Google Analytics 4 detrás de `track()` | — | Nombres de eventos de e-commerce estándar |
 | Pruebas | Vitest · Testing Library · Playwright · pgTAP (`supabase test db`) | última | Playwright sirve `apps/web/out` con `serve` |
 | Calidad | ESLint · Prettier · `tsc --noEmit` | ESLint 9 | Un solo `eslint.config.mjs` en la raíz con `eslint-config-next` y `eslint-config-prettier` |
+| Pruebas de BD sin Docker | `pg` (node-postgres) | 8.x | Solo desarrollo: `scripts/pgtap.mjs` ejecuta los archivos pgTAP contra pyp-dev porque `supabase test db --linked` necesita Docker |
 | Entorno local | `.venv` (Python) con `nodeenv` | — | Node 24 y pnpm aislados dentro del proyecto; ver `README.md` |
 | CI/CD | GitHub Actions | | Repo privado |
 

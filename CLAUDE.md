@@ -33,7 +33,7 @@ pnpm typecheck
 pnpm test           # Vitest + pruebas de scripts/
 pnpm test:e2e       # Playwright contra el build estático
 pnpm db:link        # enlaza la CLI con pyp-dev (solo pyp-dev)
-pnpm test:db        # pgTAP contra pyp-dev (--linked)
+pnpm test:db        # pgTAP contra pyp-dev (scripts/pgtap.mjs; cada prueba: begin…rollback y create extension pgtap)
 pnpm db:reset       # migraciones + semilla en pyp-dev (borra sus datos)
 pnpm db:types       # regenera packages/shared/database.types.ts desde pyp-dev
 pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev (T1.5)

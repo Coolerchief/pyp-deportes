@@ -8,10 +8,12 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { runPgTap } from './pgtap.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const cli = resolve(root, 'node_modules/supabase/dist/supabase.js');
 const linkedRefFile = resolve(root, 'supabase/.temp/project-ref');
+const poolerUrlFile = resolve(root, 'supabase/.temp/pooler-url');
 const typesFile = resolve(root, 'packages/shared/database.types.ts');
 
 const REF_PATTERN = /^[a-z0-9]{20}$/;
@@ -102,9 +104,21 @@ const commands = {
     writeFileSync(typesFile, types);
     console.log(`✓ Tipos escritos en ${typesFile}`);
   },
-  test(env, args) {
+  // `supabase test db --linked` still needs Docker (pg_prove), so pgTAP runs through
+  // scripts/pgtap.mjs over the session pooler that `supabase link` recorded.
+  async test(env) {
     guard(env);
-    supabase(['test', 'db', '--linked', ...args]);
+    if (!existsSync(poolerUrlFile))
+      fail('Falta supabase/.temp/pooler-url. Vuelve a correr pnpm db:link.');
+    const password = process.env.SUPABASE_DB_PASSWORD;
+    if (!password) fail('Falta SUPABASE_DB_PASSWORD en .env.local.');
+    const ok = await runPgTap({
+      connectionString: readFileSync(poolerUrlFile, 'utf8').trim(),
+      password,
+      testsDir: resolve(root, 'supabase/tests'),
+      root,
+    });
+    if (!ok) fail('Hay pruebas pgTAP que fallaron.');
   },
   // CSV importer (T1.5) runs admin_import_products on pyp-dev through the linked CLI.
   async import(env, args) {

@@ -91,8 +91,10 @@ La máquina de desarrollo no tiene Docker, así que no hay Supabase local. Se tr
 | Configuración | `.env.local` en la raíz (plantilla `.env.example`): `SUPABASE_DEV_PROJECT_REF`, `SUPABASE_PROD_PROJECT_REF` (solo para bloquearlo), `SUPABASE_DB_PASSWORD` y las variables `NEXT_PUBLIC_*` de pyp-dev. Lo leen los scripts y `next.config.ts` |
 | Candado | `scripts/supabase-dev.mjs` corre todos los comandos `db:*` y `test:db` con `--linked` y aborta si el proyecto enlazado (`supabase/.temp/project-ref`) no es `SUPABASE_DEV_PROJECT_REF` o es el de producción |
 | Enlace | `supabase login` una vez por máquina y luego `pnpm db:link`, que solo enlaza la referencia de pyp-dev |
-| Comandos | `pnpm db:reset` → `supabase db reset --linked` · `pnpm db:types` → `supabase gen types --linked` · `pnpm test:db` → `supabase test db --linked` · `pnpm db:import <csv>` → importador de T1.5 contra pyp-dev |
+| Comandos | `pnpm db:reset` → `supabase db reset --linked` · `pnpm db:types` → `supabase gen types --linked` · `pnpm test:db` → `scripts/pgtap.mjs` (ver abajo) · `pnpm db:import <csv>` → importador de T1.5 contra pyp-dev |
 | CI | Trabajo `db` de `.github/workflows/ci.yml`: `supabase db start` + `supabase test db` en un Postgres desechable del runner, con las migraciones y la semilla del commit. No usa secretos ni toca pyp-dev |
+
+**pgTAP sin Docker.** `supabase test db --linked` también necesita Docker (corre `pg_prove` en un contenedor), así que `pnpm test:db` usa `scripts/pgtap.mjs`: se conecta al pooler de pyp-dev (`supabase/.temp/pooler-url` + `SUPABASE_DB_PASSWORD`), ejecuta cada `supabase/tests/**/*.sql` y revisa la salida TAP (plan cumplido y ningún `not ok`). Reglas para cada archivo de prueba: es una transacción completa (`begin; … rollback;`), así que no deja datos en pyp-dev, y empieza con `create extension if not exists pgtap with schema extensions;` (la extensión se revierte con el `rollback`). En CI se usa `supabase test db` normal.
 
 En esta fase, "`supabase db reset` corre sin errores" significa `pnpm db:reset` sobre pyp-dev **y** el trabajo `db` de CI en verde. El admin de desarrollo de la semilla (`admin@pyp.test`) también existe en pyp-dev.
 

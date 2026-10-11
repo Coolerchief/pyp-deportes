@@ -7,3 +7,4 @@ supabase/.temp/
 .venv/
 *.md
 index.html
+packages/shared/database.types.ts
