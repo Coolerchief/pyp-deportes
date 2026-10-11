@@ -428,11 +428,18 @@ create table system_heartbeats (
 | Trigger | Tabla | Qué hace |
 |---|---|---|
 | `set_updated_at` | Todas las editables | `updated_at = now()` en cada `update` |
-| `products_search_text` | `products` | `search_text = lower(unaccent(name ‖ sku ‖ tags ‖ marca))` |
+| `products_search_text` | `products` | `search_text = lower(unaccent(name ‖ sku ‖ tags ‖ marca))` con `normalize_search_text()`; no se puede escribir a mano |
+| `brands_refresh_search_text` | `brands` (after update of name) | Recalcula `search_text` de los productos de la marca renombrada |
 | `products_published_at` | `products` | Fija `published_at` la primera vez que `status` pasa a `published` |
-| `validate_product_publish` | `products` | Impide publicar sin marca, categoría o variante activa |
-| `categories_one_level` | `categories` | Impide subcategorías de subcategorías |
-| `ensure_default_variant` | `products` (after insert) | Crea la variante por defecto si el producto nace sin variantes |
+| `validate_product_publish` | `products` (after insert/update) · `product_variants` (after update/delete) | Impide publicar sin nombre, marca, categoría o variante activa, y desactivar o borrar la última variante activa de un producto publicado |
+| `categories_one_level` | `categories` | Impide subcategorías de subcategorías y que una categoría con subcategorías se vuelva subcategoría |
+| `ensure_default_variant` | `products` (after insert) · `product_variants` (after delete) | Crea la variante por defecto si el producto nace sin variantes o se queda sin ninguna |
+
+**Implementación (T1.1, 11-oct-2026).** Migraciones `20261011120000_extensions_and_types.sql`, `20261011120100_staff_taxonomy_catalog.sql` y `20261011120200_catalog_triggers.sql`; pruebas en `supabase/tests/010_catalog_schema.test.sql`.
+- `ensure_default_variant` y `validate_product_publish` son *constraint triggers* `deferrable initially deferred`: se revisan al confirmar la transacción. Así el importador y el admin pueden escribir el producto, sus variantes y publicarlo en una sola transacción sin que aparezca la variante por defecto. Se ejecutan en orden alfabético, así que la variante por defecto existe antes de validar. En pruebas se usa `set constraints all immediate` para dispararlos al final de cada sentencia.
+- Las extensiones viven en el esquema `extensions` (convención de Supabase) y se llaman calificadas: `extensions.unaccent`, `extensions.gin_trgm_ops`. Todas las funciones fijan `search_path = ''`.
+- RLS queda activado en cada tabla desde su creación; sin políticas, `anon` y `authenticated` no leen nada hasta T1.3.
+- Además de los índices de §4 se crearon índices para las llaves foráneas (`categories.parent_id`, `products.subcategory_id`, `products.brand_id`, `product_sports.sport_id`, `product_images`, `inventory_levels.store_id`).
 
 ## 6. Vistas públicas
 
