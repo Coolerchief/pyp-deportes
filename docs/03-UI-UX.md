@@ -122,7 +122,8 @@ Implementado en `apps/web/app/globals.css`:
 - Los 13 estilos de texto son utilidades `type-<estilo>` (`type-display`, `type-h1`… `type-caption`), con tamaño móvil y el de escritorio a partir de `lg`.
 - `container-page`: márgenes de 16/24/32 px y contenedor de 1216 px desde `xl` (§2.4).
 - Base: `body` con `type-body`, `bg-blanco` y `text-noche`; foco visible global (anillo `lima` de 3 px con contorno `noche`); `prefers-reduced-motion` anula animaciones.
-- `app/theme.test.ts` compara el tema con `design/tokens/tokens.json`. La hoja de muestra está en `/dev/tokens` (solo con `pnpm dev`).
+- Utilidades de marca: `placa` (recorte a 13° con `--placa-o`) y `cancha` (franjas del PatrónCancha; se combina con `bg-noche` o `bg-rojo`). Se usan a través de `components/brand`.
+- `app/theme.test.ts` compara el tema con `design/tokens/tokens.json`. Las hojas de muestra están en `/dev/tokens` y `/dev/marca` (solo con `pnpm dev`).
 
 Solo tema claro en v1 (el header, footer y secciones oscuras usan `noche` como superficie, no un modo oscuro). Respaldo tipográfico según el manual: Arial Narrow para titulares y Arial para texto (*M-16*).
 
@@ -138,7 +139,7 @@ Solo tema claro en v1 (el header, footer y secciones oscuras usan `noche` como s
 - **Tamaños mínimos (*M-10*):** horizontal 120 px de ancho · vertical 80 px · monograma 32 px. En el header móvil el logo horizontal va a ≥ 140 px; si no cabe, monograma.
 - **Área de protección:** 5x (media altura de la placa) libre alrededor.
 - **Regla de fondo (*M-12*):** claro → positivo; oscuro → negativo; rojo → mono blanco; lima → mono noche.
-- ⚠️ **Los SVG están reconstruidos** con la construcción de *M-9* y medidas tomadas del PDF, con texto convertido a curvas (Barlow Condensed). Se reemplazan por los archivos maestros del diseñador en cuanto existan. Script: `docs/brand/build_logos.py`.
+- ⚠️ **Los SVG están reconstruidos** con la construcción de *M-9* y medidas tomadas del PDF, con texto convertido a curvas (Barlow Condensed). Se reemplazan por los archivos maestros del diseñador en cuanto existan. Script: `docs/brand/build_logos.py`. El sitio sirve copias en `apps/web/public/brand/` a través del componente `Logo`, que no baja de los tamaños mínimos.
 
 ## 4. Elementos gráficos de marca (*M-18*)
 
@@ -147,7 +148,7 @@ Solo tema claro en v1 (el header, footer y secciones oscuras usan `noche` como s
 | **DobleDiagonal** | Dos barras (fina 0.6 u + gruesa 1.1 u, separación 0.55 u) inclinadas 13°, en SVG inline | Viñeta de títulos de sección, cierre de página (junto al número de página como en el manual), separador del footer | Siempre en par, siempre 13° |
 | **PatrónCancha** | `repeating-linear-gradient` a 13° de la vertical (≈ `103deg`) con franjas en blanco al 5–15 % de opacidad | Fondo del hero, franja de "Uniformes a tu medida", pantalla de confirmación, imagen genérica de categoría | Solo sobre noche o rojo |
 | **Placa** | `clip-path: polygon(var(--o) 0, 100% 0, calc(100% - var(--o)) 100%, 0 100%)` con `--o = alto × 0.2309` | Botones, badges ("NUEVO", "PERSONALIZABLE"), chips de filtro activos, contador de cotización | Texto en Condensed Bold mayúsculas |
-| **CorteA13** | `clip-path` con un lado a 13° + diagonal roja paralela | Foto del hero de Inicio y de Uniformes a tu medida | **Máximo uno por pantalla** |
+| **CorteA13** | Un lado inclinado + diagonal roja paralela. Escritorio: lado izquierdo a 13°. Móvil: borde superior más suave, ≈7° (48 px de caída a 390 px), como en `design/screens/movil/`, porque a 13° la foto de 210 px perdería casi la mitad | Foto del hero de Inicio y de Uniformes a tu medida | **Máximo uno por pantalla** |
 
 ## 5. Iconografía
 

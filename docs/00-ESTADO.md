@@ -88,7 +88,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** modo sin Docker (scripts `db:*` contra pyp-dev con candado, `.env.local`, trabajo `db` de CI con pgTAP). pyp-dev enlazado (10-oct-2026); `pnpm db:types` y `pnpm test:db` probados contra pyp-dev. Aún no existe el proyecto de producción.
 
-**Siguiente paso:** tarea T0.3 (componentes de marca y página `/dev/marca`). Las cuentas del apartado D se necesitan a partir de T0.6.
+**Hecho:** T0.3 (componentes de marca en `apps/web/components/brand`: `Logo`, `Placa`, `DobleDiagonal`, `PatronCancha`, `CorteA13`, `ImagenGenerica`; hoja `/dev/marca`; pruebas de render). CorteA13 en móvil va a ≈7° como el diseño (decidido el 10-oct-2026).
+
+**Siguiente paso:** tarea T0.4 (componentes base). Las cuentas del apartado D se necesitan a partir de T0.6.
 
 ## 5. Reglas vigentes que cambian cómo se construye
 

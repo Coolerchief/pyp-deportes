@@ -152,6 +152,29 @@
   font-weight: 500;
 }
 
+/* Placa (UI/UX §4): parallelogram at 13°; --placa-o = height × 0.2309 (components/brand/Placa). */
+@utility placa {
+  clip-path: polygon(
+    var(--placa-o, 11px) 0,
+    100% 0,
+    calc(100% - var(--placa-o, 11px)) 100%,
+    0 100%
+  );
+}
+
+/* PatronCancha (UI/UX §4): white stripes at 7% slanted 13° from vertical; pair with bg-noche or bg-rojo. */
+@utility cancha {
+  --cancha-franja: color-mix(in srgb, var(--color-blanco) 7%, transparent);
+  background-image: repeating-linear-gradient(
+    103deg,
+    transparent 0 28px,
+    var(--cancha-franja) 28px 34px,
+    transparent 34px 40px,
+    var(--cancha-franja) 40px 52px,
+    transparent 52px 120px
+  );
+}
+
 /* Page container (UI/UX §2.4): 16 / 24 / 32 px side margins, 1216 px content from xl. */
 @utility container-page {
   width: 100%;
