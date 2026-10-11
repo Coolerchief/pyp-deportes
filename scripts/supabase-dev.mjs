@@ -8,6 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { runFolioConcurrency } from './folio-concurrency.mjs';
 import { runPgTap } from './pgtap.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -119,6 +120,14 @@ const commands = {
       root,
     });
     if (!ok) fail('Hay pruebas pgTAP que fallaron.');
+    // Security test 8 needs several connections at once, so it lives outside pgTAP.
+    const url = new URL(readFileSync(poolerUrlFile, 'utf8').trim());
+    url.password = password;
+    const foliosOk = await runFolioConcurrency({
+      connectionString: url.href,
+      ssl: { rejectUnauthorized: false },
+    });
+    if (!foliosOk) fail('next_folio repitió o saltó folios con llamadas simultáneas.');
   },
   // CSV importer (T1.5) runs admin_import_products on pyp-dev through the linked CLI.
   async import(env, args) {

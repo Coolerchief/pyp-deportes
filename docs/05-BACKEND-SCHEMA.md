@@ -517,7 +517,7 @@ Reglas:
 7. `create_quote_request` con el mismo `client_request_id` devuelve el mismo folio y no duplica.
 8. Dos llamadas simultáneas a `next_folio` no repiten consecutivo.
 
-Las pruebas 1–6 están en `supabase/tests/030_rls_and_views.test.sql` (la 6 también en `020_quotes_site_schema.test.sql`), junto con: `anon` no escribe a través de una vista, filtros de las vistas de categorías, marcas, variantes y ajustes, un editor solo lee su propia fila de `staff_members` y un usuario autenticado que no es personal no lee nada.
+La prueba 7 está en `supabase/tests/040_functions.test.sql`. La 8 necesita varias conexiones a la vez, así que la corre `scripts/folio-concurrency.mjs` (8 transacciones simultáneas sobre el año 2999, que se borra al terminar): dentro de `pnpm test:db` contra pyp-dev y como paso del trabajo `db` en CI. Las pruebas 1–6 están en `supabase/tests/030_rls_and_views.test.sql` (la 6 también en `020_quotes_site_schema.test.sql`), junto con: `anon` no escribe a través de una vista, filtros de las vistas de categorías, marcas, variantes y ajustes, un editor solo lee su propia fila de `staff_members` y un usuario autenticado que no es personal no lee nada.
 
 ## 8. Funciones (RPC)
 
@@ -534,6 +534,17 @@ Las pruebas 1–6 están en `supabase/tests/030_rls_and_views.test.sql` (la 6 ta
 | `admin_anonymize_customer(id uuid)` | Admin | Derecho de cancelación (ARCO): sustituye nombre y teléfono por valores anónimos en el cliente y en sus solicitudes |
 | `mark_publish_run(id uuid, status publish_status, run_url text, error text)` | Solo `service_role` | La llama GitHub Actions al iniciar y al terminar el build |
 | `ping()` | `anon` | Inserta en `system_heartbeats` y borra latidos de más de 90 días. Mantiene activo el proyecto |
+
+**Implementación (T1.4, 11-oct-2026).** Migración `20261011150000_functions.sql`; pruebas en `supabase/tests/040_functions.test.sql` y `scripts/folio-concurrency.mjs`.
+- Todas son `security definer` con `search_path = ''` y revisan quién llama: `require_staff()` / `require_admin()` lanzan `insufficient_privilege` (42501). `execute` se quita a `public`, `anon` y `authenticated` y se concede solo a quien dice la tabla. `has_unpublished_changes()` también la puede llamar `service_role` (la usará `trigger-publish` con el cron).
+- `next_folio(issued_at timestamptz default now())`: el parámetro opcional solo sirve para probar otros años; en uso normal se llama sin argumentos. El candado de fila de `insert … on conflict do update` dura hasta que termina la transacción del que llama.
+- `create_quote_request`: `invalid_items` sale con `errcode` `check_violation` y la lista en `detail` (`{"items": ["variantId", …]}`). Sin `clientRequestId` o sin productos lanza `invalid_parameter_value`. Si dos reintentos con el mismo `clientRequestId` llegan a la vez, el segundo responde con el folio del primero (captura `unique_violation`). La etiqueta de variante es `option1 · option2` (`M · Rojo`).
+- `admin_set_quote_status`: al salir de `lost` borra `lost_reason`; al historial van `changed_by = auth.uid()` y la nota.
+- `admin_replace_variants` devuelve `{ "created", "kept", "deactivated" }`, ignora valores repetidos o vacíos y genera el SKU con `variant_sku()`. Sin opciones deja activa solo la variante por defecto.
+- `has_unpublished_changes()` compara con la hora en que se encoló la última publicación exitosa (`publish_runs.created_at`), para no perder cambios hechos durante el build. No detecta borrados de filas sin `updated_at` en su tabla padre; la publicación nocturna los cubre.
+- `admin_dashboard_stats()` devuelve `newCount`, `last7Days`, `last30Days`, `byStatus` (los 5 estados, con ceros), `productsWithoutPhoto` (no archivados sin foto) y `topProducts` (10 con más piezas solicitadas en los últimos 30 días: `productId`, `name`, `sku`, `pieces`, `requests`).
+- `admin_anonymize_customer`: el teléfono anónimo es de 10 dígitos y empieza con 0 (ningún número real de México empieza así), así sigue siendo único. También borra `organization`, `ip_hash` y `user_agent` de sus solicitudes.
+- `ping()` escribe a lo más un latido por minuto, para que una llamada anónima repetida no llene la tabla, y devuelve la hora.
 
 ### 8.1 `create_quote_request`
 

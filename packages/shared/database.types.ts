@@ -1802,9 +1802,41 @@ export type Database = {
       }
     }
     Functions: {
+      admin_anonymize_customer: { Args: { id: string }; Returns: undefined }
+      admin_dashboard_stats: { Args: never; Returns: Json }
+      admin_replace_variants: {
+        Args: { option1: string[]; option2: string[]; product_id: string }
+        Returns: Json
+      }
+      admin_set_quote_note: {
+        Args: { id: string; internal_note: string }
+        Returns: undefined
+      }
+      admin_set_quote_status: {
+        Args: {
+          id: string
+          lost_reason?: string
+          note?: string
+          to_status: Database["public"]["Enums"]["quote_status"]
+        }
+        Returns: undefined
+      }
+      create_quote_request: { Args: { payload: Json }; Returns: Json }
+      has_unpublished_changes: { Args: never; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
       is_staff: { Args: never; Returns: boolean }
+      mark_publish_run: {
+        Args: {
+          error?: string
+          id: string
+          run_url?: string
+          status: Database["public"]["Enums"]["publish_status"]
+        }
+        Returns: undefined
+      }
+      next_folio: { Args: { issued_at?: string }; Returns: string }
       normalize_search_text: { Args: { value: string }; Returns: string }
+      ping: { Args: never; Returns: string }
       product_search_text: {
         Args: {
           product_brand_id: string
@@ -1814,7 +1846,17 @@ export type Database = {
         }
         Returns: string
       }
+      require_admin: { Args: never; Returns: undefined }
+      require_staff: { Args: never; Returns: undefined }
       setting_flag: { Args: { flag: string }; Returns: boolean }
+      variant_label: {
+        Args: { option1: string; option2: string }
+        Returns: string
+      }
+      variant_sku: {
+        Args: { option1: string; option2: string; product_sku: string }
+        Returns: string
+      }
     }
     Enums: {
       audience: "adulto" | "infantil" | "unisex"
