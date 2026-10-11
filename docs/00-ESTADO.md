@@ -100,7 +100,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T1.1 (migraciones de extensiones, tipos, personal, taxonomía, catálogo, comercio oculto y triggers; RLS activado en las 11 tablas; 26 pruebas pgTAP de tablas y triggers). `pnpm db:reset` aplicado en pyp-dev (11-oct-2026) y `database.types.ts` regenerado. La salida de la fase 0 (sitio en `workers.dev`) sigue pendiente del primer push a `main`.
 
-**Siguiente paso:** tarea T1.2 (clientes, solicitudes, folios, galería, `site_media`, `site_texts`, `settings`, operación).
+**Hecho:** T1.2 (12 tablas más: clientes, contadores de folio, solicitudes con sus líneas e historial, galería con consentimientos, `site_media`, `site_texts`, `settings`, `publish_runs`, `system_heartbeats`; RLS en todas; 14 pruebas pgTAP). El esquema tiene las 23 tablas de §4. `pnpm db:reset` aplicado en pyp-dev (11-oct-2026).
+
+**Siguiente paso:** tarea T1.3 (vistas `public_*`, `is_staff`/`is_admin` y políticas RLS).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
