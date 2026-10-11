@@ -91,6 +91,161 @@ export type Database = {
           },
         ]
       }
+      customers: {
+        Row: {
+          created_at: string
+          customer_type: Database["public"]["Enums"]["customer_type"]
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          name: string
+          organization: string | null
+          phone: string
+          quote_count: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_type: Database["public"]["Enums"]["customer_type"]
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          name: string
+          organization?: string | null
+          phone: string
+          quote_count?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_type?: Database["public"]["Enums"]["customer_type"]
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          name?: string
+          organization?: string | null
+          phone?: string
+          quote_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      folio_counters: {
+        Row: {
+          created_at: string
+          last_value: number
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          last_value?: number
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          created_at?: string
+          last_value?: number
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
+      gallery_item_products: {
+        Row: {
+          created_at: string
+          gallery_item_id: string
+          product_id: string
+        }
+        Insert: {
+          created_at?: string
+          gallery_item_id: string
+          product_id: string
+        }
+        Update: {
+          created_at?: string
+          gallery_item_id?: string
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_item_products_gallery_item_id_fkey"
+            columns: ["gallery_item_id"]
+            isOneToOne: false
+            referencedRelation: "gallery_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gallery_item_products_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gallery_items: {
+        Row: {
+          alt: string
+          created_at: string
+          has_guardian_consent: boolean
+          has_written_consent: boolean
+          height: number
+          id: string
+          includes_minors: boolean
+          key_base: string
+          sort_order: number
+          sport_id: string | null
+          status: Database["public"]["Enums"]["content_status"]
+          team_name: string
+          updated_at: string
+          width: number
+          year: number | null
+        }
+        Insert: {
+          alt?: string
+          created_at?: string
+          has_guardian_consent?: boolean
+          has_written_consent?: boolean
+          height: number
+          id?: string
+          includes_minors?: boolean
+          key_base: string
+          sort_order?: number
+          sport_id?: string | null
+          status?: Database["public"]["Enums"]["content_status"]
+          team_name: string
+          updated_at?: string
+          width: number
+          year?: number | null
+        }
+        Update: {
+          alt?: string
+          created_at?: string
+          has_guardian_consent?: boolean
+          has_written_consent?: boolean
+          height?: number
+          id?: string
+          includes_minors?: boolean
+          key_base?: string
+          sort_order?: number
+          sport_id?: string | null
+          status?: Database["public"]["Enums"]["content_status"]
+          team_name?: string
+          updated_at?: string
+          width?: number
+          year?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_items_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "sports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inventory_levels: {
         Row: {
           created_at: string
@@ -376,6 +531,324 @@ export type Database = {
           },
         ]
       }
+      publish_runs: {
+        Row: {
+          created_at: string
+          error: string | null
+          finished_at: string | null
+          id: string
+          reason: string
+          requested_by: string | null
+          run_url: string | null
+          status: Database["public"]["Enums"]["publish_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          reason?: string
+          requested_by?: string | null
+          run_url?: string | null
+          status?: Database["public"]["Enums"]["publish_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          reason?: string
+          requested_by?: string | null
+          run_url?: string | null
+          status?: Database["public"]["Enums"]["publish_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      quote_request_items: {
+        Row: {
+          created_at: string
+          id: string
+          line_no: number
+          notes: string
+          personalize: boolean
+          product_id: string | null
+          product_name: string
+          quantity: number
+          quote_request_id: string
+          sku: string
+          unit_price_cents: number | null
+          variant_id: string | null
+          variant_label: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          line_no: number
+          notes?: string
+          personalize?: boolean
+          product_id?: string | null
+          product_name: string
+          quantity: number
+          quote_request_id: string
+          sku: string
+          unit_price_cents?: number | null
+          variant_id?: string | null
+          variant_label?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          line_no?: number
+          notes?: string
+          personalize?: boolean
+          product_id?: string | null
+          product_name?: string
+          quantity?: number
+          quote_request_id?: string
+          sku?: string
+          unit_price_cents?: number | null
+          variant_id?: string | null
+          variant_label?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_request_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_request_items_quote_request_id_fkey"
+            columns: ["quote_request_id"]
+            isOneToOne: false
+            referencedRelation: "quote_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_request_items_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quote_requests: {
+        Row: {
+          client_request_id: string
+          created_at: string
+          customer_id: string
+          customer_name: string
+          customer_phone: string
+          customer_type: Database["public"]["Enums"]["customer_type"]
+          delivery_method: Database["public"]["Enums"]["delivery_method"]
+          folio: string
+          id: string
+          internal_note: string
+          ip_hash: string | null
+          lost_reason: string | null
+          needed_by: string
+          note: string
+          organization: string | null
+          privacy_accepted_at: string
+          privacy_version: string
+          requires_invoice: boolean
+          status: Database["public"]["Enums"]["quote_status"]
+          store_id: string | null
+          total_pieces: number
+          updated_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          client_request_id: string
+          created_at?: string
+          customer_id: string
+          customer_name: string
+          customer_phone: string
+          customer_type: Database["public"]["Enums"]["customer_type"]
+          delivery_method: Database["public"]["Enums"]["delivery_method"]
+          folio: string
+          id?: string
+          internal_note?: string
+          ip_hash?: string | null
+          lost_reason?: string | null
+          needed_by: string
+          note?: string
+          organization?: string | null
+          privacy_accepted_at: string
+          privacy_version: string
+          requires_invoice?: boolean
+          status?: Database["public"]["Enums"]["quote_status"]
+          store_id?: string | null
+          total_pieces: number
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          client_request_id?: string
+          created_at?: string
+          customer_id?: string
+          customer_name?: string
+          customer_phone?: string
+          customer_type?: Database["public"]["Enums"]["customer_type"]
+          delivery_method?: Database["public"]["Enums"]["delivery_method"]
+          folio?: string
+          id?: string
+          internal_note?: string
+          ip_hash?: string | null
+          lost_reason?: string | null
+          needed_by?: string
+          note?: string
+          organization?: string | null
+          privacy_accepted_at?: string
+          privacy_version?: string
+          requires_invoice?: boolean
+          status?: Database["public"]["Enums"]["quote_status"]
+          store_id?: string | null
+          total_pieces?: number
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_requests_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_requests_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quote_status_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          from_status: Database["public"]["Enums"]["quote_status"] | null
+          id: number
+          note: string
+          quote_request_id: string
+          to_status: Database["public"]["Enums"]["quote_status"]
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["quote_status"] | null
+          id?: never
+          note?: string
+          quote_request_id: string
+          to_status: Database["public"]["Enums"]["quote_status"]
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["quote_status"] | null
+          id?: never
+          note?: string
+          quote_request_id?: string
+          to_status?: Database["public"]["Enums"]["quote_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_status_history_quote_request_id_fkey"
+            columns: ["quote_request_id"]
+            isOneToOne: false
+            referencedRelation: "quote_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      settings: {
+        Row: {
+          created_at: string
+          is_public: boolean
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          created_at?: string
+          is_public?: boolean
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          created_at?: string
+          is_public?: boolean
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      site_media: {
+        Row: {
+          alt: string
+          created_at: string
+          height: number | null
+          key_base: string | null
+          slot: string
+          updated_at: string
+          updated_by: string | null
+          width: number | null
+        }
+        Insert: {
+          alt?: string
+          created_at?: string
+          height?: number | null
+          key_base?: string | null
+          slot: string
+          updated_at?: string
+          updated_by?: string | null
+          width?: number | null
+        }
+        Update: {
+          alt?: string
+          created_at?: string
+          height?: number | null
+          key_base?: string | null
+          slot?: string
+          updated_at?: string
+          updated_by?: string | null
+          width?: number | null
+        }
+        Relationships: []
+      }
+      site_texts: {
+        Row: {
+          created_at: string
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          created_at?: string
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
       sports: {
         Row: {
           created_at: string
@@ -493,6 +966,24 @@ export type Database = {
           sort_order?: number
           street?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      system_heartbeats: {
+        Row: {
+          created_at: string
+          id: number
+          source: string
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          source: string
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          source?: string
         }
         Relationships: []
       }

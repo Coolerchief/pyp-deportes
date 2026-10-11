@@ -6,12 +6,13 @@ select plan(26);
 
 -- Tables and RLS ------------------------------------------------------------------------------
 
-select tables_are(
-  'public',
-  array[
-    'staff_members', 'sports', 'categories', 'brands', 'products', 'product_sports',
-    'product_variants', 'product_images', 'variant_prices', 'stores', 'inventory_levels'
-  ],
+select is(
+  (select count(*)::int from information_schema.tables
+    where table_schema = 'public' and table_type = 'BASE TABLE' and table_name = any (array[
+      'staff_members', 'sports', 'categories', 'brands', 'products', 'product_sports',
+      'product_variants', 'product_images', 'variant_prices', 'stores', 'inventory_levels'
+    ])),
+  11,
   'T1.1 creates the staff, taxonomy, catalog and commerce tables'
 );
 

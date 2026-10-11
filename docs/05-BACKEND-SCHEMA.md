@@ -423,6 +423,12 @@ create table system_heartbeats (
 -- Se conservan los últimos 90 días (lo limpia ping()).
 ```
 
+**Implementación de §4.5–4.8 (T1.2, 11-oct-2026).** Migración `20261011130000_quotes_gallery_site_operations.sql`; pruebas en `supabase/tests/020_quotes_site_schema.test.sql`. Además de lo listado:
+- `updated_at` con `set_updated_at` en `customers`, `folio_counters`, `quote_requests`, `gallery_items`, `site_media`, `site_texts`, `settings` y `publish_runs`. Las tablas que solo se insertan (`quote_request_items`, `quote_status_history`, `gallery_item_products`, `system_heartbeats`) llevan solo `created_at`.
+- Restricciones `check` extra: formato del folio (`^PYP-[0-9]{4}-[0-9]{6}$`), `customer_phone` de 10 dígitos, `lost_needs_reason` (una solicitud `lost` exige `lost_reason`, también fuera de `admin_set_quote_status`), `photo_has_size` en `site_media` (si hay foto, hay medidas), `reason` de `publish_runs` en `manual`/`nightly`/`push`, claves de `site_texts` y `settings` en `snake_case`, y valores no negativos en contadores, medidas y precios.
+- Las referencias a `auth.users` (`changed_by`, `updated_by`, `requested_by`) usan `on delete set null`.
+- Índices extra para las llaves foráneas y los listados: `quote_requests (customer_id, created_at desc)`, `quote_requests (store_id)`, `quote_request_items (product_id)` y `(variant_id)`, `quote_status_history (quote_request_id, created_at)`, `gallery_items (status, sort_order)`, `publish_runs (created_at desc)`, `system_heartbeats (created_at)`.
+
 ## 5. Triggers
 
 | Trigger | Tabla | Qué hace |
