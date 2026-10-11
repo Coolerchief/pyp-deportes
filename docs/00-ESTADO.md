@@ -102,7 +102,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T1.2 (12 tablas más: clientes, contadores de folio, solicitudes con sus líneas e historial, galería con consentimientos, `site_media`, `site_texts`, `settings`, `publish_runs`, `system_heartbeats`; RLS en todas; 14 pruebas pgTAP). El esquema tiene las 23 tablas de §4. `pnpm db:reset` aplicado en pyp-dev (11-oct-2026).
 
-**Siguiente paso:** tarea T1.3 (vistas `public_*`, `is_staff`/`is_admin` y políticas RLS).
+**Hecho:** T1.3 (15 vistas `public_*` de solo lectura, `is_staff`/`is_admin`, políticas RLS por rol y privilegios: `anon` no tiene acceso a ninguna tabla base; pruebas de seguridad 1–6 de §7 en verde, 22 pruebas pgTAP). `pnpm db:reset` aplicado en pyp-dev (11-oct-2026); comprobado también con la API REST y la llave `anon`.
+
+**Siguiente paso:** tarea T1.4 (funciones: `next_folio`, `create_quote_request`, `admin_*`, `mark_publish_run`, `ping`; pruebas 7–8).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
