@@ -408,7 +408,8 @@ sequenceDiagram
 | `SITE_ENV` | build | `local` · `production` |
 | `SUPABASE_DEV_PROJECT_REF` | scripts `db:*` (solo desarrollo) | referencia de pyp-dev |
 | `SUPABASE_PROD_PROJECT_REF` | scripts `db:*` (solo para bloquearlo) | referencia de producción |
-| `SUPABASE_DB_PASSWORD` | scripts `db:reset`, `test:db` (solo desarrollo) | contraseña de Postgres de pyp-dev |
+| `SUPABASE_DB_PASSWORD` | scripts `db:reset`, `test:db`, `db:import` (solo desarrollo) | contraseña de Postgres de pyp-dev |
+| `SUPABASE_DEV_ADMIN_PASSWORD` | script `db:reset` (solo desarrollo) | contraseña que se le pone al admin de desarrollo de la semilla (`admin@pyp.test`); nunca se versiona |
 
 En desarrollo, todas viven en `.env.local` de la raíz (plantilla `.env.example`); `next.config.ts` lo carga y las variables reales del entorno (CI, despliegue) tienen prioridad.
 

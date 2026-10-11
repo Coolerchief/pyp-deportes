@@ -38,7 +38,8 @@ pnpm test:e2e       # Playwright contra el build estático
 pnpm placeholders   # regenera las 10 imágenes genéricas de categoría (public/img/placeholder)
 pnpm db:link        # enlaza la CLI con pyp-dev (solo pyp-dev)
 pnpm test:db        # pgTAP contra pyp-dev (scripts/pgtap.mjs; cada prueba: begin, create extension pgtap, truncate de las tablas, …, rollback) + folios simultáneos
-pnpm db:reset       # migraciones + semilla en pyp-dev (borra sus datos)
+pnpm db:reset       # migraciones + semilla en pyp-dev (borra sus datos) y contraseña del admin de desarrollo
+pnpm db:setup       # db:reset + importa docs/data/catalogo-inicial.csv: pyp-dev listo con un comando
 pnpm db:types       # regenera packages/shared/database.types.ts desde pyp-dev
 pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev con admin_import_products (correrlo de nuevo actualiza, no duplica)
 ```
