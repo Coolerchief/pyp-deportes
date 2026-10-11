@@ -94,7 +94,11 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T0.5 (10 imágenes genéricas WebP 800 × 1000 en `apps/web/public/img/placeholder/<slug>.webp`, generadas con `pnpm placeholders` desde `ImagenGenerica` vía la hoja `/dev/genericas`; la salida es idéntica byte a byte entre corridas; prueba que verifica los 10 archivos).
 
-**En curso:** T0.6. Listo: `ci.yml` con los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP); `deploy.yml` (push a `main` o manual → `wrangler deploy`); `apps/web/wrangler.jsonc` (Worker `pyp-deportes`, solo *static assets*); `_headers` con caché inmutable de `/_next/static/*`. Secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` cargados en GitHub (11-oct-2026). Falta: primer push a `main` que publique en `workers.dev`.
+**En curso:** T0.6. Listo: `ci.yml` con los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP); `deploy.yml` (push a `main` o manual → `wrangler deploy`); `apps/web/wrangler.jsonc` (Worker `pyp-deportes`, solo *static assets*); `_headers` con caché inmutable de `/_next/static/*`. Secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` cargados en GitHub (11-oct-2026). Falta: primer push a `main` que publique en `workers.dev` (en espera: el usuario pidió no subir nada a `main` todavía).
+
+**Hecho:** T0.7 (`CLAUDE.md` revisado contra el repositorio, 11-oct-2026: activación del `.venv`, `pnpm format`, hojas `/dev/*`, qué genera hoy `pnpm build`, despliegue y estructura real). Comandos probados: `dev`, `build`, `lint`, `typecheck`, `test`, `test:e2e`, `placeholders`, `db:link`, `test:db`, `db:types` y `db:import` (avisa que el importador llega en T1.5). `db:reset` no se corrió porque borra pyp-dev y aún no hay migraciones.
+
+**Siguiente paso:** fase 1, tarea T1.1. La salida de la fase 0 (sitio en `workers.dev`) queda pendiente del primer push a `main`.
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
