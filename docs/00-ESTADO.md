@@ -98,7 +98,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T0.7 (`CLAUDE.md` revisado contra el repositorio, 11-oct-2026: activación del `.venv`, `pnpm format`, hojas `/dev/*`, qué genera hoy `pnpm build`, despliegue y estructura real). Comandos probados: `dev`, `build`, `lint`, `typecheck`, `test`, `test:e2e`, `placeholders`, `db:link`, `test:db`, `db:types` y `db:import` (avisa que el importador llega en T1.5). `db:reset` no se corrió porque borra pyp-dev y aún no hay migraciones.
 
-**Siguiente paso:** fase 1, tarea T1.1. La salida de la fase 0 (sitio en `workers.dev`) queda pendiente del primer push a `main`.
+**Hecho:** T1.1 (migraciones de extensiones, tipos, personal, taxonomía, catálogo, comercio oculto y triggers; RLS activado en las 11 tablas; 26 pruebas pgTAP de tablas y triggers). `pnpm db:reset` aplicado en pyp-dev (11-oct-2026) y `database.types.ts` regenerado. La salida de la fase 0 (sitio en `workers.dev`) sigue pendiente del primer push a `main`.
+
+**Siguiente paso:** tarea T1.2 (clientes, solicitudes, folios, galería, `site_media`, `site_texts`, `settings`, operación).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
