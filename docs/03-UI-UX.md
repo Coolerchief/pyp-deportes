@@ -162,7 +162,7 @@ Solo tema claro en v1 (el header, footer y secciones oscuras usan `noche` como s
 
 - **Las fotos son contenido, no parte del front.** Ninguna foto vive en el repositorio ni en el build: se suben desde el admin al almacenamiento (R2) y el sitio solo recibe su dirección. En el repositorio solo hay logos e imágenes genéricas.
 - **Proporción estándar 4:5 vertical** en tarjetas, fichas y galería de equipos. Marco `gis`, `object-fit: cover`, sin bordes redondeados.
-- **Imagen genérica de categoría** (producto sin foto): fondo `noche` con PatrónCancha, monograma mono blanco al 30 % del ancho y el nombre de la categoría en `eyebrow` lima. Una por categoría (10). En la ficha lleva debajo el texto "Foto próximamente".
+- **Imagen genérica de categoría** (producto sin foto): fondo `noche` con PatrónCancha, monograma mono blanco al 30 % del ancho y el nombre de la categoría en `eyebrow` lima. Una por categoría (10). En la ficha lleva debajo el texto "Foto próximamente". Los archivos son `public/img/placeholder/<slug>.webp` (800 × 1000), generados con `pnpm placeholders` desde el componente y la lista de `apps/web/scripts/placeholders.json`; el nombre va dentro de la imagen, así que si se renombra o agrega una categoría hay que actualizar esa lista y regenerar. El texto se dimensiona para tarjetas de ≈200 px de ancho (en la ficha se ve proporcionalmente más grande).
 - **Espacios de foto del sitio** (no son de producto): mientras no haya foto se muestran sobre `gis` con la DobleDiagonal en `concreto` y su nombre entre corchetes. Cada uno es un espacio editable en el admin (`site_media`, TRD §6.2):
 
 | Espacio | Dónde aparece | Proporción |
@@ -454,7 +454,7 @@ Sistema visual: **shadcn/ui** con los tokens de §2 (fuente Barlow, primario `no
 | D-2 | 24 pantallas móviles 390 px | Claude Design "P&P Deportes — Pantallas" · copia en `design/screens/movil/` | ✅ |
 | D-3 | 22 pantallas de escritorio 1440 px | Mismo lienzo · copia en `design/screens/escritorio/` | ✅ |
 | D-4 | Admin: Inicio, Productos, Editor de producto, Importar, Solicitudes, Fotos del sitio | — | ⬜ Pendiente |
-| D-5 | Imágenes genéricas por categoría (10) como archivos | Hoy solo como componente `ImagenGenerica` | ⬜ Pendiente (se generan en la fase 1 del plan) |
+| D-5 | Imágenes genéricas por categoría (10) como archivos | `apps/web/public/img/placeholder/<slug>.webp`, generadas desde `ImagenGenerica` con `pnpm placeholders` | ✅ (11-oct-2026) |
 | D-6 | Pantallas sin diseñar listadas en §8 | — | ⬜ Opcional |
 
 **Paquete exportado** (`pyp-deportes-diseno.zip`): `docs/` + `design/screens` (HTML autónomo) + `design/screenshots` (PNG) + `design/tokens` + `design/fonts` + `design/assets/logos`. Se copia a la raíz del repositorio.

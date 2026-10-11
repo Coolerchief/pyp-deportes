@@ -32,6 +32,7 @@ pnpm lint
 pnpm typecheck
 pnpm test           # Vitest + pruebas de scripts/
 pnpm test:e2e       # Playwright contra el build estático
+pnpm placeholders   # regenera las 10 imágenes genéricas de categoría (public/img/placeholder)
 pnpm db:link        # enlaza la CLI con pyp-dev (solo pyp-dev)
 pnpm test:db        # pgTAP contra pyp-dev (scripts/pgtap.mjs; cada prueba: begin…rollback y create extension pgtap)
 pnpm db:reset       # migraciones + semilla en pyp-dev (borra sus datos)

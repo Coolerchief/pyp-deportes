@@ -13,6 +13,7 @@
     "typecheck": "pnpm -r --parallel typecheck",
     "test": "pnpm -r test && node --test \"scripts/*.test.mjs\"",
     "test:e2e": "pnpm --filter @pyp/web test:e2e",
+    "placeholders": "pnpm --filter @pyp/web placeholders",
     "test:db": "node scripts/supabase-dev.mjs test",
     "db:link": "node scripts/supabase-dev.mjs link",
     "db:reset": "node scripts/supabase-dev.mjs reset",

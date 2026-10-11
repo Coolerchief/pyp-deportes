@@ -87,6 +87,7 @@ flowchart LR
 | Íconos | lucide-react · simple-icons (solo el glifo de WhatsApp) | última | Trazo 2 px, 20/24 px (`03-UI-UX.md` §5) |
 | CSV/Excel | Papa Parse · SheetJS (`xlsx`) | última | Importador del admin |
 | Imágenes (subida) | `browser-image-compression` o Canvas API | — | Genera WebP 320/640/1024/1600 |
+| Imágenes genéricas (build) | `sharp` | 0.35.x | Solo desarrollo: `pnpm placeholders` captura `ImagenGenerica` con Playwright y la codifica a WebP en `apps/web/public/img/placeholder/` (misma versión que trae Next) |
 | Backend | Supabase (Postgres 15+, Auth, Edge Functions en Deno) | CLI última | Migraciones en `supabase/migrations` |
 | Almacenamiento | Cloudflare R2 (API S3) | — | Firma con `aws4fetch` en la Edge Function |
 | Anti-spam | Cloudflare Turnstile | — | Modo "managed", invisible cuando se puede |
