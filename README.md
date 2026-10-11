@@ -34,6 +34,10 @@ Después de activar el entorno: `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pn
 | `packages/shared/` | Reglas de negocio compartidas (TypeScript puro) |
 | `supabase/` | Configuración, migraciones, funciones y pruebas de la base |
 | `workers/cron/` | Worker de tareas programadas |
+
+## Despliegue
+
+Cada push a `main` corre `.github/workflows/deploy.yml`: compila el sitio y lo publica con `wrangler deploy` en Cloudflare Workers (Worker `pyp-deportes`, configurado en `apps/web/wrangler.jsonc`). También se puede lanzar a mano desde la pestaña Actions. Usa los secretos del repositorio `CLOUDFLARE_API_TOKEN` (permiso de edición de Workers) y `CLOUDFLARE_ACCOUNT_ID`. Para revisar sin publicar: `pnpm build` y luego `pnpm --filter @pyp/web exec wrangler deploy --dry-run`.
 | `docs/` | PRD, TRD, UI/UX, flujos, esquema de base de datos, plan de implementación, datos y logos |
 | `design/screens/` | 24 pantallas móviles y 22 de escritorio en HTML (navegables entre sí) |
 | `design/screenshots/` | Las mismas pantallas en PNG |

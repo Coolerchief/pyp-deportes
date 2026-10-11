@@ -13,9 +13,53 @@ permissions:
   contents: read
 
 jobs:
+  # Lint, typecheck, unit tests, static build and Playwright against apps/web/out.
+  web:
+    name: web (lint, test, build, e2e)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @pyp/web exec playwright install --with-deps chromium
+
+      - name: E2E tests
+        run: pnpm test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-report
+          path: apps/web/test-results
+          retention-days: 7
+
   # pgTAP tests (supabase/tests) against a throwaway Postgres inside the runner: it applies
   # supabase/migrations and seed.sql from this commit. Never touches pyp-dev or production,
-  # so it needs no secrets. Lint, typecheck, unit tests and build are added in T0.6.
+  # so it needs no secrets.
   db:
     name: db (pgTAP)
     runs-on: ubuntu-latest
