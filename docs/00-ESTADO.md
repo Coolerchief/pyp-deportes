@@ -110,7 +110,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T1.6 (`supabase/seed.sql`: 6 ajustes, 4 textos con los textos de las pantallas y sus corchetes pendientes, 8 espacios de foto, tienda Coapa, 7 deportes, 10 categorías y 34 subcategorías con su `size_label`, 15 marcas y el admin de desarrollo `admin@pyp.test` sin contraseña en el repo). `pnpm db:setup` deja pyp-dev listo con un comando; aplicado el 11-oct-2026: 56 productos importados sobre la taxonomía de la semilla, sin crear categorías ni marcas extra. 14 pruebas pgTAP de la semilla. **Pendiente del usuario:** definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:reset` (o `db:setup`) para poder entrar como admin.
 
-**Siguiente paso:** tarea T1.7 (tipos generados y esquemas Zod compartidos).
+**Hecho:** T1.7 (`packages/shared`: esquemas Zod de la solicitud de cotización con los mensajes de UI/UX §10 y el resumen "Faltan n datos…", fila del importador con las mismas reglas que `admin_import_products`, `catalog.json`, resultado del importador; folio, fechas de CDMX, normalización de texto, SKU y etiqueta de variante, enums con etiquetas y transiciones de estado; tipos `Database`/`Json`). 33 pruebas, entre ellas: las 56 filas del CSV inicial validan y dan las 313 variantes que hay en pyp-dev. Zod 4.
+
+**Siguiente paso:** tarea T1.8 (aplicar migraciones y semilla al proyecto real de Supabase). Necesita el proyecto de producción y se hace desde GitHub Actions, nunca enlazándolo desde esta máquina.
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
