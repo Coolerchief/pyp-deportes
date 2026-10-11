@@ -37,10 +37,10 @@ pnpm test           # Vitest + pruebas de scripts/
 pnpm test:e2e       # Playwright contra el build estático
 pnpm placeholders   # regenera las 10 imágenes genéricas de categoría (public/img/placeholder)
 pnpm db:link        # enlaza la CLI con pyp-dev (solo pyp-dev)
-pnpm test:db        # pgTAP contra pyp-dev (scripts/pgtap.mjs; cada prueba: begin…rollback y create extension pgtap) + folios simultáneos
+pnpm test:db        # pgTAP contra pyp-dev (scripts/pgtap.mjs; cada prueba: begin, create extension pgtap, truncate de las tablas, …, rollback) + folios simultáneos
 pnpm db:reset       # migraciones + semilla en pyp-dev (borra sus datos)
 pnpm db:types       # regenera packages/shared/database.types.ts desde pyp-dev
-pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev (hasta T1.5 solo avisa que falta el importador)
+pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev con admin_import_products (correrlo de nuevo actualiza, no duplica)
 ```
 
 **Despliegue.** `.github/workflows/deploy.yml` publica en Cloudflare Workers (`apps/web/wrangler.jsonc`) con cada push a `main` o a mano desde Actions. No subas ni fusiones nada a `main` sin que el usuario lo pida. `ci.yml` corre los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP) en cada PR.
@@ -60,7 +60,7 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   wrangler.jsonc     Worker de static assets que sirve apps/web/out
 packages/shared/     Esquemas Zod, tipos, folio, normalización de texto (sin dependencias de Node); database.types.ts generado
 supabase/            migrations/, functions/, seed.sql, tests/
-scripts/             supabase-dev.mjs (candado pyp-dev), pgtap.mjs y folio-concurrency.mjs (prueba 8), con sus pruebas
+scripts/             supabase-dev.mjs (candado pyp-dev), pgtap.mjs, folio-concurrency.mjs (prueba 8) e import-catalog.mjs, con sus pruebas
 workers/cron/        Latido, publicación nocturna, respaldo
 .github/workflows/   ci.yml y deploy.yml
 docs/                Documentación (fuente de verdad)

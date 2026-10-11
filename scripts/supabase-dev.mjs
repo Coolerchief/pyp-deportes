@@ -7,8 +7,9 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { runFolioConcurrency } from './folio-concurrency.mjs';
+import { importCatalog } from './import-catalog.mjs';
 import { runPgTap } from './pgtap.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -75,6 +76,20 @@ function fail(message) {
   process.exit(1);
 }
 
+/**
+ * Connection to pyp-dev through the session pooler that `supabase link` recorded. The pooler's
+ * certificate comes from Supabase's own CA: encrypt without verifying.
+ */
+function poolerConnection() {
+  if (!existsSync(poolerUrlFile))
+    fail('Falta supabase/.temp/pooler-url. Vuelve a correr pnpm db:link.');
+  const password = process.env.SUPABASE_DB_PASSWORD;
+  if (!password) fail('Falta SUPABASE_DB_PASSWORD en .env.local.');
+  const url = new URL(readFileSync(poolerUrlFile, 'utf8').trim());
+  url.password = password;
+  return { connectionString: url.href, ssl: { rejectUnauthorized: false } };
+}
+
 function guard(env) {
   const error = checkLinkedProject({ ...env, linkedRef: readLinkedRef() });
   if (error) fail(error);
@@ -121,22 +136,20 @@ const commands = {
     });
     if (!ok) fail('Hay pruebas pgTAP que fallaron.');
     // Security test 8 needs several connections at once, so it lives outside pgTAP.
-    const url = new URL(readFileSync(poolerUrlFile, 'utf8').trim());
-    url.password = password;
-    const foliosOk = await runFolioConcurrency({
-      connectionString: url.href,
-      ssl: { rejectUnauthorized: false },
-    });
+    const foliosOk = await runFolioConcurrency(poolerConnection());
     if (!foliosOk) fail('next_folio repitió o saltó folios con llamadas simultáneas.');
   },
-  // CSV importer (T1.5) runs admin_import_products on pyp-dev through the linked CLI.
+  // CSV importer (T1.5): sends the file to admin_import_products on pyp-dev over the pooler.
   async import(env, args) {
     guard(env);
-    const importer = resolve(root, 'scripts/import-catalog.mjs');
-    if (!existsSync(importer))
-      fail('El importador llega con la tarea T1.5 (scripts/import-catalog.mjs).');
-    const { importCatalog } = await import(pathToFileURL(importer).href);
-    await importCatalog({ args, supabase });
+    const [file] = args;
+    if (!file) fail('Indica el CSV: pnpm db:import docs/data/catalogo-inicial.csv');
+    if (!existsSync(resolve(root, file))) fail(`No existe el archivo ${file}.`);
+    const ok = await importCatalog({
+      file: resolve(root, file),
+      ...poolerConnection(),
+    });
+    if (!ok) fail('Hay filas con errores; las demás se importaron.');
   },
 };
 

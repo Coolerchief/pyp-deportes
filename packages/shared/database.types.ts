@@ -1804,6 +1804,7 @@ export type Database = {
     Functions: {
       admin_anonymize_customer: { Args: { id: string }; Returns: undefined }
       admin_dashboard_stats: { Args: never; Returns: Json }
+      admin_import_products: { Args: { rows: Json }; Returns: Json }
       admin_replace_variants: {
         Args: { option1: string[]; option2: string[]; product_id: string }
         Returns: Json
@@ -1834,6 +1835,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      name_from_slug: { Args: { slug: string }; Returns: string }
       next_folio: { Args: { issued_at?: string }; Returns: string }
       normalize_search_text: { Args: { value: string }; Returns: string }
       ping: { Args: never; Returns: string }
@@ -1849,6 +1851,8 @@ export type Database = {
       require_admin: { Args: never; Returns: undefined }
       require_staff: { Args: never; Returns: undefined }
       setting_flag: { Args: { flag: string }; Returns: boolean }
+      slugify: { Args: { value: string }; Returns: string }
+      split_list: { Args: { value: string }; Returns: string[] }
       variant_label: {
         Args: { option1: string; option2: string }
         Returns: string

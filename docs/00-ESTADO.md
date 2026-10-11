@@ -106,7 +106,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T1.4 (10 funciones de §8 más ayudantes `require_staff`, `require_admin`, `variant_sku` y `variant_label`; 51 pruebas pgTAP, entre ellas la 7; la 8, de folios simultáneos, con `scripts/folio-concurrency.mjs` dentro de `pnpm test:db` y en CI). Las 8 pruebas de seguridad de §7 pasan contra pyp-dev (11-oct-2026); `pnpm db:reset` aplicado y comprobado con la API REST y la llave `anon`.
 
-**Siguiente paso:** tarea T1.5 (`admin_import_products` y `pnpm db:import`).
+**Hecho:** T1.5 (`admin_import_products` y `scripts/import-catalog.mjs`). En pyp-dev (11-oct-2026), `pnpm db:import docs/data/catalogo-inicial.csv` dejó 56 productos y 313 variantes (tallas × colores); la segunda corrida actualizó los 56 sin duplicar nada. 17 pruebas pgTAP del importador. Las pruebas pgTAP ahora vacían las tablas al empezar (`truncate … cascade` dentro de su transacción) para no chocar con los datos de pyp-dev. Hasta T1.6 las categorías creadas por el importador usan `Talla` como nombre de la opción 1.
+
+**Siguiente paso:** tarea T1.6 (datos semilla).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 

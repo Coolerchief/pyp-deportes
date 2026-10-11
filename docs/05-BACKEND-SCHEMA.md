@@ -583,6 +583,16 @@ Pasos, en una transacción:
 - Si el producto ya existe, **no** cambia su `slug` (rompería enlaces) y avisa si el CSV trae uno distinto.
 - Devuelve `{ "created": n, "updated": n, "errors": [{ "row": 3, "sku": "…", "message": "…" }] }`. Una fila con error no detiene las demás del lote.
 
+**Implementación (T1.5, 11-oct-2026).** Migración `20261011160000_import_products.sql`; pruebas en `supabase/tests/050_import_products.test.sql`; script `scripts/import-catalog.mjs` (`pnpm db:import <csv>`).
+- Cada fila llega con los nombres de columna del CSV como llaves y valores de texto (como los entrega Papa Parse en el admin). Las reglas del CSV viven solo en la función. `_row`, opcional, es el número de línea en la hoja de cálculo (el encabezado es la línea 1) y es el que sale en `errors`; sin él se usa la posición en el lote.
+- Cada fila corre en su propio bloque con `exception`: si falla se deshace solo esa fila. Al final de la fila se ejecuta `set constraints all immediate`, para que las reglas diferidas (variante por defecto, publicación) fallen dentro de su fila y no al confirmar el lote.
+- Además de `errors` devuelve `warnings` (por ahora, el slug distinto en un producto que ya existe).
+- Se validan: SKU, nombre y marca presentes; slugs de producto, categoría, subcategoría y deportes; `url_anterior` que termine en el mismo slug; `publico`, `estado`, `personalizable` y `destacado` (`si`, `sí` o `no`) y `tecnicas`. Una subcategoría que ya existe bajo otra categoría es error.
+- Marca: se busca por nombre sin importar mayúsculas o por `slugify(nombre)`; si no existe se crea. Categorías, subcategorías y deportes que no existen se crean con el nombre derivado del slug (`name_from_slug`: `guantes-portero` → "Guantes portero"); los nombres correctos llegan con la semilla de T1.6.
+- `option1_name` toma el `size_label` de la categoría al crear el producto y no se toca al actualizar. Sin la semilla, las categorías creadas por el importador tienen `Talla`; con la semilla (T1.6), `balones` y `material-entrenamiento` dan `Tamaño` y `box-y-combate` da `Peso`.
+- `tallas = unitalla` y `colores = A elegir` funcionan como dice `data/sitio-actual.md` §4. `option2_name` es `Color` cuando hay colores.
+- La llaman el personal y `service_role`. Para eso `require_staff()` deja pasar a `service_role` (el servidor, que ya salta RLS); las funciones solo de admin siguen exigiendo admin. El script entra por el pooler de pyp-dev y, dentro de cada transacción, actúa como `service_role`.
+
 ## 9. Edge Functions
 
 Comunes: CORS con lista de orígenes permitidos, respuestas JSON, errores con la forma `{ "error": { "code": "…", "message": "…", "fields": { … } } }`.
