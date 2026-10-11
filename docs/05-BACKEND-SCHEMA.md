@@ -471,6 +471,11 @@ Son lo único que lee el build del sitio (con la `anon key`). Se crean como vist
 
 Las dos últimas permiten pasar a modo tienda cambiando un ajuste, sin migración.
 
+**Implementación (T1.3, 11-oct-2026).** Migración `20261011140000_public_views_and_rls.sql`.
+- Las vistas quedan con permiso **solo de lectura** (`revoke all` y luego `grant select` a `anon` y `authenticated`). Varias son vistas simples que Postgres haría actualizables; sin esto, `anon` podría escribir a través de ellas con los permisos del dueño.
+- Los ajustes `flags.show_prices` y `flags.enable_stock` se leen con `setting_flag(flag)` (`security definer`). Quien consulta una vista necesita `execute` sobre las funciones que usa, así que se concede a `anon` y `authenticated`; solo devuelve un booleano de un ajuste público.
+- Las vistas incluyen `created_at` y `updated_at` (para `lastModified` del sitemap) y las columnas de estado (`status`, `is_active`), que siempre valen lo publicado.
+
 ## 7. Seguridad por fila (RLS)
 
 Funciones de apoyo (`security definer`, `stable`, `search_path = public`):
@@ -496,6 +501,8 @@ $$;
 | `folio_counters`, `system_heartbeats` | Sin acceso | Sin acceso | Leer |
 
 Reglas:
+- **Privilegios además de RLS (T1.3).** `anon` no tiene ningún privilegio sobre las tablas base (`revoke all`, también por defecto para tablas futuras creadas por `postgres`): una consulta directa responde "permiso denegado" en vez de una lista vacía. `authenticated` solo puede leer `customers`, `quote_requests`, `quote_request_items`, `quote_status_history`, `folio_counters`, `system_heartbeats` y `publish_runs`; las escrituras van por las funciones de §8. Todas las políticas son `to authenticated` y llaman a `(select is_staff())` / `(select is_admin())` para que Postgres las evalúe una vez por consulta.
+- `is_staff()` e `is_admin()` fijan `search_path = ''` (nombres calificados) en lugar de `public`, y solo las ejecutan `authenticated` y `service_role`.
 - Nadie borra solicitudes ni clientes desde el cliente web; no hay política `delete` para ellos.
 - `service_role` (Edge Functions, GitHub Actions) salta RLS; por eso su llave nunca sale del servidor.
 - Borrar un producto con solicitudes asociadas no rompe el historial: las líneas conservan nombre y SKU.
@@ -509,6 +516,8 @@ Reglas:
 6. No se puede publicar un `gallery_item` sin consentimiento.
 7. `create_quote_request` con el mismo `client_request_id` devuelve el mismo folio y no duplica.
 8. Dos llamadas simultáneas a `next_folio` no repiten consecutivo.
+
+Las pruebas 1–6 están en `supabase/tests/030_rls_and_views.test.sql` (la 6 también en `020_quotes_site_schema.test.sql`), junto con: `anon` no escribe a través de una vista, filtros de las vistas de categorías, marcas, variantes y ajustes, un editor solo lee su propia fila de `staff_members` y un usuario autenticado que no es personal no lee nada.
 
 ## 8. Funciones (RPC)
 

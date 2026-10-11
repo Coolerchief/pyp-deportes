@@ -89,6 +89,13 @@ export type Database = {
             referencedRelation: "categories"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "public_categories"
+            referencedColumns: ["id"]
+          },
         ]
       }
       customers: {
@@ -176,10 +183,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "gallery_item_products_gallery_item_id_fkey"
+            columns: ["gallery_item_id"]
+            isOneToOne: false
+            referencedRelation: "public_gallery_items"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "gallery_item_products_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gallery_item_products_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "public_products"
             referencedColumns: ["id"]
           },
         ]
@@ -241,6 +262,13 @@ export type Database = {
             foreignKeyName: "gallery_items_sport_id_fkey"
             columns: ["sport_id"]
             isOneToOne: false
+            referencedRelation: "public_sports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gallery_items_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
             referencedRelation: "sports"
             referencedColumns: ["id"]
           },
@@ -273,6 +301,13 @@ export type Database = {
             foreignKeyName: "inventory_levels_store_id_fkey"
             columns: ["store_id"]
             isOneToOne: false
+            referencedRelation: "public_stores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_levels_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
             referencedRelation: "stores"
             referencedColumns: ["id"]
           },
@@ -281,6 +316,13 @@ export type Database = {
             columns: ["variant_id"]
             isOneToOne: false
             referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_levels_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "public_product_variants"
             referencedColumns: ["id"]
           },
         ]
@@ -331,10 +373,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "public_products"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "product_images_variant_id_fkey"
             columns: ["variant_id"]
             isOneToOne: false
             referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_images_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "public_product_variants"
             referencedColumns: ["id"]
           },
         ]
@@ -361,6 +417,20 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_sports_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "public_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_sports_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "public_sports"
             referencedColumns: ["id"]
           },
           {
@@ -415,6 +485,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "public_products"
             referencedColumns: ["id"]
           },
         ]
@@ -516,8 +593,29 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "products_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "public_brands"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "products_category_id_fkey"
             columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "public_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_subcategory_id_fkey"
+            columns: ["subcategory_id"]
             isOneToOne: false
             referencedRelation: "categories"
             referencedColumns: ["id"]
@@ -526,7 +624,7 @@ export type Database = {
             foreignKeyName: "products_subcategory_id_fkey"
             columns: ["subcategory_id"]
             isOneToOne: false
-            referencedRelation: "categories"
+            referencedRelation: "public_categories"
             referencedColumns: ["id"]
           },
         ]
@@ -622,6 +720,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "quote_request_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "public_products"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "quote_request_items_quote_request_id_fkey"
             columns: ["quote_request_id"]
             isOneToOne: false
@@ -633,6 +738,13 @@ export type Database = {
             columns: ["variant_id"]
             isOneToOne: false
             referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_request_items_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "public_product_variants"
             referencedColumns: ["id"]
           },
         ]
@@ -719,6 +831,13 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_requests_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "public_stores"
             referencedColumns: ["id"]
           },
           {
@@ -1020,13 +1139,671 @@ export type Database = {
             referencedRelation: "product_variants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "variant_prices_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "public_product_variants"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
     Views: {
-      [_ in never]: never
+      public_brands: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          is_own_brand: boolean | null
+          logo_key: string | null
+          name: string | null
+          slug: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          is_own_brand?: boolean | null
+          logo_key?: string | null
+          name?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          is_own_brand?: boolean | null
+          logo_key?: string | null
+          name?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      public_categories: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          is_active: boolean | null
+          name: string | null
+          parent_id: string | null
+          size_label: string | null
+          slug: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          parent_id?: string | null
+          size_label?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          parent_id?: string | null
+          size_label?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "public_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_gallery_item_products: {
+        Row: {
+          gallery_item_id: string | null
+          product_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_item_products_gallery_item_id_fkey"
+            columns: ["gallery_item_id"]
+            isOneToOne: false
+            referencedRelation: "gallery_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gallery_item_products_gallery_item_id_fkey"
+            columns: ["gallery_item_id"]
+            isOneToOne: false
+            referencedRelation: "public_gallery_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gallery_item_products_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gallery_item_products_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "public_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_gallery_items: {
+        Row: {
+          alt: string | null
+          created_at: string | null
+          height: number | null
+          id: string | null
+          key_base: string | null
+          sort_order: number | null
+          sport_id: string | null
+          status: Database["public"]["Enums"]["content_status"] | null
+          team_name: string | null
+          updated_at: string | null
+          width: number | null
+          year: number | null
+        }
+        Insert: {
+          alt?: string | null
+          created_at?: string | null
+          height?: number | null
+          id?: string | null
+          key_base?: string | null
+          sort_order?: number | null
+          sport_id?: string | null
+          status?: Database["public"]["Enums"]["content_status"] | null
+          team_name?: string | null
+          updated_at?: string | null
+          width?: number | null
+          year?: number | null
+        }
+        Update: {
+          alt?: string | null
+          created_at?: string | null
+          height?: number | null
+          id?: string | null
+          key_base?: string | null
+          sort_order?: number | null
+          sport_id?: string | null
+          status?: Database["public"]["Enums"]["content_status"] | null
+          team_name?: string | null
+          updated_at?: string | null
+          width?: number | null
+          year?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_items_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "public_sports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gallery_items_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "sports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_inventory: {
+        Row: {
+          created_at: string | null
+          quantity: number | null
+          store_id: string | null
+          updated_at: string | null
+          variant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_levels_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "public_stores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_levels_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_levels_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_levels_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "public_product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_product_images: {
+        Row: {
+          alt: string | null
+          created_at: string | null
+          height: number | null
+          id: string | null
+          key_base: string | null
+          product_id: string | null
+          sort_order: number | null
+          updated_at: string | null
+          variant_id: string | null
+          width: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "public_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_images_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_images_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "public_product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_product_sports: {
+        Row: {
+          product_id: string | null
+          sport_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_sports_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_sports_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "public_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_sports_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "public_sports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_sports_sport_id_fkey"
+            columns: ["sport_id"]
+            isOneToOne: false
+            referencedRelation: "sports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_product_variants: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          is_active: boolean | null
+          is_default: boolean | null
+          option1_value: string | null
+          option2_value: string | null
+          product_id: string | null
+          sku: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "public_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_products: {
+        Row: {
+          audience: Database["public"]["Enums"]["audience"] | null
+          brand_id: string | null
+          category_id: string | null
+          color_note: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          is_customizable: boolean | null
+          is_featured: boolean | null
+          legacy_url: string | null
+          min_suggested_qty: number | null
+          name: string | null
+          option1_name: string | null
+          option2_name: string | null
+          published_at: string | null
+          short_description: string | null
+          sku: string | null
+          slug: string | null
+          sort_order: number | null
+          specs: Json | null
+          status: Database["public"]["Enums"]["product_status"] | null
+          subcategory_id: string | null
+          tags: string[] | null
+          techniques: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          audience?: Database["public"]["Enums"]["audience"] | null
+          brand_id?: string | null
+          category_id?: string | null
+          color_note?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          is_customizable?: boolean | null
+          is_featured?: boolean | null
+          legacy_url?: string | null
+          min_suggested_qty?: number | null
+          name?: string | null
+          option1_name?: string | null
+          option2_name?: string | null
+          published_at?: string | null
+          short_description?: string | null
+          sku?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          specs?: Json | null
+          status?: Database["public"]["Enums"]["product_status"] | null
+          subcategory_id?: string | null
+          tags?: string[] | null
+          techniques?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          audience?: Database["public"]["Enums"]["audience"] | null
+          brand_id?: string | null
+          category_id?: string | null
+          color_note?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          is_customizable?: boolean | null
+          is_featured?: boolean | null
+          legacy_url?: string | null
+          min_suggested_qty?: number | null
+          name?: string | null
+          option1_name?: string | null
+          option2_name?: string | null
+          published_at?: string | null
+          short_description?: string | null
+          sku?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          specs?: Json | null
+          status?: Database["public"]["Enums"]["product_status"] | null
+          subcategory_id?: string | null
+          tags?: string[] | null
+          techniques?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "public_brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "public_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "public_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_settings: {
+        Row: {
+          created_at: string | null
+          is_public: boolean | null
+          key: string | null
+          updated_at: string | null
+          value: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          is_public?: boolean | null
+          key?: string | null
+          updated_at?: string | null
+          value?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          is_public?: boolean | null
+          key?: string | null
+          updated_at?: string | null
+          value?: Json | null
+        }
+        Relationships: []
+      }
+      public_site_media: {
+        Row: {
+          alt: string | null
+          created_at: string | null
+          height: number | null
+          key_base: string | null
+          slot: string | null
+          updated_at: string | null
+          width: number | null
+        }
+        Insert: {
+          alt?: string | null
+          created_at?: string | null
+          height?: number | null
+          key_base?: string | null
+          slot?: string | null
+          updated_at?: string | null
+          width?: number | null
+        }
+        Update: {
+          alt?: string | null
+          created_at?: string | null
+          height?: number | null
+          key_base?: string | null
+          slot?: string | null
+          updated_at?: string | null
+          width?: number | null
+        }
+        Relationships: []
+      }
+      public_site_texts: {
+        Row: {
+          created_at: string | null
+          key: string | null
+          updated_at: string | null
+          value: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          key?: string | null
+          updated_at?: string | null
+          value?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          key?: string | null
+          updated_at?: string | null
+          value?: Json | null
+        }
+        Relationships: []
+      }
+      public_sports: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          is_active: boolean | null
+          name: string | null
+          slug: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      public_stores: {
+        Row: {
+          borough: string | null
+          city: string | null
+          created_at: string | null
+          directions: string | null
+          email: string | null
+          hours: Json | null
+          id: string | null
+          is_active: boolean | null
+          lat: number | null
+          lng: number | null
+          name: string | null
+          neighborhood: string | null
+          phone: string | null
+          postal_code: string | null
+          slug: string | null
+          sort_order: number | null
+          street: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          borough?: string | null
+          city?: string | null
+          created_at?: string | null
+          directions?: string | null
+          email?: string | null
+          hours?: Json | null
+          id?: string | null
+          is_active?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          name?: string | null
+          neighborhood?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          street?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          borough?: string | null
+          city?: string | null
+          created_at?: string | null
+          directions?: string | null
+          email?: string | null
+          hours?: Json | null
+          id?: string | null
+          is_active?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          name?: string | null
+          neighborhood?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          street?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      public_variant_prices: {
+        Row: {
+          created_at: string | null
+          currency: string | null
+          min_qty: number | null
+          unit_price_cents: number | null
+          updated_at: string | null
+          variant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "variant_prices_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "variant_prices_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "public_product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      is_admin: { Args: never; Returns: boolean }
+      is_staff: { Args: never; Returns: boolean }
       normalize_search_text: { Args: { value: string }; Returns: string }
       product_search_text: {
         Args: {
@@ -1037,6 +1814,7 @@ export type Database = {
         }
         Returns: string
       }
+      setting_flag: { Args: { flag: string }; Returns: boolean }
     }
     Enums: {
       audience: "adulto" | "infantil" | "unisex"
