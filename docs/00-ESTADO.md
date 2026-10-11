@@ -104,7 +104,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T1.3 (15 vistas `public_*` de solo lectura, `is_staff`/`is_admin`, políticas RLS por rol y privilegios: `anon` no tiene acceso a ninguna tabla base; pruebas de seguridad 1–6 de §7 en verde, 22 pruebas pgTAP). `pnpm db:reset` aplicado en pyp-dev (11-oct-2026); comprobado también con la API REST y la llave `anon`.
 
-**Siguiente paso:** tarea T1.4 (funciones: `next_folio`, `create_quote_request`, `admin_*`, `mark_publish_run`, `ping`; pruebas 7–8).
+**Hecho:** T1.4 (10 funciones de §8 más ayudantes `require_staff`, `require_admin`, `variant_sku` y `variant_label`; 51 pruebas pgTAP, entre ellas la 7; la 8, de folios simultáneos, con `scripts/folio-concurrency.mjs` dentro de `pnpm test:db` y en CI). Las 8 pruebas de seguridad de §7 pasan contra pyp-dev (11-oct-2026); `pnpm db:reset` aplicado y comprobado con la API REST y la llave `anon`.
+
+**Siguiente paso:** tarea T1.5 (`admin_import_products` y `pnpm db:import`).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 

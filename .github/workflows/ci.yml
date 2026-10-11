@@ -76,3 +76,19 @@ jobs:
 
       - name: Run pgTAP tests
         run: supabase test db
+
+      # Security test 8 (concurrent next_folio) needs several connections: plain Node + pg.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Concurrent folio test
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+        run: node scripts/folio-concurrency.mjs
