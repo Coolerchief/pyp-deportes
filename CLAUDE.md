@@ -70,6 +70,8 @@ design/              Referencia visual exportada de Claude Design (no es código
 
 ## Reglas que no se rompen
 
+0. **El repositorio es público.** Todo lo que se sube (código, documentos, pruebas, semillas, commits, PRs y registros de Actions) se ve en internet. Nunca se suben datos reales de clientes (nombres, teléfonos, solicitudes), llaves, contraseñas, tokens, archivos `.env` ni cadenas de conexión, ni nada que no deba verse públicamente. Los datos de prueba son inventados; los secretos van en `.env.local` (ignorado) o en los secretos de GitHub, y los scripts nunca los imprimen. El trabajo `secrets` de CI (gitleaks) falla si un PR trae un secreto.
+
 1. **El sitio público es estático.** Las páginas públicas no consultan la base de datos en tiempo de visita. La única llamada al servidor es `submit-quote`.
 2. **El sitio público lee solo vistas `public_*`.** Nunca tablas base ni columnas de precio o existencias.
 3. **Ninguna foto en el repositorio.** En `public/` solo van logos, favicon y las imágenes genéricas de categoría. Lo demás está en R2.

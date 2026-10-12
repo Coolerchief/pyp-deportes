@@ -1,0 +1,34 @@
+# gitleaks configuration (CI job `secrets` in .github/workflows/ci.yml). The repository is public.
+# Starts from gitleaks' default rules and adds what this project handles that they miss.
+
+title = "pyp-deportes"
+
+[extend]
+useDefault = true
+
+# Postgres URLs with a password (Supabase direct connection or pooler). Not covered by defaults.
+[[rules]]
+id = "postgres-connection-string"
+description = "Postgres connection string with a password"
+regex = '''postgres(?:ql)?://[^:\s/@'"`]+:([^@\s'"`]+)@[^\s'"`/:]+'''
+secretGroup = 1
+keywords = ["postgres://", "postgresql://"]
+
+# Known fake passwords: the throwaway CI database and the fixtures in scripts/supabase-prod.test.mjs.
+[[rules.allowlists]]
+regexTarget = "secret"
+regexes = ['''^(postgres|pw|s3cr%40t)$''']
+
+[[rules]]
+id = "supabase-personal-access-token"
+description = "Supabase personal access token"
+regex = '''\b(sbp_[a-f0-9]{40})\b'''
+secretGroup = 1
+keywords = ["sbp_"]
+
+[[rules]]
+id = "supabase-secret-key"
+description = "Supabase secret API key"
+regex = '''\b(sb_secret_[A-Za-z0-9_-]{20,})'''
+secretGroup = 1
+keywords = ["sb_secret_"]
