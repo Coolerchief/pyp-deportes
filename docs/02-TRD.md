@@ -97,7 +97,8 @@ flowchart LR
 | Calidad | ESLint · Prettier · `tsc --noEmit` | ESLint 9 | Un solo `eslint.config.mjs` en la raíz con `eslint-config-next` y `eslint-config-prettier` |
 | Pruebas de BD sin Docker | `pg` (node-postgres) | 8.x | Solo desarrollo: `scripts/pgtap.mjs` ejecuta los archivos pgTAP contra pyp-dev porque `supabase test db --linked` necesita Docker |
 | Entorno local | `.venv` (Python) con `nodeenv` | — | Node 24 y pnpm aislados dentro del proyecto; ver `README.md` |
-| CI/CD | GitHub Actions | | Repo privado |
+| CI/CD | GitHub Actions | | Repo público (por ahora): secretos del repositorio, sin *environments* |
+| Detección de secretos | gitleaks (binario de la *release*, verificado con SHA-256) | 8.28.0 | Trabajo `secrets` de `ci.yml`: revisa todo el historial en cada PR y push. `.gitleaks.toml` agrega a las reglas por defecto cadenas de conexión de Postgres con contraseña y llaves `sbp_`/`sb_secret_` de Supabase. En local, `.venv/Scripts/gitleaks.exe git --redact .` |
 
 ## 4. Planes gratuitos: límites y consumo esperado
 
@@ -383,6 +384,7 @@ sequenceDiagram
 - Encabezados en `_headers`: `Content-Security-Policy` (self, R2, GA, Turnstile, Supabase), `X-Content-Type-Options`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`.
 - Datos personales: solo nombre, teléfono y datos de la solicitud. IP guardada como hash con sal (para limitar abusos), nunca en claro. Aviso de privacidad LFPDPPP enlazado junto a la casilla de consentimiento; se guarda `privacy_accepted_at` y la versión del aviso.
 - Contraseñas del personal gestionadas por Supabase Auth; se recomienda 2FA (TOTP) para rol `admin`.
+- **Repositorio público.** Ningún dato real de clientes, llave, contraseña, `.env` ni cadena de conexión en el repositorio ni en los registros de Actions. `.gitignore` excluye `.env`, `.env.*` (salvo `.env.example`) y `supabase/.temp/`; gitleaks corre en CI. Revisión del historial completo con gitleaks 8.28.0 el 11-oct-2026: sin hallazgos.
 
 ## 14. Rendimiento y accesibilidad
 

@@ -13,6 +13,31 @@ permissions:
   contents: read
 
 jobs:
+  # The repository is public: fail if any commit in the history (a PR brings its own commits)
+  # carries a key, password, token or connection string. Uses the pinned gitleaks release
+  # binary, checked against its published SHA-256, instead of an action that needs a license.
+  secrets:
+    name: secrets (gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GITLEAKS_VERSION: 8.28.0
+      GITLEAKS_SHA256: a65b5253807a68ac0cafa4414031fd740aeb55f54fb7e55f386acb52e6a840eb
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        run: |
+          file="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -sSfL -o "$RUNNER_TEMP/$file"             "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/$file"
+          echo "$GITLEAKS_SHA256  $RUNNER_TEMP/$file" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/$file" -C "$RUNNER_TEMP" gitleaks
+
+      - name: Scan the git history
+        run: $RUNNER_TEMP/gitleaks git --redact --no-banner --verbose .
+
   # Lint, typecheck, unit tests, static build and Playwright against apps/web/out.
   web:
     name: web (lint, test, build, e2e)

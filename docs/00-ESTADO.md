@@ -64,6 +64,7 @@ Completa. Los seis documentos y `CLAUDE.md` están escritos. Se actualizan cuand
 - Repositorio de GitHub (privado).
 - Proyecto de Supabase (plan Free).
 - Cuenta de Cloudflare: Workers, R2, Turnstile. ✅ Cuenta y token de Workers en los secretos de GitHub (11-oct-2026); R2 y Turnstile se configuran más adelante.
+- ☐ Pendiente: "Crear environment production con Required reviewers y mover ahí los secretos de Supabase".
 - Acceso al DNS de `pypdeportescoapa.com` (hoy en el hosting de WordPress) y copia de sus registros, sobre todo los de correo.
 - Google Analytics 4 y Search Console.
 
