@@ -690,7 +690,7 @@ Cada lectura se valida con Zod en el build; si un registro no cumple, el build f
 
 ## 11. Datos semilla
 
-`supabase/seed.sql` (entorno local) y la migración inicial de datos (producción):
+`supabase/seeds/base.sql` (todos los entornos) y `supabase/seeds/dev-admin.sql` (solo desarrollo):
 
 1. `settings` y `site_texts` con los valores de §4.7.
 2. `site_media`: una fila por `slot`, sin foto.
@@ -699,7 +699,7 @@ Cada lectura se valida con Zod en el build; si un registro no cumple, el build f
 5. Productos: **no** van en SQL. Se cargan con el importador desde `data/catalogo-inicial.csv`, que es además la prueba de aceptación del importador.
 6. Solo en local: un usuario admin de desarrollo (`admin@pyp.test`).
 
-**Implementación (T1.6, 11-oct-2026).** `supabase/seed.sql`; prueba en `supabase/tests/060_seed.test.sql`.
+**Implementación (T1.6, 11-oct-2026; dividida en T1.8).** `supabase/seeds/base.sql` (puntos 1–4) y `supabase/seeds/dev-admin.sql` (punto 6); `config.toml` carga los dos en pyp-dev y en CI. Producción carga solo `base.sql`, una vez, desde `db-production.yml`; su primer admin sale de secretos de GitHub, no de la semilla. Prueba en `supabase/tests/060_seed.test.sql`.
 - Los textos de `site_texts` salen de las pantallas de `design/` (pregunta y respuesta de las 4 preguntas frecuentes, frase de la asesora, cuerpo de las 7 secciones del aviso). Lo que va entre corchetes se queda así hasta que el negocio lo dé. Las secciones del aviso son `{ title, body }`; `body` es texto con párrafos separados por una línea en blanco y listas con `- `.
 - La tienda guarda el teléfono solo con dígitos (`5565822426`); el sitio le da formato. Su nombre es "P&P Deportes Coapa" y `directions` es `[REFERENCIAS PARA LLEGAR Y ESTACIONAMIENTO]`.
 - Los nombres de las 34 subcategorías se escribieron a mano a partir de los slugs de `data/sitio-actual.md` §3.2 (`guantes-portero` → "Guantes de portero") y heredan el `size_label` de su categoría. P&P es la marca propia (`slug` `pyp`).

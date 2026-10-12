@@ -161,11 +161,11 @@ pyp-deportes/
 ├── supabase/
 │   ├── migrations/               # SQL versionado (fuente de verdad del esquema)
 │   ├── functions/                # submit-quote, sign-upload, trigger-publish, _shared/
-│   ├── seed.sql                  # Taxonomía + settings + usuario admin de desarrollo
+│   ├── seeds/                    # base.sql (taxonomía + settings, todos los entornos) y dev-admin.sql (solo desarrollo)
 │   └── tests/                    # pgTAP: RLS y RPCs
 ├── workers/
 │   └── cron/                     # Worker con Cron Triggers (keep-alive, build nocturno, respaldo)
-└── .github/workflows/            # ci.yml, deploy.yml, backup.yml
+└── .github/workflows/            # ci.yml, deploy.yml, db-production.yml, backup.yml
 ```
 
 ## 6. Sitio público
@@ -332,6 +332,9 @@ Contratos completos (entradas, validación y códigos de respuesta) en `05-BACKE
 | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | GitHub Actions (deploy) |
 | `CRON_SHARED_SECRET` | Worker cron ↔ `trigger-publish` |
 | `IP_HASH_SALT` | Edge Functions (`submit-quote`): sal para guardar la IP solo como hash |
+| `SUPABASE_PROD_PROJECT_REF`, `SUPABASE_PROD_DB_URL` (cadena del *session pooler* con la contraseña codificada) | GitHub Actions, entorno `production` (`db-production.yml`, T1.8) |
+| `SUPABASE_ACCESS_TOKEN` (token personal de Supabase) | GitHub Actions, entorno `production`: desactiva el registro público de Auth con la API de administración |
+| `SUPABASE_PROD_ADMIN_EMAIL`, `SUPABASE_PROD_ADMIN_PASSWORD`, `SUPABASE_PROD_ADMIN_NAME` (opcional) | GitHub Actions, entorno `production`: primer admin. La contraseña es inicial; se cambia al entrar y una segunda corrida no la toca |
 
 ## 10. Build y despliegue
 
@@ -408,7 +411,7 @@ sequenceDiagram
 | `NEXT_PUBLIC_GA_ID` | cliente | opcional |
 | `SITE_ENV` | build | `local` · `production` |
 | `SUPABASE_DEV_PROJECT_REF` | scripts `db:*` (solo desarrollo) | referencia de pyp-dev |
-| `SUPABASE_PROD_PROJECT_REF` | scripts `db:*` (solo para bloquearlo) | referencia de producción |
+| `SUPABASE_PROD_PROJECT_REF` | scripts `db:*` (solo para bloquearlo); secreto de `db-production.yml` | referencia de producción |
 | `SUPABASE_DB_PASSWORD` | scripts `db:reset`, `test:db`, `db:import` (solo desarrollo) | contraseña de Postgres de pyp-dev |
 | `SUPABASE_DEV_ADMIN_PASSWORD` | script `db:reset` (solo desarrollo) | contraseña que se le pone al admin de desarrollo de la semilla (`admin@pyp.test`); nunca se versiona |
 

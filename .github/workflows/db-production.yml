@@ -1,0 +1,100 @@
+name: DB production
+
+# T1.8 · Applies migrations, the base seed, Auth settings and the first admin to the production
+# Supabase project, then verifies it. Production is never linked (CLAUDE.md, rule 8): the CLI
+# pushes with --db-url and scripts/supabase-prod.mjs uses the same secret URL. Safe to run again:
+# only pending migrations are applied, the seed goes in once and an existing admin keeps its
+# password. The repository is public and so are these logs: no step prints secrets.
+#
+# Secrets (environment "production"): SUPABASE_PROD_PROJECT_REF, SUPABASE_PROD_DB_URL (session
+# pooler, password percent-encoded), SUPABASE_ACCESS_TOKEN, SUPABASE_PROD_ADMIN_EMAIL,
+# SUPABASE_PROD_ADMIN_PASSWORD and optionally SUPABASE_PROD_ADMIN_NAME.
+#
+# Started by hand from Actions (needs this file on the default branch) or by pushing a tag
+# db-production-* (works from any branch).
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Escribe PRODUCCION para aplicar los cambios al proyecto de producción
+        required: true
+        type: string
+      dry_run:
+        description: Solo revisar la conexión y mostrar las migraciones pendientes
+        required: false
+        type: boolean
+        default: false
+  push:
+    tags: ['db-production-*']
+
+concurrency:
+  group: db-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    name: migrations, seed, auth and admin
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    env:
+      SUPABASE_PROD_PROJECT_REF: ${{ secrets.SUPABASE_PROD_PROJECT_REF }}
+      SUPABASE_PROD_DB_URL: ${{ secrets.SUPABASE_PROD_DB_URL }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+    steps:
+      - name: Confirm
+        if: github.event_name == 'workflow_dispatch' && inputs.confirm != 'PRODUCCION'
+        run: |
+          echo "::error::Escribe PRODUCCION en el campo de confirmación para continuar."
+          exit 1
+
+      - uses: actions/checkout@v5
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.120.0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check environment and connection
+        run: node scripts/supabase-prod.mjs check
+
+      - name: Pending migrations
+        run: supabase db push --db-url "$SUPABASE_PROD_DB_URL" --dry-run --skip-vault
+
+      - name: Apply migrations
+        if: env.DRY_RUN != 'true'
+        run: supabase db push --db-url "$SUPABASE_PROD_DB_URL" --skip-vault --yes
+
+      - name: Base seed (once, without the development admin)
+        if: env.DRY_RUN != 'true'
+        run: node scripts/supabase-prod.mjs seed
+
+      - name: Turn off public sign-up in Auth
+        if: env.DRY_RUN != 'true'
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: node scripts/supabase-prod.mjs auth
+
+      - name: First admin
+        if: env.DRY_RUN != 'true'
+        env:
+          SUPABASE_PROD_ADMIN_EMAIL: ${{ secrets.SUPABASE_PROD_ADMIN_EMAIL }}
+          SUPABASE_PROD_ADMIN_PASSWORD: ${{ secrets.SUPABASE_PROD_ADMIN_PASSWORD }}
+          SUPABASE_PROD_ADMIN_NAME: ${{ secrets.SUPABASE_PROD_ADMIN_NAME }}
+        run: node scripts/supabase-prod.mjs admin
+
+      - name: Verify
+        if: env.DRY_RUN != 'true'
+        run: node scripts/supabase-prod.mjs verify

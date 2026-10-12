@@ -58,7 +58,7 @@ jobs:
           retention-days: 7
 
   # pgTAP tests (supabase/tests) against a throwaway Postgres inside the runner: it applies
-  # supabase/migrations and seed.sql from this commit. Never touches pyp-dev or production,
+  # supabase/migrations and supabase/seeds from this commit. Never touches pyp-dev or production,
   # so it needs no secrets.
   db:
     name: db (pgTAP)
