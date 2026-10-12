@@ -332,9 +332,9 @@ Contratos completos (entradas, validación y códigos de respuesta) en `05-BACKE
 | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | GitHub Actions (deploy) |
 | `CRON_SHARED_SECRET` | Worker cron ↔ `trigger-publish` |
 | `IP_HASH_SALT` | Edge Functions (`submit-quote`): sal para guardar la IP solo como hash |
-| `SUPABASE_PROD_PROJECT_REF`, `SUPABASE_PROD_DB_URL` (cadena del *session pooler* con la contraseña codificada) | GitHub Actions, entorno `production` (`db-production.yml`, T1.8) |
-| `SUPABASE_ACCESS_TOKEN` (token personal de Supabase) | GitHub Actions, entorno `production`: desactiva el registro público de Auth con la API de administración |
-| `SUPABASE_PROD_ADMIN_EMAIL`, `SUPABASE_PROD_ADMIN_PASSWORD`, `SUPABASE_PROD_ADMIN_NAME` (opcional) | GitHub Actions, entorno `production`: primer admin. La contraseña es inicial; se cambia al entrar y una segunda corrida no la toca |
+| `SUPABASE_PROD_PROJECT_REF`, `SUPABASE_PROD_DB_URL` (cadena del *session pooler* con la contraseña codificada) | Secretos del repositorio en GitHub Actions (`db-production.yml`, T1.8) |
+| `SUPABASE_ACCESS_TOKEN` (token personal de Supabase) | Secretos del repositorio en GitHub Actions: desactiva el registro público de Auth con la API de administración |
+| `SUPABASE_PROD_ADMIN_EMAIL`, `SUPABASE_PROD_ADMIN_PASSWORD`, `SUPABASE_PROD_ADMIN_NAME` (opcional) | Secretos del repositorio en GitHub Actions: primer admin. La contraseña es inicial; se cambia al entrar y una segunda corrida no la toca |
 
 ## 10. Build y despliegue
 
@@ -355,7 +355,7 @@ sequenceDiagram
   A->>D: consulta publish_runs (estado visible en el admin)
 ```
 
-- `deploy.yml`: `on: workflow_dispatch` y `push` a `main`. `concurrency: { group: deploy-prod, cancel-in-progress: true }`. Corre `pnpm build` y `wrangler deploy` desde `apps/web` con los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` del repositorio; publica en el entorno `production` de GitHub con la URL de `workers.dev`.
+- `deploy.yml`: `on: workflow_dispatch` y `push` a `main`. `concurrency: { group: deploy-prod, cancel-in-progress: true }`. Corre `pnpm build` y `wrangler deploy` desde `apps/web` con los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` del repositorio (sin *environment* de GitHub: el repositorio es privado en el plan Free); deja la URL de `workers.dev` en el resumen de la corrida. No define `SITE_INDEXABLE`, así que lo publicado sale con `noindex` hasta el cambio de dominio.
 - `apps/web/wrangler.jsonc`: Worker `pyp-deportes` solo de *static assets* (sin código de servidor) que sirve `apps/web/out`; `html_handling: drop-trailing-slash` (coincide con `trailingSlash: false`) y `not_found_handling: 404-page` (sirve `404.html`). `_headers` vive en `apps/web/public/`.
 - `ci.yml` en cada PR y en cada push a `main` y `develop`, con dos trabajos: `web` (lint, typecheck, Vitest, build y Playwright contra el build estático con `serve out`) y `db` (`supabase db start` + `supabase test db` en un Postgres desechable del runner). Lighthouse CI (§14) se agrega cuando existan las páginas públicas.
 - **Entornos:** `local` (`next dev` contra el proyecto remoto **pyp-dev**; sin Docker no hay Supabase local) y `production`. El plan Free permite 2 proyectos: pyp-dev y producción. Detalle en `06-IMPLEMENTATION-PLAN.md`, fase 1, "Modo sin Docker".
@@ -410,6 +410,7 @@ sequenceDiagram
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | cliente | — |
 | `NEXT_PUBLIC_GA_ID` | cliente | opcional |
 | `SITE_ENV` | build | `local` · `production` |
+| `SITE_INDEXABLE` | build | Solo `true` permite indexar (`app/robots.ts` y meta robots del layout, `lib/indexing.ts`). Sin ella, todo build sale con `noindex, nofollow` y `robots.txt` con `Disallow: /`. Se agrega a `deploy.yml` en la fase 7, después del cambio de dominio |
 | `SUPABASE_DEV_PROJECT_REF` | scripts `db:*` (solo desarrollo) | referencia de pyp-dev |
 | `SUPABASE_PROD_PROJECT_REF` | scripts `db:*` (solo para bloquearlo); secreto de `db-production.yml` | referencia de producción |
 | `SUPABASE_DB_PASSWORD` | scripts `db:reset`, `test:db`, `db:import` (solo desarrollo) | contraseña de Postgres de pyp-dev |

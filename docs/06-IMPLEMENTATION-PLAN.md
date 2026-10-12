@@ -109,7 +109,7 @@ En esta fase, "`supabase db reset` corre sin errores" significa `pnpm db:reset` 
 | T1.7 | Tipos TypeScript generados y esquemas Zod compartidos (`QuoteSubmissionSchema`, fila del importador, `CatalogJson`, normalización de texto, formato de folio) | TRD §9.1 · Esquema §9.1, §10 | Pruebas unitarias de cada esquema | M |
 | T1.8 | Aplicar migraciones y semilla al proyecto real de Supabase; desactivar el registro público en Auth; crear el primer admin | TRD §9.3 | El proyecto remoto tiene el esquema; `anon` no lee tablas base | S |
 
-**T1.8 sin enlazar producción.** `.github/workflows/db-production.yml`, entorno `production` de GitHub:
+**T1.8 sin enlazar producción.** `.github/workflows/db-production.yml`, con secretos del repositorio (en el plan Free de GitHub los repositorios privados no tienen *environments*):
 
 1. `scripts/supabase-prod.mjs check`: se niega a correr fuera de GitHub Actions y revisa que `SUPABASE_PROD_DB_URL` sea del proyecto de `SUPABASE_PROD_PROJECT_REF`.
 2. `supabase db push --db-url … --dry-run` muestra las migraciones pendientes; después las aplica.
@@ -118,7 +118,7 @@ En esta fase, "`supabase db reset` corre sin errores" significa `pnpm db:reset` 
 5. `admin`: crea el usuario confirmado con la contraseña inicial de los secretos y su fila `admin` en `staff_members`; si ya existe, solo asegura la fila.
 6. `verify` (el "hecho cuando"): todas las migraciones aplicadas, `anon` sin privilegios en tablas base y con `permission denied` al leer `products`, RLS en todas las tablas, `public_settings` legible, semilla presente, ningún `admin@pyp.test` y al menos un admin activo.
 
-Se lanza a mano desde Actions escribiendo `PRODUCCION` (con la opción de solo revisar) o empujando una etiqueta `db-production-*`; lanzarlo a mano requiere que el archivo exista en `main`. Repetirlo es seguro. Ensayado el 11-oct-2026 contra pyp-dev haciéndolo pasar por producción: conexión, `db push --dry-run`, semilla omitida, admin creado que inicia sesión, segunda corrida sin cambios y `verify` (solo falló, como debía, por el `admin@pyp.test` de pyp-dev). Sin ensayar: el paso `auth`.
+Solo se lanza a mano (`workflow_dispatch`) desde Actions, escribiendo `PRODUCCION` (con la opción de solo revisar), y solo desde `main`: el primer paso detiene cualquier corrida lanzada desde otra rama. Por eso el archivo tiene que estar en `main`. Repetirlo es seguro. Ensayado el 11-oct-2026 contra pyp-dev haciéndolo pasar por producción: conexión, `db push --dry-run`, semilla omitida, admin creado que inicia sesión, segunda corrida sin cambios y `verify` (solo falló, como debía, por el `admin@pyp.test` de pyp-dev). Sin ensayar: el paso `auth`.
 
 **Salida de la fase:** las 8 pruebas de seguridad en verde y el catálogo inicial consultable desde las vistas públicas.
 
@@ -226,6 +226,7 @@ Se lanza a mano desde Actions escribiendo `PRODUCCION` (con la opción de solo r
 | 8 | Mover el DNS a Cloudflare conservando todos los registros, sobre todo los de correo | ☐ |
 | 9 | Apuntar el dominio al sitio nuevo y verificar HTTPS | ☐ |
 | 10 | Verificar las 48 redirecciones en el dominio real | ☐ |
+| 10b | Agregar `SITE_INDEXABLE: 'true'` al paso de build de `deploy.yml` y comprobar que `robots.txt` y la meta robots ya permiten indexar (hasta aquí el sitio sale con `noindex`) | ☐ |
 | 11 | Enviar el sitemap en Search Console | ☐ |
 | 12 | Confirmar que el latido, la publicación nocturna y el respaldo corrieron una vez | ☐ |
 | 13 | Guardar el WordPress anterior 30 días antes de darlo de baja | ☐ |

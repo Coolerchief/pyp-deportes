@@ -2,6 +2,8 @@ name: Deploy
 
 # Publishes the static site to Cloudflare Workers (static assets) on every push to main.
 # workflow_dispatch is also what trigger-publish calls from the admin panel (T4.10).
+# Uses repository secrets only (private repositories on GitHub Free have no environments).
+# SITE_INDEXABLE is not set, so the workers.dev site ships noindex until the domain change.
 on:
   push:
     branches: [main]
@@ -19,9 +21,6 @@ jobs:
     name: build and deploy
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    environment:
-      name: production
-      url: ${{ steps.deploy.outputs.url }}
     steps:
       - uses: actions/checkout@v5
 
@@ -48,3 +47,4 @@ jobs:
           pnpm exec wrangler deploy | tee deploy.log
           url=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' deploy.log | head -n 1)
           echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Sitio publicado: $url" >> "$GITHUB_STEP_SUMMARY"

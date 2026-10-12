@@ -4,14 +4,14 @@ name: DB production
 # Supabase project, then verifies it. Production is never linked (CLAUDE.md, rule 8): the CLI
 # pushes with --db-url and scripts/supabase-prod.mjs uses the same secret URL. Safe to run again:
 # only pending migrations are applied, the seed goes in once and an existing admin keeps its
-# password. The repository is public and so are these logs: no step prints secrets.
+# password. No step prints secrets, the admin's email or the connection string.
 #
-# Secrets (environment "production"): SUPABASE_PROD_PROJECT_REF, SUPABASE_PROD_DB_URL (session
-# pooler, password percent-encoded), SUPABASE_ACCESS_TOKEN, SUPABASE_PROD_ADMIN_EMAIL,
-# SUPABASE_PROD_ADMIN_PASSWORD and optionally SUPABASE_PROD_ADMIN_NAME.
+# Repository secrets (Settings → Secrets and variables → Actions): SUPABASE_PROD_PROJECT_REF,
+# SUPABASE_PROD_DB_URL (session pooler, password percent-encoded), SUPABASE_ACCESS_TOKEN,
+# SUPABASE_PROD_ADMIN_EMAIL, SUPABASE_PROD_ADMIN_PASSWORD and optionally SUPABASE_PROD_ADMIN_NAME.
 #
-# Started by hand from Actions (needs this file on the default branch) or by pushing a tag
-# db-production-* (works from any branch).
+# Only by hand from the Actions tab, and only from main: the first step stops any run started
+# from another branch.
 on:
   workflow_dispatch:
     inputs:
@@ -24,8 +24,6 @@ on:
         required: false
         type: boolean
         default: false
-  push:
-    tags: ['db-production-*']
 
 concurrency:
   group: db-production
@@ -39,14 +37,19 @@ jobs:
     name: migrations, seed, auth and admin
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    environment: production
     env:
       SUPABASE_PROD_PROJECT_REF: ${{ secrets.SUPABASE_PROD_PROJECT_REF }}
       SUPABASE_PROD_DB_URL: ${{ secrets.SUPABASE_PROD_DB_URL }}
-      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+      DRY_RUN: ${{ inputs.dry_run }}
     steps:
+      - name: Only from main
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "::error::Este flujo solo corre desde main (se lanzó desde ${GITHUB_REF})."
+          exit 1
+
       - name: Confirm
-        if: github.event_name == 'workflow_dispatch' && inputs.confirm != 'PRODUCCION'
+        if: inputs.confirm != 'PRODUCCION'
         run: |
           echo "::error::Escribe PRODUCCION en el campo de confirmación para continuar."
           exit 1
