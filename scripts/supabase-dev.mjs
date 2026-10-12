@@ -109,7 +109,7 @@ async function setDevAdminPassword() {
         where email = $2`,
       [password, DEV_ADMIN_EMAIL],
     );
-    if (rowCount !== 1) fail(`No se encontró ${DEV_ADMIN_EMAIL}; ¿corrió seed.sql?`);
+    if (rowCount !== 1) fail(`No se encontró ${DEV_ADMIN_EMAIL}; ¿corrió supabase/seeds/dev-admin.sql?`);
     console.log(`✓ Contraseña de ${DEV_ADMIN_EMAIL} lista (de SUPABASE_DEV_ADMIN_PASSWORD).`);
   } finally {
     await client.end();
@@ -133,7 +133,7 @@ const commands = {
     }
     supabase(['link', '--project-ref', env.devRef]);
   },
-  // Re-applies every migration and seed.sql on pyp-dev (destructive: wipes its data), then gives
+  // Re-applies every migration and the seeds (config.toml) on pyp-dev (destructive: wipes its data), then gives
   // the seed's development admin its password from .env.local (never in the public repo).
   async reset(env, args) {
     guard(env);

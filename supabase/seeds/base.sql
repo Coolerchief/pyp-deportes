@@ -1,4 +1,6 @@
--- Seed data for development (pyp-dev and the CI database): docs/05-BACKEND-SCHEMA.md §11.
+-- Base seed data, shared by every database: docs/05-BACKEND-SCHEMA.md §11.
+-- Development (pyp-dev and the CI database) loads it with dev-admin.sql through config.toml;
+-- production loads only this file, once, from .github/workflows/db-production.yml (T1.8).
 -- Values come from §4.7 and docs/data/sitio-actual.md §2–3. Bracketed texts ([HORARIO], [PEDIDO
 -- MÍNIMO]…) and values marked ⚠️ there are pending data: they stay as they are until the business
 -- confirms them in the admin. Products are not seeded: `pnpm db:import` loads them (or
@@ -145,29 +147,3 @@ insert into public.brands (slug, name, is_own_brand, sort_order) values
   ('futre', 'Futre', false, 13),
   ('figo', 'Figo', false, 14),
   ('maravillosa', 'Maravillosa', false, 15);
-
--- 5. Development admin (only in development databases) ------------------------------------------
--- No password here: the repository is public. `pnpm db:reset` sets it afterwards from
--- SUPABASE_DEV_ADMIN_PASSWORD in .env.local; without it the user exists but cannot sign in.
-
-insert into auth.users (
-  instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
-  raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
-  confirmation_token, recovery_token, email_change, email_change_token_new
-) values (
-  '00000000-0000-0000-0000-000000000000', '00000000-0000-4000-8000-00000000ad01',
-  'authenticated', 'authenticated', 'admin@pyp.test', '', now(),
-  '{"provider": "email", "providers": ["email"]}', '{"full_name": "Admin de desarrollo"}',
-  now(), now(), '', '', '', ''
-);
-
-insert into auth.identities (id, user_id, provider_id, provider, identity_data, created_at, updated_at)
-values (
-  gen_random_uuid(), '00000000-0000-4000-8000-00000000ad01', '00000000-0000-4000-8000-00000000ad01',
-  'email',
-  '{"sub": "00000000-0000-4000-8000-00000000ad01", "email": "admin@pyp.test", "email_verified": true}',
-  now(), now()
-);
-
-insert into public.staff_members (user_id, role, full_name)
-values ('00000000-0000-4000-8000-00000000ad01', 'admin', 'Admin de desarrollo');
