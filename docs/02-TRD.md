@@ -332,9 +332,9 @@ Contratos completos (entradas, validación y códigos de respuesta) en `05-BACKE
 | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | GitHub Actions (deploy) |
 | `CRON_SHARED_SECRET` | Worker cron ↔ `trigger-publish` |
 | `IP_HASH_SALT` | Edge Functions (`submit-quote`): sal para guardar la IP solo como hash |
-| `SUPABASE_PROD_PROJECT_REF`, `SUPABASE_PROD_DB_URL` (cadena del *session pooler* con la contraseña codificada) | GitHub Actions, entorno `production` (`db-production.yml`, T1.8) |
-| `SUPABASE_ACCESS_TOKEN` (token personal de Supabase) | GitHub Actions, entorno `production`: desactiva el registro público de Auth con la API de administración |
-| `SUPABASE_PROD_ADMIN_EMAIL`, `SUPABASE_PROD_ADMIN_PASSWORD`, `SUPABASE_PROD_ADMIN_NAME` (opcional) | GitHub Actions, entorno `production`: primer admin. La contraseña es inicial; se cambia al entrar y una segunda corrida no la toca |
+| `SUPABASE_PROD_PROJECT_REF`, `SUPABASE_PROD_DB_URL` (cadena del *session pooler* con la contraseña codificada) | Secretos del repositorio en GitHub Actions (`db-production.yml`, T1.8) |
+| `SUPABASE_ACCESS_TOKEN` (token personal de Supabase) | Secretos del repositorio en GitHub Actions: desactiva el registro público de Auth con la API de administración |
+| `SUPABASE_PROD_ADMIN_EMAIL`, `SUPABASE_PROD_ADMIN_PASSWORD`, `SUPABASE_PROD_ADMIN_NAME` (opcional) | Secretos del repositorio en GitHub Actions: primer admin. La contraseña es inicial; se cambia al entrar y una segunda corrida no la toca |
 
 ## 10. Build y despliegue
 

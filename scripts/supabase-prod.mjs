@@ -10,7 +10,7 @@
 //   admin   first admin: Auth user + staff_members row (never changes an existing password)
 //   verify  migrations applied, anon reads no base table, RLS everywhere, seed and admin present
 //
-// The repository is public and so are its Actions logs: nothing here prints secrets, the
+// Actions logs are readable by everyone with access to the repository: nothing here prints secrets, the
 // admin's email or the connection string.
 
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
