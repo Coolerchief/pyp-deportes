@@ -61,8 +61,8 @@ Completa. Los seis documentos y `CLAUDE.md` están escritos. Se actualizan cuand
 | Coordenadas exactas de la tienda | Mapa | No |
 
 ### D. Cuentas y accesos (para la fase 0 del plan)
-- Repositorio de GitHub (privado).
-- Proyecto de Supabase (plan Free).
+- Repositorio de GitHub (público por ahora; secretos como secretos del repositorio, sin *environments*). ✅
+- Proyectos de Supabase (plan Free): pyp-dev y producción. ✅
 - Cuenta de Cloudflare: Workers, R2, Turnstile. ✅ Cuenta y token de Workers en los secretos de GitHub (11-oct-2026); R2 y Turnstile se configuran más adelante.
 - ☐ Pendiente: "Crear environment production con Required reviewers y mover ahí los secretos de Supabase".
 - Acceso al DNS de `pypdeportescoapa.com` (hoy en el hosting de WordPress) y copia de sus registros, sobre todo los de correo.
@@ -87,7 +87,7 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 | 6 · Calidad | Pruebas de punta a punta, accesibilidad, rendimiento, respaldos | 5 |
 | 7 · Salida a producción | Datos reales, cambio de dominio (13 pasos) | — |
 
-**Hecho:** modo sin Docker (scripts `db:*` contra pyp-dev con candado, `.env.local`, trabajo `db` de CI con pgTAP). pyp-dev enlazado (10-oct-2026); `pnpm db:types` y `pnpm test:db` probados contra pyp-dev. Aún no existe el proyecto de producción.
+**Hecho:** modo sin Docker (scripts `db:*` contra pyp-dev con candado, `.env.local`, trabajo `db` de CI con pgTAP). pyp-dev enlazado (10-oct-2026); `pnpm db:types` y `pnpm test:db` probados contra pyp-dev. El proyecto de producción existe desde el 11-oct-2026 y nunca se enlaza: se actualiza con `db-production.yml` (T1.8).
 
 **Hecho:** T0.3 (componentes de marca en `apps/web/components/brand`: `Logo`, `Placa`, `DobleDiagonal`, `PatronCancha`, `CorteA13`, `ImagenGenerica`; hoja `/dev/marca`; pruebas de render). CorteA13 en móvil va a ≈7° como el diseño (decidido el 10-oct-2026).
 
@@ -95,7 +95,7 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T0.5 (10 imágenes genéricas WebP 800 × 1000 en `apps/web/public/img/placeholder/<slug>.webp`, generadas con `pnpm placeholders` desde `ImagenGenerica` vía la hoja `/dev/genericas`; la salida es idéntica byte a byte entre corridas; prueba que verifica los 10 archivos).
 
-**En curso:** T0.6. Listo: `ci.yml` con los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP); `deploy.yml` (push a `main` o manual → `wrangler deploy`); `apps/web/wrangler.jsonc` (Worker `pyp-deportes`, solo *static assets*); `_headers` con caché inmutable de `/_next/static/*`. Secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` cargados en GitHub (11-oct-2026). Falta: primer push a `main` que publique en `workers.dev` (en espera: el usuario pidió no subir nada a `main` todavía).
+**Hecho:** T0.6. `ci.yml` con los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP); `deploy.yml` (push a `main` o manual → `wrangler deploy`); `apps/web/wrangler.jsonc` (Worker `pyp-deportes`, solo *static assets*); `_headers` con caché inmutable de `/_next/static/*`. Secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` cargados en GitHub (11-oct-2026). Primer push a `main` el 11-oct-2026 (PR #16): `Deploy` publicó en https://pyp-deportes.gael-marroquin2004.workers.dev con `noindex` (meta robots y `robots.txt` `Disallow: /`, comprobado en la URL). **Fase 0 cumplida.** `deploy.yml` usa solo secretos del repositorio.
 
 **Hecho:** T0.7 (`CLAUDE.md` revisado contra el repositorio, 11-oct-2026: activación del `.venv`, `pnpm format`, hojas `/dev/*`, qué genera hoy `pnpm build`, despliegue y estructura real). Comandos probados: `dev`, `build`, `lint`, `typecheck`, `test`, `test:e2e`, `placeholders`, `db:link`, `test:db`, `db:types` y `db:import` (avisa que el importador llega en T1.5). `db:reset` no se corrió porque borra pyp-dev y aún no hay migraciones.
 
@@ -113,9 +113,11 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T1.7 (`packages/shared`: esquemas Zod de la solicitud de cotización con los mensajes de UI/UX §10 y el resumen "Faltan n datos…", fila del importador con las mismas reglas que `admin_import_products`, `catalog.json`, resultado del importador; folio, fechas de CDMX, normalización de texto, SKU y etiqueta de variante, enums con etiquetas y transiciones de estado; tipos `Database`/`Json`). 33 pruebas, entre ellas: las 56 filas del CSV inicial validan y dan las 313 variantes que hay en pyp-dev. Zod 4.
 
-**En curso:** T1.8. Listo: `.github/workflows/db-production.yml` y `scripts/supabase-prod.mjs` (migraciones con `db push --db-url`, semilla base una vez, registro público apagado en Auth, primer admin desde secretos, verificación de que `anon` no lee tablas base); semilla dividida en `base.sql` y `dev-admin.sql`. Ensayado contra pyp-dev (11-oct-2026). Secretos de producción cargados como secretos del repositorio (11-oct-2026; sin *environments* en el plan Free). El flujo solo corre a mano desde `main`. Falta: llevarlo a `main` (eso también dispara `deploy.yml`) y lanzarlo. `deploy.yml` también usa solo secretos del repositorio, y el sitio sale con `noindex` (meta robots y `robots.txt`) hasta que se defina `SITE_INDEXABLE=true` en la fase 7.
+**Hecho:** T1.8 (`.github/workflows/db-production.yml` y `scripts/supabase-prod.mjs`; semilla dividida en `supabase/seeds/base.sql` y `dev-admin.sql`). El flujo solo corre a mano desde `main` (escribiendo `PRODUCCION`) con secretos del repositorio. Corrido el 11-oct-2026: se aplicaron las 7 migraciones, la semilla base (44 categorías, 15 marcas, 7 deportes, 1 tienda), el registro público quedó apagado en Auth y se creó el primer admin; `verify` en verde (`anon` sin privilegios y con `permission denied` en tablas base, RLS en todas, ningún `admin@pyp.test`). Los registros no muestran secretos. Producción aún no tiene productos: el catálogo se carga ahí en la fase 7. Pendiente para después: *environment* `production` con aprobación (decisión del usuario, 11-oct-2026).
 
-**Siguiente paso:** correr T1.8 en producción; después, fase 2 (T2.1).
+**Fase 1 cumplida:** las 8 pruebas de seguridad en verde (pyp-dev y CI) y el catálogo inicial consultable desde las vistas públicas en pyp-dev.
+
+**Siguiente paso:** fase 2, tarea T2.1 (`catalog.json` y datos del build desde las vistas públicas).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
