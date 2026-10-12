@@ -423,16 +423,29 @@ create table system_heartbeats (
 -- Se conservan los últimos 90 días (lo limpia ping()).
 ```
 
+**Implementación de §4.5–4.8 (T1.2, 11-oct-2026).** Migración `20261011130000_quotes_gallery_site_operations.sql`; pruebas en `supabase/tests/020_quotes_site_schema.test.sql`. Además de lo listado:
+- `updated_at` con `set_updated_at` en `customers`, `folio_counters`, `quote_requests`, `gallery_items`, `site_media`, `site_texts`, `settings` y `publish_runs`. Las tablas que solo se insertan (`quote_request_items`, `quote_status_history`, `gallery_item_products`, `system_heartbeats`) llevan solo `created_at`.
+- Restricciones `check` extra: formato del folio (`^PYP-[0-9]{4}-[0-9]{6}$`), `customer_phone` de 10 dígitos, `lost_needs_reason` (una solicitud `lost` exige `lost_reason`, también fuera de `admin_set_quote_status`), `photo_has_size` en `site_media` (si hay foto, hay medidas), `reason` de `publish_runs` en `manual`/`nightly`/`push`, claves de `site_texts` y `settings` en `snake_case`, y valores no negativos en contadores, medidas y precios.
+- Las referencias a `auth.users` (`changed_by`, `updated_by`, `requested_by`) usan `on delete set null`.
+- Índices extra para las llaves foráneas y los listados: `quote_requests (customer_id, created_at desc)`, `quote_requests (store_id)`, `quote_request_items (product_id)` y `(variant_id)`, `quote_status_history (quote_request_id, created_at)`, `gallery_items (status, sort_order)`, `publish_runs (created_at desc)`, `system_heartbeats (created_at)`.
+
 ## 5. Triggers
 
 | Trigger | Tabla | Qué hace |
 |---|---|---|
 | `set_updated_at` | Todas las editables | `updated_at = now()` en cada `update` |
-| `products_search_text` | `products` | `search_text = lower(unaccent(name ‖ sku ‖ tags ‖ marca))` |
+| `products_search_text` | `products` | `search_text = lower(unaccent(name ‖ sku ‖ tags ‖ marca))` con `normalize_search_text()`; no se puede escribir a mano |
+| `brands_refresh_search_text` | `brands` (after update of name) | Recalcula `search_text` de los productos de la marca renombrada |
 | `products_published_at` | `products` | Fija `published_at` la primera vez que `status` pasa a `published` |
-| `validate_product_publish` | `products` | Impide publicar sin marca, categoría o variante activa |
-| `categories_one_level` | `categories` | Impide subcategorías de subcategorías |
-| `ensure_default_variant` | `products` (after insert) | Crea la variante por defecto si el producto nace sin variantes |
+| `validate_product_publish` | `products` (after insert/update) · `product_variants` (after update/delete) | Impide publicar sin nombre, marca, categoría o variante activa, y desactivar o borrar la última variante activa de un producto publicado |
+| `categories_one_level` | `categories` | Impide subcategorías de subcategorías y que una categoría con subcategorías se vuelva subcategoría |
+| `ensure_default_variant` | `products` (after insert) · `product_variants` (after delete) | Crea la variante por defecto si el producto nace sin variantes o se queda sin ninguna |
+
+**Implementación (T1.1, 11-oct-2026).** Migraciones `20261011120000_extensions_and_types.sql`, `20261011120100_staff_taxonomy_catalog.sql` y `20261011120200_catalog_triggers.sql`; pruebas en `supabase/tests/010_catalog_schema.test.sql`.
+- `ensure_default_variant` y `validate_product_publish` son *constraint triggers* `deferrable initially deferred`: se revisan al confirmar la transacción. Así el importador y el admin pueden escribir el producto, sus variantes y publicarlo en una sola transacción sin que aparezca la variante por defecto. Se ejecutan en orden alfabético, así que la variante por defecto existe antes de validar. En pruebas se usa `set constraints all immediate` para dispararlos al final de cada sentencia.
+- Las extensiones viven en el esquema `extensions` (convención de Supabase) y se llaman calificadas: `extensions.unaccent`, `extensions.gin_trgm_ops`. Todas las funciones fijan `search_path = ''`.
+- RLS queda activado en cada tabla desde su creación; sin políticas, `anon` y `authenticated` no leen nada hasta T1.3.
+- Además de los índices de §4 se crearon índices para las llaves foráneas (`categories.parent_id`, `products.subcategory_id`, `products.brand_id`, `product_sports.sport_id`, `product_images`, `inventory_levels.store_id`).
 
 ## 6. Vistas públicas
 
@@ -457,6 +470,11 @@ Son lo único que lee el build del sitio (con la `anon key`). Se crean como vist
 | `public_inventory` | **solo devuelve filas si `flags.enable_stock = true`** | — |
 
 Las dos últimas permiten pasar a modo tienda cambiando un ajuste, sin migración.
+
+**Implementación (T1.3, 11-oct-2026).** Migración `20261011140000_public_views_and_rls.sql`.
+- Las vistas quedan con permiso **solo de lectura** (`revoke all` y luego `grant select` a `anon` y `authenticated`). Varias son vistas simples que Postgres haría actualizables; sin esto, `anon` podría escribir a través de ellas con los permisos del dueño.
+- Los ajustes `flags.show_prices` y `flags.enable_stock` se leen con `setting_flag(flag)` (`security definer`). Quien consulta una vista necesita `execute` sobre las funciones que usa, así que se concede a `anon` y `authenticated`; solo devuelve un booleano de un ajuste público.
+- Las vistas incluyen `created_at` y `updated_at` (para `lastModified` del sitemap) y las columnas de estado (`status`, `is_active`), que siempre valen lo publicado.
 
 ## 7. Seguridad por fila (RLS)
 
@@ -483,6 +501,8 @@ $$;
 | `folio_counters`, `system_heartbeats` | Sin acceso | Sin acceso | Leer |
 
 Reglas:
+- **Privilegios además de RLS (T1.3).** `anon` no tiene ningún privilegio sobre las tablas base (`revoke all`, también por defecto para tablas futuras creadas por `postgres`): una consulta directa responde "permiso denegado" en vez de una lista vacía. `authenticated` solo puede leer `customers`, `quote_requests`, `quote_request_items`, `quote_status_history`, `folio_counters`, `system_heartbeats` y `publish_runs`; las escrituras van por las funciones de §8. Todas las políticas son `to authenticated` y llaman a `(select is_staff())` / `(select is_admin())` para que Postgres las evalúe una vez por consulta.
+- `is_staff()` e `is_admin()` fijan `search_path = ''` (nombres calificados) en lugar de `public`, y solo las ejecutan `authenticated` y `service_role`.
 - Nadie borra solicitudes ni clientes desde el cliente web; no hay política `delete` para ellos.
 - `service_role` (Edge Functions, GitHub Actions) salta RLS; por eso su llave nunca sale del servidor.
 - Borrar un producto con solicitudes asociadas no rompe el historial: las líneas conservan nombre y SKU.
@@ -496,6 +516,8 @@ Reglas:
 6. No se puede publicar un `gallery_item` sin consentimiento.
 7. `create_quote_request` con el mismo `client_request_id` devuelve el mismo folio y no duplica.
 8. Dos llamadas simultáneas a `next_folio` no repiten consecutivo.
+
+La prueba 7 está en `supabase/tests/040_functions.test.sql`. La 8 necesita varias conexiones a la vez, así que la corre `scripts/folio-concurrency.mjs` (8 transacciones simultáneas sobre el año 2999, que se borra al terminar): dentro de `pnpm test:db` contra pyp-dev y como paso del trabajo `db` en CI. Las pruebas 1–6 están en `supabase/tests/030_rls_and_views.test.sql` (la 6 también en `020_quotes_site_schema.test.sql`), junto con: `anon` no escribe a través de una vista, filtros de las vistas de categorías, marcas, variantes y ajustes, un editor solo lee su propia fila de `staff_members` y un usuario autenticado que no es personal no lee nada.
 
 ## 8. Funciones (RPC)
 
@@ -512,6 +534,17 @@ Reglas:
 | `admin_anonymize_customer(id uuid)` | Admin | Derecho de cancelación (ARCO): sustituye nombre y teléfono por valores anónimos en el cliente y en sus solicitudes |
 | `mark_publish_run(id uuid, status publish_status, run_url text, error text)` | Solo `service_role` | La llama GitHub Actions al iniciar y al terminar el build |
 | `ping()` | `anon` | Inserta en `system_heartbeats` y borra latidos de más de 90 días. Mantiene activo el proyecto |
+
+**Implementación (T1.4, 11-oct-2026).** Migración `20261011150000_functions.sql`; pruebas en `supabase/tests/040_functions.test.sql` y `scripts/folio-concurrency.mjs`.
+- Todas son `security definer` con `search_path = ''` y revisan quién llama: `require_staff()` / `require_admin()` lanzan `insufficient_privilege` (42501). `execute` se quita a `public`, `anon` y `authenticated` y se concede solo a quien dice la tabla. `has_unpublished_changes()` también la puede llamar `service_role` (la usará `trigger-publish` con el cron).
+- `next_folio(issued_at timestamptz default now())`: el parámetro opcional solo sirve para probar otros años; en uso normal se llama sin argumentos. El candado de fila de `insert … on conflict do update` dura hasta que termina la transacción del que llama.
+- `create_quote_request`: `invalid_items` sale con `errcode` `check_violation` y la lista en `detail` (`{"items": ["variantId", …]}`). Sin `clientRequestId` o sin productos lanza `invalid_parameter_value`. Si dos reintentos con el mismo `clientRequestId` llegan a la vez, el segundo responde con el folio del primero (captura `unique_violation`). La etiqueta de variante es `option1 · option2` (`M · Rojo`).
+- `admin_set_quote_status`: al salir de `lost` borra `lost_reason`; al historial van `changed_by = auth.uid()` y la nota.
+- `admin_replace_variants` devuelve `{ "created", "kept", "deactivated" }`, ignora valores repetidos o vacíos y genera el SKU con `variant_sku()`. Sin opciones deja activa solo la variante por defecto.
+- `has_unpublished_changes()` compara con la hora en que se encoló la última publicación exitosa (`publish_runs.created_at`), para no perder cambios hechos durante el build. No detecta borrados de filas sin `updated_at` en su tabla padre; la publicación nocturna los cubre.
+- `admin_dashboard_stats()` devuelve `newCount`, `last7Days`, `last30Days`, `byStatus` (los 5 estados, con ceros), `productsWithoutPhoto` (no archivados sin foto) y `topProducts` (10 con más piezas solicitadas en los últimos 30 días: `productId`, `name`, `sku`, `pieces`, `requests`).
+- `admin_anonymize_customer`: el teléfono anónimo es de 10 dígitos y empieza con 0 (ningún número real de México empieza así), así sigue siendo único. También borra `organization`, `ip_hash` y `user_agent` de sus solicitudes.
+- `ping()` escribe a lo más un latido por minuto, para que una llamada anónima repetida no llene la tabla, y devuelve la hora.
 
 ### 8.1 `create_quote_request`
 
@@ -549,6 +582,16 @@ Pasos, en una transacción:
 - Por fila, *upsert* por `sku`: crea marca, categoría y subcategoría si no existen; reemplaza deportes; genera variantes con `admin_replace_variants`.
 - Si el producto ya existe, **no** cambia su `slug` (rompería enlaces) y avisa si el CSV trae uno distinto.
 - Devuelve `{ "created": n, "updated": n, "errors": [{ "row": 3, "sku": "…", "message": "…" }] }`. Una fila con error no detiene las demás del lote.
+
+**Implementación (T1.5, 11-oct-2026).** Migración `20261011160000_import_products.sql`; pruebas en `supabase/tests/050_import_products.test.sql`; script `scripts/import-catalog.mjs` (`pnpm db:import <csv>`).
+- Cada fila llega con los nombres de columna del CSV como llaves y valores de texto (como los entrega Papa Parse en el admin). Las reglas del CSV viven solo en la función. `_row`, opcional, es el número de línea en la hoja de cálculo (el encabezado es la línea 1) y es el que sale en `errors`; sin él se usa la posición en el lote.
+- Cada fila corre en su propio bloque con `exception`: si falla se deshace solo esa fila. Al final de la fila se ejecuta `set constraints all immediate`, para que las reglas diferidas (variante por defecto, publicación) fallen dentro de su fila y no al confirmar el lote.
+- Además de `errors` devuelve `warnings` (por ahora, el slug distinto en un producto que ya existe).
+- Se validan: SKU, nombre y marca presentes; slugs de producto, categoría, subcategoría y deportes; `url_anterior` que termine en el mismo slug; `publico`, `estado`, `personalizable` y `destacado` (`si`, `sí` o `no`) y `tecnicas`. Una subcategoría que ya existe bajo otra categoría es error.
+- Marca: se busca por nombre sin importar mayúsculas o por `slugify(nombre)`; si no existe se crea. Categorías, subcategorías y deportes que no existen se crean con el nombre derivado del slug (`name_from_slug`: `guantes-portero` → "Guantes portero"); los nombres correctos llegan con la semilla de T1.6.
+- `option1_name` toma el `size_label` de la categoría al crear el producto y no se toca al actualizar. Sin la semilla, las categorías creadas por el importador tienen `Talla`; con la semilla (T1.6), `balones` y `material-entrenamiento` dan `Tamaño` y `box-y-combate` da `Peso`.
+- `tallas = unitalla` y `colores = A elegir` funcionan como dice `data/sitio-actual.md` §4. `option2_name` es `Color` cuando hay colores.
+- La llaman el personal y `service_role`. Para eso `require_staff()` deja pasar a `service_role` (el servidor, que ya salta RLS); las funciones solo de admin siguen exigiendo admin. El script entra por el pooler de pyp-dev y, dentro de cada transacción, actúa como `service_role`.
 
 ## 9. Edge Functions
 
@@ -647,7 +690,7 @@ Cada lectura se valida con Zod en el build; si un registro no cumple, el build f
 
 ## 11. Datos semilla
 
-`supabase/seed.sql` (entorno local) y la migración inicial de datos (producción):
+`supabase/seeds/base.sql` (todos los entornos) y `supabase/seeds/dev-admin.sql` (solo desarrollo):
 
 1. `settings` y `site_texts` con los valores de §4.7.
 2. `site_media`: una fila por `slot`, sin foto.
@@ -655,6 +698,13 @@ Cada lectura se valida con Zod en el build; si un registro no cumple, el build f
 4. `sports` (7), `categories` (10 + subcategorías) y `brands` (12 + 3 por validar) de `data/sitio-actual.md` §3.
 5. Productos: **no** van en SQL. Se cargan con el importador desde `data/catalogo-inicial.csv`, que es además la prueba de aceptación del importador.
 6. Solo en local: un usuario admin de desarrollo (`admin@pyp.test`).
+
+**Implementación (T1.6, 11-oct-2026; dividida en T1.8).** `supabase/seeds/base.sql` (puntos 1–4) y `supabase/seeds/dev-admin.sql` (punto 6); `config.toml` carga los dos en pyp-dev y en CI. Producción carga solo `base.sql`, una vez, desde `db-production.yml`; su primer admin sale de secretos de GitHub, no de la semilla. Prueba en `supabase/tests/060_seed.test.sql`.
+- Los textos de `site_texts` salen de las pantallas de `design/` (pregunta y respuesta de las 4 preguntas frecuentes, frase de la asesora, cuerpo de las 7 secciones del aviso). Lo que va entre corchetes se queda así hasta que el negocio lo dé. Las secciones del aviso son `{ title, body }`; `body` es texto con párrafos separados por una línea en blanco y listas con `- `.
+- La tienda guarda el teléfono solo con dígitos (`5565822426`); el sitio le da formato. Su nombre es "P&P Deportes Coapa" y `directions` es `[REFERENCIAS PARA LLEGAR Y ESTACIONAMIENTO]`.
+- Los nombres de las 34 subcategorías se escribieron a mano a partir de los slugs de `data/sitio-actual.md` §3.2 (`guantes-portero` → "Guantes de portero") y heredan el `size_label` de su categoría. P&P es la marca propia (`slug` `pyp`).
+- **El admin de desarrollo se crea sin contraseña**, porque el repositorio es público. `pnpm db:reset` se la pone después con `SUPABASE_DEV_ADMIN_PASSWORD` de `.env.local`; sin esa variable el usuario existe pero no puede entrar. En CI no se necesita.
+- "Entorno listo con un solo comando" es `pnpm db:setup`: `db:reset` (migraciones, semilla y contraseña del admin) y después `db:import` del catálogo inicial.
 
 ## 12. Fase e-commerce (no se crea en v1)
 

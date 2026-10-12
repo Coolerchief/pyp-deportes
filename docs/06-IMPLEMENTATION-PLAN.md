@@ -33,7 +33,7 @@ Tamaño: **S** (una sesión corta) · **M** (una sesión completa) · **L** (con
 | # | Qué | Para qué |
 |---|---|---|
 | P1 | Repositorio privado en GitHub | Código y despliegue |
-| P2 | Proyecto de Supabase (plan Free, región más cercana a México) | Base de datos, acceso y funciones |
+| P2 | Dos proyectos de Supabase (plan Free, región más cercana a México): **pyp-dev** para desarrollo y el de producción | Base de datos, acceso y funciones (ver "Modo sin Docker" en la fase 1) |
 | P3 | Cuenta de Cloudflare con Workers, R2 (buckets `pyp-media` y `pyp-backups`) y un sitio de Turnstile | Hospedaje, fotos, anti-spam |
 | P4 | Acceso al DNS de `pypdeportescoapa.com` y copia de todos sus registros (sobre todo los de correo) | Cambio de dominio en la fase 7 |
 | P5 | Propiedad de Google Analytics 4 y acceso a Search Console | Analítica y SEO |
@@ -80,6 +80,24 @@ Las fases 2–3 y la 4 pueden avanzar en paralelo una vez terminada la 1.
 
 **Objetivo:** base de datos completa, segura y con el catálogo inicial cargado.
 
+#### Modo sin Docker
+
+La máquina de desarrollo no tiene Docker, así que no hay Supabase local. Se trabaja así:
+
+| Qué | Cómo |
+|---|---|
+| Base de desarrollo | Proyecto remoto **pyp-dev** (Supabase Free). Es desechable: `pnpm db:reset` borra sus datos y reaplica migraciones y semilla |
+| Producción | Otro proyecto. **Nunca** se enlaza desde una máquina de desarrollo; se actualiza desde GitHub Actions (T1.8 y fase 7) |
+| Configuración | `.env.local` en la raíz (plantilla `.env.example`): `SUPABASE_DEV_PROJECT_REF`, `SUPABASE_PROD_PROJECT_REF` (solo para bloquearlo), `SUPABASE_DB_PASSWORD`, `SUPABASE_DEV_ADMIN_PASSWORD` (contraseña del admin de desarrollo) y las variables `NEXT_PUBLIC_*` de pyp-dev. Lo leen los scripts y `next.config.ts` |
+| Candado | `scripts/supabase-dev.mjs` corre todos los comandos `db:*` y `test:db` con `--linked` y aborta si el proyecto enlazado (`supabase/.temp/project-ref`) no es `SUPABASE_DEV_PROJECT_REF` o es el de producción |
+| Enlace | `supabase login` una vez por máquina y luego `pnpm db:link`, que solo enlaza la referencia de pyp-dev |
+| Comandos | `pnpm db:reset` → `supabase db reset --linked` · `pnpm db:types` → `supabase gen types --linked` · `pnpm test:db` → `scripts/pgtap.mjs` (ver abajo) · `pnpm db:import <csv>` → importador de T1.5 contra pyp-dev |
+| CI | Trabajo `db` de `.github/workflows/ci.yml`: `supabase db start` + `supabase test db` en un Postgres desechable del runner, con las migraciones y la semilla del commit. No usa secretos ni toca pyp-dev |
+
+**pgTAP sin Docker.** `supabase test db --linked` también necesita Docker (corre `pg_prove` en un contenedor), así que `pnpm test:db` usa `scripts/pgtap.mjs`: se conecta al pooler de pyp-dev (`supabase/.temp/pooler-url` + `SUPABASE_DB_PASSWORD`), ejecuta cada `supabase/tests/**/*.sql` y revisa la salida TAP (plan cumplido y ningún `not ok`). Reglas para cada archivo de prueba: es una transacción completa (`begin; … rollback;`), así que no deja datos en pyp-dev, y empieza con `create extension if not exists pgtap with schema extensions;` (la extensión se revierte con el `rollback`). En CI se usa `supabase test db` normal.
+
+En esta fase, "`supabase db reset` corre sin errores" significa `pnpm db:reset` sobre pyp-dev **y** el trabajo `db` de CI en verde. El admin de desarrollo de la semilla (`admin@pyp.test`) también existe en pyp-dev.
+
 | Tarea | Qué se hace | Leer | Hecho cuando | Tam. |
 |---|---|---|---|---|
 | T1.1 | Migraciones: extensiones, tipos, tablas de personal, taxonomía y catálogo; triggers | Esquema §3, §4.1–4.4, §5 | `supabase db reset` corre sin errores | M |
@@ -90,6 +108,17 @@ Las fases 2–3 y la 4 pueden avanzar en paralelo una vez terminada la 1.
 | T1.6 | Datos semilla: ajustes, textos, espacios de fotos, tienda, deportes, categorías, marcas, admin de desarrollo | Esquema §11 | Entorno local listo con un solo comando | S |
 | T1.7 | Tipos TypeScript generados y esquemas Zod compartidos (`QuoteSubmissionSchema`, fila del importador, `CatalogJson`, normalización de texto, formato de folio) | TRD §9.1 · Esquema §9.1, §10 | Pruebas unitarias de cada esquema | M |
 | T1.8 | Aplicar migraciones y semilla al proyecto real de Supabase; desactivar el registro público en Auth; crear el primer admin | TRD §9.3 | El proyecto remoto tiene el esquema; `anon` no lee tablas base | S |
+
+**T1.8 sin enlazar producción.** `.github/workflows/db-production.yml`, con secretos del repositorio (en el plan Free de GitHub los repositorios privados no tienen *environments*):
+
+1. `scripts/supabase-prod.mjs check`: se niega a correr fuera de GitHub Actions y revisa que `SUPABASE_PROD_DB_URL` sea del proyecto de `SUPABASE_PROD_PROJECT_REF`.
+2. `supabase db push --db-url … --dry-run` muestra las migraciones pendientes; después las aplica.
+3. `seed`: `supabase/seeds/base.sql` en una transacción, solo si `settings` está vacía (no pisa lo que el negocio ya cambió). Sin admin de desarrollo ni productos.
+4. `auth`: `disable_signup = true` con la API de administración (`SUPABASE_ACCESS_TOKEN`).
+5. `admin`: crea el usuario confirmado con la contraseña inicial de los secretos y su fila `admin` en `staff_members`; si ya existe, solo asegura la fila.
+6. `verify` (el "hecho cuando"): todas las migraciones aplicadas, `anon` sin privilegios en tablas base y con `permission denied` al leer `products`, RLS en todas las tablas, `public_settings` legible, semilla presente, ningún `admin@pyp.test` y al menos un admin activo.
+
+Solo se lanza a mano (`workflow_dispatch`) desde Actions, escribiendo `PRODUCCION` (con la opción de solo revisar), y solo desde `main`: el primer paso detiene cualquier corrida lanzada desde otra rama. Por eso el archivo tiene que estar en `main`. Repetirlo es seguro. Ensayado el 11-oct-2026 contra pyp-dev haciéndolo pasar por producción: conexión, `db push --dry-run`, semilla omitida, admin creado que inicia sesión, segunda corrida sin cambios y `verify` (solo falló, como debía, por el `admin@pyp.test` de pyp-dev). Sin ensayar: el paso `auth`.
 
 **Salida de la fase:** las 8 pruebas de seguridad en verde y el catálogo inicial consultable desde las vistas públicas.
 
@@ -197,6 +226,7 @@ Las fases 2–3 y la 4 pueden avanzar en paralelo una vez terminada la 1.
 | 8 | Mover el DNS a Cloudflare conservando todos los registros, sobre todo los de correo | ☐ |
 | 9 | Apuntar el dominio al sitio nuevo y verificar HTTPS | ☐ |
 | 10 | Verificar las 48 redirecciones en el dominio real | ☐ |
+| 10b | Agregar `SITE_INDEXABLE: 'true'` al paso de build de `deploy.yml` y comprobar que `robots.txt` y la meta robots ya permiten indexar (hasta aquí el sitio sale con `noindex`) | ☐ |
 | 11 | Enviar el sitemap en Search Console | ☐ |
 | 12 | Confirmar que el latido, la publicación nocturna y el respaldo corrieron una vez | ☐ |
 | 13 | Guardar el WordPress anterior 30 días antes de darlo de baja | ☐ |

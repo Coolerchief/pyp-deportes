@@ -1,0 +1,50 @@
+name: Deploy
+
+# Publishes the static site to Cloudflare Workers (static assets) on every push to main.
+# workflow_dispatch is also what trigger-publish calls from the admin panel (T4.10).
+# Uses repository secrets only (private repositories on GitHub Free have no environments).
+# SITE_INDEXABLE is not set, so the workers.dev site ships noindex until the domain change.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: build and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy with wrangler
+        id: deploy
+        working-directory: apps/web
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          pnpm exec wrangler deploy | tee deploy.log
+          url=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' deploy.log | head -n 1)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Sitio publicado: $url" >> "$GITHUB_STEP_SUMMARY"

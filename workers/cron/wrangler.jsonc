@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "pyp-cron",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  // Heartbeat, nightly publish and backup schedules are added in T6.4.
+  "triggers": { "crons": [] },
+}

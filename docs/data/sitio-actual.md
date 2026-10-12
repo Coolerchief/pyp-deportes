@@ -99,4 +99,6 @@ Es también la **plantilla oficial del importador** (FR-M5-3). Una fila = un pro
 | origen | enum | `sitio_actual` · `inventado` (solo para seguimiento de la carga inicial) |
 | url_anterior | URL | Para generar redirecciones 301 |
 
+El importador acepta comillas dobles (campos con comas o saltos de línea), CRLF y BOM de Excel; `si`/`sí`/`no`; listas con `|`. Detalle de validaciones y de lo que crea: `05-BACKEND-SCHEMA.md` §8.2.
+
 **Resumen de la carga inicial:** 56 productos (48 del sitio actual y 8 inventados). Faltan fotos; se publican con imagen genérica de categoría hasta cargar las reales desde el admin (las fotos no viven en el repositorio; TRD ADR-10).

@@ -54,7 +54,7 @@ Colores de marca (*M-14*) + variantes funcionales derivadas **solo** para cumpli
 
 ### 2.2 Tipografía
 
-Familias (*M-16*): **Barlow Condensed** (titulares, precios, números, etiquetas, botones) y **Barlow** (texto). Autoalojadas con `next/font/google`. Pesos a cargar: Barlow Condensed 600, 700 (normal) y 600, 800, 900 (itálica); Barlow 400, 500, 600.
+Familias (*M-16*): **Barlow Condensed** (titulares, precios, números, etiquetas, botones) y **Barlow** (texto). Autoalojadas con `next/font/local` desde `apps/web/app/fonts/` (`app/fonts.ts`). Pesos a cargar: Barlow Condensed 600, 700 (normal) y 600, 800, 900 (itálica); Barlow 400, 500, 600.
 
 | Estilo | Familia · peso | Móvil | ≥ 1024 px | Interlineado | Mayúsculas / tracking | Uso |
 |---|---|---|---|---|---|---|
@@ -65,7 +65,7 @@ Familias (*M-16*): **Barlow Condensed** (titulares, precios, números, etiquetas
 | `h4` | Condensed 700 | 18 px | 20 px | 1.1 | Sí · 0.02em | Subtítulos, nombre en tarjetas grandes |
 | `eyebrow` | Condensed 700 | 13 px | 13 px | 1.2 | Sí · 0.15em | Etiqueta sobre títulos (en `rojo-profundo`) |
 | `button` | Condensed 700 | 19 px | 19 px | 1 | Sí · 0.04em | Botones (≥ 19 px para cumplir AA grande sobre rojo) |
-| `number` | Condensed 900 itálica | 28 px | 36 px | 1 | — | Totales de piezas, folio, futuros precios |
+| `number` | Condensed 900 itálica | 28 px | 36 px | 1 | Sí · 0 | Totales de piezas, folio, futuros precios |
 | `body-lg` | Barlow 400 | 18 px | 18 px | 1.45 | No | Introducciones |
 | `body` | Barlow 400 | 16 px | 16 px | 1.45 | No | Texto general, formularios |
 | `body-strong` | Barlow 600 | 16 px | 16 px | 1.45 | No | Nombres de producto en tarjetas |
@@ -115,6 +115,17 @@ Cuadrícula de productos: 2 columnas en móvil · 3 en `sm` · 4 en `lg` (con fi
 }
 ```
 
+Implementado en `apps/web/app/globals.css`:
+
+- Colores con `@theme static` y `--color-*: initial`: la paleta por defecto de Tailwind no existe, solo los 13 tokens (`bg-rojo`, `text-noche`…).
+- Espaciado: la escala por defecto de Tailwind (base 4 px) ya coincide con `space-N` (`p-4` = 16 px, `gap-6` = 24 px).
+- Los 13 estilos de texto son utilidades `type-<estilo>` (`type-display`, `type-h1`… `type-caption`), con tamaño móvil y el de escritorio a partir de `lg`.
+- `container-page`: márgenes de 16/24/32 px y contenedor de 1216 px desde `xl` (§2.4).
+- Base: `body` con `type-body`, `bg-blanco` y `text-noche`; foco visible global (anillo `lima` de 3 px con contorno `noche`); `prefers-reduced-motion` anula animaciones.
+- Utilidades de componentes: `type-badge` (Condensed 700, 12 px, 0.12em) y `type-chip` (Barlow 500, 14 px), tomadas de `design/tokens/components.css`; `focus-placa` dibuja el anillo de foco en el contenedor de los controles con forma de placa, porque el `clip-path` recorta el `outline`.
+- Utilidades de marca: `placa` (recorte a 13° con `--placa-o`) y `cancha` (franjas del PatrónCancha; se combina con `bg-noche` o `bg-rojo`). Se usan a través de `components/brand`.
+- `app/theme.test.ts` compara el tema con `design/tokens/tokens.json`. Las hojas de muestra están en `/dev/tokens`, `/dev/marca` y `/dev/componentes` (solo con `pnpm dev`).
+
 Solo tema claro en v1 (el header, footer y secciones oscuras usan `noche` como superficie, no un modo oscuro). Respaldo tipográfico según el manual: Arial Narrow para titulares y Arial para texto (*M-16*).
 
 ## 3. Logotipo en la interfaz
@@ -129,7 +140,7 @@ Solo tema claro en v1 (el header, footer y secciones oscuras usan `noche` como s
 - **Tamaños mínimos (*M-10*):** horizontal 120 px de ancho · vertical 80 px · monograma 32 px. En el header móvil el logo horizontal va a ≥ 140 px; si no cabe, monograma.
 - **Área de protección:** 5x (media altura de la placa) libre alrededor.
 - **Regla de fondo (*M-12*):** claro → positivo; oscuro → negativo; rojo → mono blanco; lima → mono noche.
-- ⚠️ **Los SVG están reconstruidos** con la construcción de *M-9* y medidas tomadas del PDF, con texto convertido a curvas (Barlow Condensed). Se reemplazan por los archivos maestros del diseñador en cuanto existan. Script: `docs/brand/build_logos.py`.
+- ⚠️ **Los SVG están reconstruidos** con la construcción de *M-9* y medidas tomadas del PDF, con texto convertido a curvas (Barlow Condensed). Se reemplazan por los archivos maestros del diseñador en cuanto existan. Script: `docs/brand/build_logos.py`. El sitio sirve copias en `apps/web/public/brand/` a través del componente `Logo`, que no baja de los tamaños mínimos.
 
 ## 4. Elementos gráficos de marca (*M-18*)
 
@@ -138,7 +149,7 @@ Solo tema claro en v1 (el header, footer y secciones oscuras usan `noche` como s
 | **DobleDiagonal** | Dos barras (fina 0.6 u + gruesa 1.1 u, separación 0.55 u) inclinadas 13°, en SVG inline | Viñeta de títulos de sección, cierre de página (junto al número de página como en el manual), separador del footer | Siempre en par, siempre 13° |
 | **PatrónCancha** | `repeating-linear-gradient` a 13° de la vertical (≈ `103deg`) con franjas en blanco al 5–15 % de opacidad | Fondo del hero, franja de "Uniformes a tu medida", pantalla de confirmación, imagen genérica de categoría | Solo sobre noche o rojo |
 | **Placa** | `clip-path: polygon(var(--o) 0, 100% 0, calc(100% - var(--o)) 100%, 0 100%)` con `--o = alto × 0.2309` | Botones, badges ("NUEVO", "PERSONALIZABLE"), chips de filtro activos, contador de cotización | Texto en Condensed Bold mayúsculas |
-| **CorteA13** | `clip-path` con un lado a 13° + diagonal roja paralela | Foto del hero de Inicio y de Uniformes a tu medida | **Máximo uno por pantalla** |
+| **CorteA13** | Un lado inclinado + diagonal roja paralela. Escritorio: lado izquierdo a 13°. Móvil: borde superior más suave, ≈7° (48 px de caída a 390 px), como en `design/screens/movil/`, porque a 13° la foto de 210 px perdería casi la mitad | Foto del hero de Inicio y de Uniformes a tu medida | **Máximo uno por pantalla** |
 
 ## 5. Iconografía
 
@@ -151,7 +162,7 @@ Solo tema claro en v1 (el header, footer y secciones oscuras usan `noche` como s
 
 - **Las fotos son contenido, no parte del front.** Ninguna foto vive en el repositorio ni en el build: se suben desde el admin al almacenamiento (R2) y el sitio solo recibe su dirección. En el repositorio solo hay logos e imágenes genéricas.
 - **Proporción estándar 4:5 vertical** en tarjetas, fichas y galería de equipos. Marco `gis`, `object-fit: cover`, sin bordes redondeados.
-- **Imagen genérica de categoría** (producto sin foto): fondo `noche` con PatrónCancha, monograma mono blanco al 30 % del ancho y el nombre de la categoría en `eyebrow` lima. Una por categoría (10). En la ficha lleva debajo el texto "Foto próximamente".
+- **Imagen genérica de categoría** (producto sin foto): fondo `noche` con PatrónCancha, monograma mono blanco al 30 % del ancho y el nombre de la categoría en `eyebrow` lima. Una por categoría (10). En la ficha lleva debajo el texto "Foto próximamente". Los archivos son `public/img/placeholder/<slug>.webp` (800 × 1000), generados con `pnpm placeholders` desde el componente y la lista de `apps/web/scripts/placeholders.json`; el nombre va dentro de la imagen, así que si se renombra o agrega una categoría hay que actualizar esa lista y regenerar. El texto se dimensiona para tarjetas de ≈200 px de ancho (en la ficha se ve proporcionalmente más grande).
 - **Espacios de foto del sitio** (no son de producto): mientras no haya foto se muestran sobre `gis` con la DobleDiagonal en `concreto` y su nombre entre corchetes. Cada uno es un espacio editable en el admin (`site_media`, TRD §6.2):
 
 | Espacio | Dónde aparece | Proporción |
@@ -187,7 +198,7 @@ Cada componente lista **anatomía → variantes → estados → reglas**. Nombre
 | Variante | Fondo / texto | Uso |
 |---|---|---|
 | `new` | lima / noche | "NUEVO" (máx. 1 por tarjeta) |
-| `custom` | rojo / blanco (texto 12 px bold: solo decorativo; el mismo dato está en texto accesible en la ficha) | "PERSONALIZABLE" |
+| `custom` | noche / blanco. El diseño la pone en rojo con texto blanco de 12 px, pero eso no cumple el contraste de §2.1; se decidió `noche` (10-oct-2026). Queda igual que `info`: la distingue el texto | "PERSONALIZABLE" |
 | `info` | noche / blanco | "ENVÍO A ACORDAR", "POR VOLUMEN" |
 
 En las pantallas los badges miden 22 px de alto con texto de 11 px; en código se usa el componente del sistema (24 px / 12 px).
@@ -443,7 +454,7 @@ Sistema visual: **shadcn/ui** con los tokens de §2 (fuente Barlow, primario `no
 | D-2 | 24 pantallas móviles 390 px | Claude Design "P&P Deportes — Pantallas" · copia en `design/screens/movil/` | ✅ |
 | D-3 | 22 pantallas de escritorio 1440 px | Mismo lienzo · copia en `design/screens/escritorio/` | ✅ |
 | D-4 | Admin: Inicio, Productos, Editor de producto, Importar, Solicitudes, Fotos del sitio | — | ⬜ Pendiente |
-| D-5 | Imágenes genéricas por categoría (10) como archivos | Hoy solo como componente `ImagenGenerica` | ⬜ Pendiente (se generan en la fase 1 del plan) |
+| D-5 | Imágenes genéricas por categoría (10) como archivos | `apps/web/public/img/placeholder/<slug>.webp`, generadas desde `ImagenGenerica` con `pnpm placeholders` | ✅ (11-oct-2026) |
 | D-6 | Pantallas sin diseñar listadas en §8 | — | ⬜ Opcional |
 
 **Paquete exportado** (`pyp-deportes-diseno.zip`): `docs/` + `design/screens` (HTML autónomo) + `design/screenshots` (PNG) + `design/tokens` + `design/fonts` + `design/assets/logos`. Se copia a la raíz del repositorio.

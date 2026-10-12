@@ -10,10 +10,36 @@ Con GitHub Pages activo: `https://coolerchief.github.io/pyp-deportes/`
 Local: abre `index.html` en el navegador (en pantalla ancha muestra la versión de escritorio de 1440 px; en móvil, la de 390 px).
 Referencia: `design/screenshots/movil/inicio.png` y `design/screenshots/escritorio/inicio.png`.
 
+## Entorno de desarrollo
+
+Node y pnpm viven aislados dentro de un entorno virtual (`.venv`, no se versiona):
+
+```bash
+python -m venv .venv
+.venv/Scripts/python -m pip install nodeenv        # en Linux/macOS: .venv/bin/...
+.venv/Scripts/nodeenv -p --node=24.14.0 --prebuilt
+source .venv/Scripts/activate                       # PowerShell: .venv\Scripts\Activate.ps1
+npm install -g pnpm@10.20.0                         # se instala dentro de .venv
+pnpm install
+pnpm exec playwright install chromium               # desde apps/web, solo para pruebas E2E
+```
+
+Después de activar el entorno: `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:e2e` y `pnpm placeholders` (regenera las imágenes genéricas de categoría). Base de datos (sin Docker, contra el proyecto remoto pyp-dev): copia `.env.example` a `.env.local`, llénalo, corre `node_modules\.bin\supabase login` una vez y luego `pnpm db:link`. Después: `pnpm db:setup` (borra pyp-dev, aplica migraciones y semilla, e importa el catálogo inicial), `pnpm db:types`, `pnpm test:db`. Para poder entrar con el admin de desarrollo (`admin@pyp.test`) define `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` antes de correr `db:setup` o `db:reset`. Nunca enlaces el proyecto de producción.
+
 ## Contenido
 
 | Carpeta | Qué hay |
 |---|---|
+| `apps/web/` | Sitio Next.js (exportación estática a `apps/web/out`) |
+| `packages/shared/` | Reglas de negocio compartidas (TypeScript puro) |
+| `supabase/` | Configuración, migraciones, funciones y pruebas de la base |
+| `workers/cron/` | Worker de tareas programadas |
+
+## Despliegue
+
+Cada push a `main` corre `.github/workflows/deploy.yml`: compila el sitio y lo publica con `wrangler deploy` en Cloudflare Workers (Worker `pyp-deportes`, configurado en `apps/web/wrangler.jsonc`). También se puede lanzar a mano desde la pestaña Actions. Usa los secretos del repositorio `CLOUDFLARE_API_TOKEN` (permiso de edición de Workers) y `CLOUDFLARE_ACCOUNT_ID`. Para revisar sin publicar: `pnpm build` y luego `pnpm --filter @pyp/web exec wrangler deploy --dry-run`. Mientras no se haga el cambio de dominio, todo build sale con `noindex` (meta robots y `robots.txt`); solo `SITE_INDEXABLE=true` lo quita.
+
+La base de datos de producción se actualiza solo con `.github/workflows/db-production.yml` (nunca con `supabase link`): aplica las migraciones pendientes, la semilla base la primera vez, apaga el registro público de Auth, crea el primer admin y verifica que `anon` no lea tablas base. Solo se lanza a mano desde la pestaña Actions, sobre `main`, escribiendo `PRODUCCION`. Usa los secretos del repositorio descritos en `docs/02-TRD.md` §9.3.
 | `docs/` | PRD, TRD, UI/UX, flujos, esquema de base de datos, plan de implementación, datos y logos |
 | `design/screens/` | 24 pantallas móviles y 22 de escritorio en HTML (navegables entre sí) |
 | `design/screenshots/` | Las mismas pantallas en PNG |

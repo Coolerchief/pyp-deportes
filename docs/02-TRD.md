@@ -76,23 +76,27 @@ flowchart LR
 | Gestor de paquetes | pnpm | 10.x | |
 | Framework | Next.js (App Router) | 16.x | `output: 'export'`, `trailingSlash: false` |
 | UI | React | 19.x | |
-| Lenguaje | TypeScript | 5.x, `strict: true` | |
+| Lenguaje | TypeScript | 5.x, `strict: true` | Fijado en `~5.9` (TypeScript 7 aún no se adopta) |
 | Estilos | Tailwind CSS | 4.x | Tokens de marca en `@theme` (ver `03-UI-UX.md`) |
 | Componentes admin | shadcn/ui + Radix | última | Solo en `/admin`; el sitio público usa componentes propios de marca |
-| Tipografía | Barlow + Barlow Condensed | vía `next/font/google` (autoalojadas en build) | |
+| Tipografía | Barlow + Barlow Condensed | vía `next/font/local` (autoalojadas) | Los 8 `woff2` del paquete de diseño (licencia OFL) copiados a `apps/web/app/fonts/`: solo las caras que usa la escala, sin descargar de Google en el build |
+| Estilos (build) | `@tailwindcss/postcss` | 4.x | Plugin de PostCSS de Tailwind v4 |
 | Estado del cliente | Zustand + `persist` | 5.x | Lista de cotización y datos del solicitante |
-| Formularios | React Hook Form + Zod | última | Esquemas Zod compartidos con Edge Functions |
+| Formularios | React Hook Form + Zod | Zod 4.x | Esquemas Zod compartidos con Edge Functions; Zod es dependencia de `packages/shared` |
 | Búsqueda | MiniSearch | 7.x | Índice construido en el navegador desde `catalog.json`; `autoSuggest` para "¿Quisiste decir…?" |
 | Íconos | lucide-react · simple-icons (solo el glifo de WhatsApp) | última | Trazo 2 px, 20/24 px (`03-UI-UX.md` §5) |
 | CSV/Excel | Papa Parse · SheetJS (`xlsx`) | última | Importador del admin |
 | Imágenes (subida) | `browser-image-compression` o Canvas API | — | Genera WebP 320/640/1024/1600 |
+| Imágenes genéricas (build) | `sharp` | 0.35.x | Solo desarrollo: `pnpm placeholders` captura `ImagenGenerica` con Playwright y la codifica a WebP en `apps/web/public/img/placeholder/` (misma versión que trae Next) |
 | Backend | Supabase (Postgres 15+, Auth, Edge Functions en Deno) | CLI última | Migraciones en `supabase/migrations` |
 | Almacenamiento | Cloudflare R2 (API S3) | — | Firma con `aws4fetch` en la Edge Function |
 | Anti-spam | Cloudflare Turnstile | — | Modo "managed", invisible cuando se puede |
-| Hosting | Cloudflare Workers + static assets | Wrangler 4.x | `_redirects` y `_headers` soportados |
+| Hosting | Cloudflare Workers + static assets | Wrangler 4.x | `_redirects` y `_headers` soportados; `wrangler` es dependencia de desarrollo de `apps/web` y de `workers/cron` |
 | Analítica | Google Analytics 4 detrás de `track()` | — | Nombres de eventos de e-commerce estándar |
-| Pruebas | Vitest · Testing Library · Playwright · pgTAP (`supabase test db`) | última | |
-| Calidad | ESLint · Prettier · `tsc --noEmit` | | |
+| Pruebas | Vitest · Testing Library · Playwright · pgTAP (`supabase test db`) | última | Playwright sirve `apps/web/out` con `serve`; las pruebas de componentes usan `jsdom`, `@testing-library/jest-dom`, `@testing-library/user-event` y `@vitejs/plugin-react` |
+| Calidad | ESLint · Prettier · `tsc --noEmit` | ESLint 9 | Un solo `eslint.config.mjs` en la raíz con `eslint-config-next` y `eslint-config-prettier` |
+| Pruebas de BD sin Docker | `pg` (node-postgres) | 8.x | Solo desarrollo: `scripts/pgtap.mjs` ejecuta los archivos pgTAP contra pyp-dev porque `supabase test db --linked` necesita Docker |
+| Entorno local | `.venv` (Python) con `nodeenv` | — | Node 24 y pnpm aislados dentro del proyecto; ver `README.md` |
 | CI/CD | GitHub Actions | | Repo privado |
 
 ## 4. Planes gratuitos: límites y consumo esperado
@@ -157,11 +161,11 @@ pyp-deportes/
 ├── supabase/
 │   ├── migrations/               # SQL versionado (fuente de verdad del esquema)
 │   ├── functions/                # submit-quote, sign-upload, trigger-publish, _shared/
-│   ├── seed.sql                  # Taxonomía + settings + usuario admin de desarrollo
+│   ├── seeds/                    # base.sql (taxonomía + settings, todos los entornos) y dev-admin.sql (solo desarrollo)
 │   └── tests/                    # pgTAP: RLS y RPCs
 ├── workers/
 │   └── cron/                     # Worker con Cron Triggers (keep-alive, build nocturno, respaldo)
-└── .github/workflows/            # ci.yml, deploy.yml, backup.yml
+└── .github/workflows/            # ci.yml, deploy.yml, db-production.yml, backup.yml
 ```
 
 ## 6. Sitio público
@@ -303,7 +307,8 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 - Esquema completo de comercio desde v1 (detalle en `05-BACKEND-SCHEMA.md`).
 - **Migraciones SQL versionadas** en `supabase/migrations`; nada se cambia a mano en el dashboard.
 - **RLS activado en todas las tablas.** Lectura pública solo de contenido publicado; escritura solo de personal; `quote_requests` y `customers` sin acceso anónimo directo.
-- Tipos TS generados con `supabase gen types typescript` → `packages/shared/database.types.ts`.
+- Tipos TS generados con `supabase gen types typescript` → `packages/shared/database.types.ts` (se exportan como `Database` y `Json` desde `@pyp/shared`).
+- **`packages/shared` (T1.7)**: `QuoteRequesterSchema` y `QuoteSubmissionSchema` (con `createQuote…Schema({ now })` para fijar el reloj en pruebas), `quoteErrorSummary` (texto del resumen de errores), `ImportRowSchema` e `ImportResultSchema`, `CatalogJsonSchema`, folio (`formatFolio`, `parseFolio`, `isFolio`), fechas de CDMX (`mexicoCityDate`, `mexicoCityYear`), texto (`normalizeText`, `slugify`, `variantSku`, `variantLabel`, idénticos a sus funciones SQL) y los valores y etiquetas de los enums. El código se revisa sin tipos de Node ni DOM (`tsconfig.json`) para que corra en Deno; las pruebas, con Node (`tsconfig.test.json`). Los imports internos no llevan extensión: las Edge Functions lo importarán con el bundler de Supabase o un mapa de imports (T3).
 
 ### 9.2 Edge Functions
 
@@ -327,6 +332,9 @@ Contratos completos (entradas, validación y códigos de respuesta) en `05-BACKE
 | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | GitHub Actions (deploy) |
 | `CRON_SHARED_SECRET` | Worker cron ↔ `trigger-publish` |
 | `IP_HASH_SALT` | Edge Functions (`submit-quote`): sal para guardar la IP solo como hash |
+| `SUPABASE_PROD_PROJECT_REF`, `SUPABASE_PROD_DB_URL` (cadena del *session pooler* con la contraseña codificada) | Secretos del repositorio en GitHub Actions (`db-production.yml`, T1.8) |
+| `SUPABASE_ACCESS_TOKEN` (token personal de Supabase) | Secretos del repositorio en GitHub Actions: desactiva el registro público de Auth con la API de administración |
+| `SUPABASE_PROD_ADMIN_EMAIL`, `SUPABASE_PROD_ADMIN_PASSWORD`, `SUPABASE_PROD_ADMIN_NAME` (opcional) | Secretos del repositorio en GitHub Actions: primer admin. La contraseña es inicial; se cambia al entrar y una segunda corrida no la toca |
 
 ## 10. Build y despliegue
 
@@ -347,9 +355,10 @@ sequenceDiagram
   A->>D: consulta publish_runs (estado visible en el admin)
 ```
 
-- `deploy.yml`: `on: workflow_dispatch` y `push` a `main`. `concurrency: { group: deploy-prod, cancel-in-progress: true }`.
-- `ci.yml` en cada PR: lint, typecheck, Vitest, build, Playwright contra el build estático (`npx serve out`) y `supabase test db` con la BD local de la CLI.
-- **Entornos:** `local` (Supabase CLI + `next dev`) y `production`. Un proyecto Supabase de *staging* es opcional (el Free permite 2 proyectos).
+- `deploy.yml`: `on: workflow_dispatch` y `push` a `main`. `concurrency: { group: deploy-prod, cancel-in-progress: true }`. Corre `pnpm build` y `wrangler deploy` desde `apps/web` con los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` del repositorio (sin *environment* de GitHub: el repositorio es privado en el plan Free); deja la URL de `workers.dev` en el resumen de la corrida. No define `SITE_INDEXABLE`, así que lo publicado sale con `noindex` hasta el cambio de dominio.
+- `apps/web/wrangler.jsonc`: Worker `pyp-deportes` solo de *static assets* (sin código de servidor) que sirve `apps/web/out`; `html_handling: drop-trailing-slash` (coincide con `trailingSlash: false`) y `not_found_handling: 404-page` (sirve `404.html`). `_headers` vive en `apps/web/public/`.
+- `ci.yml` en cada PR y en cada push a `main` y `develop`, con dos trabajos: `web` (lint, typecheck, Vitest, build y Playwright contra el build estático con `serve out`) y `db` (`supabase db start` + `supabase test db` en un Postgres desechable del runner). Lighthouse CI (§14) se agrega cuando existan las páginas públicas.
+- **Entornos:** `local` (`next dev` contra el proyecto remoto **pyp-dev**; sin Docker no hay Supabase local) y `production`. El plan Free permite 2 proyectos: pyp-dev y producción. Detalle en `06-IMPLEMENTATION-PLAN.md`, fase 1, "Modo sin Docker".
 - El build **falla** si `settings.whatsapp_sales_number` es el placeholder y `SITE_ENV=production` (evita publicar el número de ejemplo; PRD §11), y **avisa** (sin fallar) de cada texto que siga entre corchetes (`[PEDIDO MÍNIMO]`, `[HISTORIA DE LA TIENDA]`…).
 
 ## 11. SEO técnico
@@ -401,6 +410,13 @@ sequenceDiagram
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | cliente | — |
 | `NEXT_PUBLIC_GA_ID` | cliente | opcional |
 | `SITE_ENV` | build | `local` · `production` |
+| `SITE_INDEXABLE` | build | Solo `true` permite indexar (`app/robots.ts` y meta robots del layout, `lib/indexing.ts`). Sin ella, todo build sale con `noindex, nofollow` y `robots.txt` con `Disallow: /`. Se agrega a `deploy.yml` en la fase 7, después del cambio de dominio |
+| `SUPABASE_DEV_PROJECT_REF` | scripts `db:*` (solo desarrollo) | referencia de pyp-dev |
+| `SUPABASE_PROD_PROJECT_REF` | scripts `db:*` (solo para bloquearlo); secreto de `db-production.yml` | referencia de producción |
+| `SUPABASE_DB_PASSWORD` | scripts `db:reset`, `test:db`, `db:import` (solo desarrollo) | contraseña de Postgres de pyp-dev |
+| `SUPABASE_DEV_ADMIN_PASSWORD` | script `db:reset` (solo desarrollo) | contraseña que se le pone al admin de desarrollo de la semilla (`admin@pyp.test`); nunca se versiona |
+
+En desarrollo, todas viven en `.env.local` de la raíz (plantilla `.env.example`); `next.config.ts` lo carga y las variables reales del entorno (CI, despliegue) tienen prioridad.
 
 Todo lo que el negocio pueda cambiar (WhatsApp, horario, textos de portada, flags) vive en la tabla `settings` y `stores`, **no** en variables de entorno.
 

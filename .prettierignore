@@ -1,0 +1,10 @@
+design/
+docs/
+pnpm-lock.yaml
+**/out/
+**/.next/
+supabase/.temp/
+.venv/
+*.md
+index.html
+packages/shared/database.types.ts

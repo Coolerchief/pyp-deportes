@@ -1,7 +1,7 @@
 # 00 · Estado del proyecto y pendientes
 
 > Índice de la documentación y lista de lo que falta. Se actualiza cada vez que cambia un documento o el diseño.
-> **Última actualización:** 1-oct-2026.
+> **Última actualización:** 11-oct-2026.
 
 ## 1. Qué es
 
@@ -32,7 +32,7 @@ Catálogo web de P&P Deportes Coapa: sin precios, el cliente arma una lista con 
 | 22 pantallas de escritorio (1440 px) | ✅ |
 | Paquete exportado para VS Code (`design/`): HTML, PNG, tokens, fuentes, logos | ✅ |
 | Pantallas del panel de administración | ⬜ Falta |
-| Imágenes genéricas de las 10 categorías como archivos | ⬜ Falta (se generan en la fase 1) |
+| Imágenes genéricas de las 10 categorías como archivos | ✅ `apps/web/public/img/placeholder/` (T0.5) |
 | Página de marca, confirmación sin folio, header compacto, ficha con color y talla | ⬜ Opcional (se resuelven con los componentes existentes) |
 
 ## 4. Qué falta, en orden
@@ -63,12 +63,17 @@ Completa. Los seis documentos y `CLAUDE.md` están escritos. Se actualizan cuand
 ### D. Cuentas y accesos (para la fase 0 del plan)
 - Repositorio de GitHub (privado).
 - Proyecto de Supabase (plan Free).
-- Cuenta de Cloudflare: Workers, R2, Turnstile.
+- Cuenta de Cloudflare: Workers, R2, Turnstile. ✅ Cuenta y token de Workers en los secretos de GitHub (11-oct-2026); R2 y Turnstile se configuran más adelante.
 - Acceso al DNS de `pypdeportescoapa.com` (hoy en el hosting de WordPress) y copia de sus registros, sobre todo los de correo.
 - Google Analytics 4 y Search Console.
 
 ### E. Construcción
-Todo por hacer. El detalle está en `06-IMPLEMENTATION-PLAN.md`:
+En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
+
+**Hecho:** T0.1 (monorepo pnpm: `apps/web`, `packages/shared`, `supabase/`, `workers/cron`; `pnpm build` genera `apps/web/out/`). Pendiente de T0.1: `test:db` no se probó en local por falta de Docker; `db:import` llega con T1.5.
+
+**Hecho:** T0.2 (Tailwind v4 con los tokens en `@theme`, fuentes Barlow con `next/font/local`, 13 estilos `type-*`, estilos base; hoja de muestra en `/dev/tokens`).
+
 
 | Fase | Objetivo | Tareas |
 |---|---|---|
@@ -81,7 +86,35 @@ Todo por hacer. El detalle está en `06-IMPLEMENTATION-PLAN.md`:
 | 6 · Calidad | Pruebas de punta a punta, accesibilidad, rendimiento, respaldos | 5 |
 | 7 · Salida a producción | Datos reales, cambio de dominio (13 pasos) | — |
 
-**Siguiente paso:** conseguir las cuentas del apartado D y arrancar la tarea T0.1.
+**Hecho:** modo sin Docker (scripts `db:*` contra pyp-dev con candado, `.env.local`, trabajo `db` de CI con pgTAP). pyp-dev enlazado (10-oct-2026); `pnpm db:types` y `pnpm test:db` probados contra pyp-dev. Aún no existe el proyecto de producción.
+
+**Hecho:** T0.3 (componentes de marca en `apps/web/components/brand`: `Logo`, `Placa`, `DobleDiagonal`, `PatronCancha`, `CorteA13`, `ImagenGenerica`; hoja `/dev/marca`; pruebas de render). CorteA13 en móvil va a ≈7° como el diseño (decidido el 10-oct-2026).
+
+**Hecho:** T0.4 (componentes base en `apps/web/components/ui`: `Button`, `Badge`, `Chip`, `FormField`, `Sheet`, `EmptyState`, `Skeleton`, `SectionHeader`; hoja `/dev/componentes`; pruebas de teclado de `Sheet`). Badge `custom` en `noche` por contraste.
+
+**Hecho:** T0.5 (10 imágenes genéricas WebP 800 × 1000 en `apps/web/public/img/placeholder/<slug>.webp`, generadas con `pnpm placeholders` desde `ImagenGenerica` vía la hoja `/dev/genericas`; la salida es idéntica byte a byte entre corridas; prueba que verifica los 10 archivos).
+
+**En curso:** T0.6. Listo: `ci.yml` con los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP); `deploy.yml` (push a `main` o manual → `wrangler deploy`); `apps/web/wrangler.jsonc` (Worker `pyp-deportes`, solo *static assets*); `_headers` con caché inmutable de `/_next/static/*`. Secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` cargados en GitHub (11-oct-2026). Falta: primer push a `main` que publique en `workers.dev` (en espera: el usuario pidió no subir nada a `main` todavía).
+
+**Hecho:** T0.7 (`CLAUDE.md` revisado contra el repositorio, 11-oct-2026: activación del `.venv`, `pnpm format`, hojas `/dev/*`, qué genera hoy `pnpm build`, despliegue y estructura real). Comandos probados: `dev`, `build`, `lint`, `typecheck`, `test`, `test:e2e`, `placeholders`, `db:link`, `test:db`, `db:types` y `db:import` (avisa que el importador llega en T1.5). `db:reset` no se corrió porque borra pyp-dev y aún no hay migraciones.
+
+**Hecho:** T1.1 (migraciones de extensiones, tipos, personal, taxonomía, catálogo, comercio oculto y triggers; RLS activado en las 11 tablas; 26 pruebas pgTAP de tablas y triggers). `pnpm db:reset` aplicado en pyp-dev (11-oct-2026) y `database.types.ts` regenerado. La salida de la fase 0 (sitio en `workers.dev`) sigue pendiente del primer push a `main`.
+
+**Hecho:** T1.2 (12 tablas más: clientes, contadores de folio, solicitudes con sus líneas e historial, galería con consentimientos, `site_media`, `site_texts`, `settings`, `publish_runs`, `system_heartbeats`; RLS en todas; 14 pruebas pgTAP). El esquema tiene las 23 tablas de §4. `pnpm db:reset` aplicado en pyp-dev (11-oct-2026).
+
+**Hecho:** T1.3 (15 vistas `public_*` de solo lectura, `is_staff`/`is_admin`, políticas RLS por rol y privilegios: `anon` no tiene acceso a ninguna tabla base; pruebas de seguridad 1–6 de §7 en verde, 22 pruebas pgTAP). `pnpm db:reset` aplicado en pyp-dev (11-oct-2026); comprobado también con la API REST y la llave `anon`.
+
+**Hecho:** T1.4 (10 funciones de §8 más ayudantes `require_staff`, `require_admin`, `variant_sku` y `variant_label`; 51 pruebas pgTAP, entre ellas la 7; la 8, de folios simultáneos, con `scripts/folio-concurrency.mjs` dentro de `pnpm test:db` y en CI). Las 8 pruebas de seguridad de §7 pasan contra pyp-dev (11-oct-2026); `pnpm db:reset` aplicado y comprobado con la API REST y la llave `anon`.
+
+**Hecho:** T1.5 (`admin_import_products` y `scripts/import-catalog.mjs`). En pyp-dev (11-oct-2026), `pnpm db:import docs/data/catalogo-inicial.csv` dejó 56 productos y 313 variantes (tallas × colores); la segunda corrida actualizó los 56 sin duplicar nada. 17 pruebas pgTAP del importador. Las pruebas pgTAP ahora vacían las tablas al empezar (`truncate … cascade` dentro de su transacción) para no chocar con los datos de pyp-dev. Hasta T1.6 las categorías creadas por el importador usan `Talla` como nombre de la opción 1.
+
+**Hecho:** T1.6 (`supabase/seed.sql`, desde T1.8 `supabase/seeds/base.sql` + `dev-admin.sql`: 6 ajustes, 4 textos con los textos de las pantallas y sus corchetes pendientes, 8 espacios de foto, tienda Coapa, 7 deportes, 10 categorías y 34 subcategorías con su `size_label`, 15 marcas y el admin de desarrollo `admin@pyp.test` sin contraseña en el repo). `pnpm db:setup` deja pyp-dev listo con un comando; aplicado el 11-oct-2026: 56 productos importados sobre la taxonomía de la semilla, sin crear categorías ni marcas extra. 14 pruebas pgTAP de la semilla. **Pendiente del usuario:** definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:reset` (o `db:setup`) para poder entrar como admin.
+
+**Hecho:** T1.7 (`packages/shared`: esquemas Zod de la solicitud de cotización con los mensajes de UI/UX §10 y el resumen "Faltan n datos…", fila del importador con las mismas reglas que `admin_import_products`, `catalog.json`, resultado del importador; folio, fechas de CDMX, normalización de texto, SKU y etiqueta de variante, enums con etiquetas y transiciones de estado; tipos `Database`/`Json`). 33 pruebas, entre ellas: las 56 filas del CSV inicial validan y dan las 313 variantes que hay en pyp-dev. Zod 4.
+
+**En curso:** T1.8. Listo: `.github/workflows/db-production.yml` y `scripts/supabase-prod.mjs` (migraciones con `db push --db-url`, semilla base una vez, registro público apagado en Auth, primer admin desde secretos, verificación de que `anon` no lee tablas base); semilla dividida en `base.sql` y `dev-admin.sql`. Ensayado contra pyp-dev (11-oct-2026). Secretos de producción cargados como secretos del repositorio (11-oct-2026; sin *environments* en el plan Free). El flujo solo corre a mano desde `main`. Falta: llevarlo a `main` (eso también dispara `deploy.yml`) y lanzarlo. `deploy.yml` también usa solo secretos del repositorio, y el sitio sale con `noindex` (meta robots y `robots.txt`) hasta que se defina `SITE_INDEXABLE=true` en la fase 7.
+
+**Siguiente paso:** correr T1.8 en producción; después, fase 2 (T2.1).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
