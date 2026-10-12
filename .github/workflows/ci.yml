@@ -65,7 +65,10 @@ jobs:
       - name: Unit tests
         run: pnpm test
 
+      # CI has no database: the build reads the snapshot of pyp-dev's public views (T2.1).
       - name: Build
+        env:
+          BUILD_DATA_FILE: fixtures/build-data.json
         run: pnpm build
 
       - name: Install Playwright Chromium

@@ -117,7 +117,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Fase 1 cumplida:** las 8 pruebas de seguridad en verde (pyp-dev y CI) y el catálogo inicial consultable desde las vistas públicas en pyp-dev.
 
-**Siguiente paso:** fase 2, tarea T2.1 (`catalog.json` y datos del build desde las vistas públicas).
+**Hecho:** T2.1 (capa de datos del build: `packages/shared/src/build-data.ts` y `apps/web/lib/data`; `out/data/catalog.json` y `out/data/settings.json`). Con pyp-dev: 56 productos, 313 variantes, 7 deportes, 44 categorías, 15 marcas; un registro inválido detiene el build con la vista y el `id`. CI compila con la copia `apps/web/fixtures/build-data.json`. **Pendiente del usuario antes del próximo push a `main`:** agregar los secretos del repositorio `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` de producción; sin ellos `Deploy` falla. Riesgo anotado: `catalog.json` pasaría de 60 KB gzip con 500 productos (se revisa en T6.3).
+
+**Siguiente paso:** T2.2 (header, menú móvil, mega menú, footer, botón flotante de WhatsApp).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 

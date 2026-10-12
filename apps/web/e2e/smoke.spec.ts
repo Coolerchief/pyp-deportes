@@ -14,3 +14,12 @@ test('the site asks search engines not to index it', async ({ page, request }) =
   expect(robots.ok()).toBe(true);
   expect(await robots.text()).toMatch(/User-Agent: \*\nDisallow: \/\n/);
 });
+
+test('the build publishes catalog.json and settings.json', async ({ request }) => {
+  const catalog = await (await request.get('/data/catalog.json')).json();
+  expect(catalog.products.length).toBeGreaterThan(0);
+  expect(catalog.products[0].variants.length).toBeGreaterThan(0);
+  const settings = await (await request.get('/data/settings.json')).json();
+  expect(settings.whatsappSalesNumber).toMatch(/^[0-9]{10}$/);
+  expect(Object.keys(settings.siteMedia)).toHaveLength(8);
+});

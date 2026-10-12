@@ -1,6 +1,7 @@
 // Shared business rules: Zod schemas, domain types, folio format, text normalization.
 // Pure TypeScript with no Node dependencies so it can be imported from Deno (Edge Functions).
 
+export * from './build-data';
 export * from './catalog';
 export * from './dates';
 export * from './folio';

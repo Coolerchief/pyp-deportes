@@ -179,6 +179,7 @@ pyp-deportes/
   - `/data/catalog.json`: resumen de productos publicados para filtros, orden y búsqueda (id, slug, nombre, marca, categoría, subcategoría, deportes, público, personalizable, destacado, orden, `publishedAt`, imagen principal y variantes mínimas). Objetivo: < 60 KB gzip con 500 productos.
   - `/data/settings.json`: WhatsApp, flags, textos globales y **`siteMedia`** (URL y texto alternativo de cada foto del sitio; también se incrustan en el HTML en build).
   - `_redirects`: generado con `scripts/generate-redirects.ts` a partir de `products.legacy_url` y del mapa de `docs/data/sitio-actual.md`.
+- **Implementación (T2.1, 11-oct-2026).** `apps/web/lib/data`: `getBuildData()` lee las 11 vistas una vez por proceso de build con la API REST de Supabase (`fetch` + llave `anon`, paginado de 1 000 en 1 000; sin `supabase-js`), las valida con los esquemas de `packages/shared/src/build-data.ts` y arma `catalog.json` y `settings.json`. Las rutas `app/data/catalog.json/route.ts` y `app/data/settings.json/route.ts` (`force-static`) los escriben en `out/data/`. Si un registro no cumple, el build se detiene con la vista y el `id` de cada problema. Fuente: `BUILD_DATA_FILE` (copia de las vistas) si existe; si no, `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` (pyp-dev en local, producción en `deploy.yml`). CI no tiene base: compila con `apps/web/fixtures/build-data.json`, copia de las vistas públicas de pyp-dev (sin datos de clientes ni precios) que regenera `pnpm --filter @pyp/web data:snapshot`. **Tamaño:** con 56 productos `catalog.json` pesa 15 KB gzip; al mismo ritmo, 500 productos rondarían 130 KB, por encima del objetivo de 60 KB. Se revisa en T6.3 (por ejemplo, variantes resumidas o ids cortos).
 - **Listados con filtros:** la página estática contiene el listado por defecto (SEO). Al aplicar filtros, un componente cliente filtra `catalog.json` y sincroniza con la URL (`?deporte=futbol&marca=molten`).
 
 ### 6.2 Imágenes
@@ -407,11 +408,12 @@ sequenceDiagram
 | Variable | Ámbito | Ejemplo |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | build | `https://pypdeportescoapa.com` |
-| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | build + cliente | — |
+| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | build + cliente | En `deploy.yml`, secretos del repositorio con los valores de producción |
 | `NEXT_PUBLIC_MEDIA_URL` | build + cliente | `https://media.pypdeportescoapa.com` |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | cliente | — |
 | `NEXT_PUBLIC_GA_ID` | cliente | opcional |
 | `SITE_ENV` | build | `local` · `production` |
+| `BUILD_DATA_FILE` | build | Ruta a una copia de las vistas `public_*` (`fixtures/build-data.json` en CI). Si existe, el build no consulta Supabase |
 | `SITE_INDEXABLE` | build | Solo `true` permite indexar (`app/robots.ts` y meta robots del layout, `lib/indexing.ts`). Sin ella, todo build sale con `noindex, nofollow` y `robots.txt` con `Disallow: /`. Se agrega a `deploy.yml` en la fase 7, después del cambio de dominio |
 | `SUPABASE_DEV_PROJECT_REF` | scripts `db:*` (solo desarrollo) | referencia de pyp-dev |
 | `SUPABASE_PROD_PROJECT_REF` | scripts `db:*` (solo para bloquearlo); secreto de `db-production.yml` | referencia de producción |
