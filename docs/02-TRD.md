@@ -355,7 +355,7 @@ sequenceDiagram
   A->>D: consulta publish_runs (estado visible en el admin)
 ```
 
-- `deploy.yml`: `on: workflow_dispatch` y `push` a `main`. `concurrency: { group: deploy-prod, cancel-in-progress: true }`. Corre `pnpm build` y `wrangler deploy` desde `apps/web` con los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` del repositorio; publica en el entorno `production` de GitHub con la URL de `workers.dev`.
+- `deploy.yml`: `on: workflow_dispatch` y `push` a `main`. `concurrency: { group: deploy-prod, cancel-in-progress: true }`. Corre `pnpm build` y `wrangler deploy` desde `apps/web` con los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` del repositorio (sin *environment* de GitHub: el repositorio es privado en el plan Free); deja la URL de `workers.dev` en el resumen de la corrida. No define `SITE_INDEXABLE`, así que lo publicado sale con `noindex` hasta el cambio de dominio.
 - `apps/web/wrangler.jsonc`: Worker `pyp-deportes` solo de *static assets* (sin código de servidor) que sirve `apps/web/out`; `html_handling: drop-trailing-slash` (coincide con `trailingSlash: false`) y `not_found_handling: 404-page` (sirve `404.html`). `_headers` vive en `apps/web/public/`.
 - `ci.yml` en cada PR y en cada push a `main` y `develop`, con dos trabajos: `web` (lint, typecheck, Vitest, build y Playwright contra el build estático con `serve out`) y `db` (`supabase db start` + `supabase test db` en un Postgres desechable del runner). Lighthouse CI (§14) se agrega cuando existan las páginas públicas.
 - **Entornos:** `local` (`next dev` contra el proyecto remoto **pyp-dev**; sin Docker no hay Supabase local) y `production`. El plan Free permite 2 proyectos: pyp-dev y producción. Detalle en `06-IMPLEMENTATION-PLAN.md`, fase 1, "Modo sin Docker".
@@ -410,6 +410,7 @@ sequenceDiagram
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | cliente | — |
 | `NEXT_PUBLIC_GA_ID` | cliente | opcional |
 | `SITE_ENV` | build | `local` · `production` |
+| `SITE_INDEXABLE` | build | Solo `true` permite indexar (`app/robots.ts` y meta robots del layout, `lib/indexing.ts`). Sin ella, todo build sale con `noindex, nofollow` y `robots.txt` con `Disallow: /`. Se agrega a `deploy.yml` en la fase 7, después del cambio de dominio |
 | `SUPABASE_DEV_PROJECT_REF` | scripts `db:*` (solo desarrollo) | referencia de pyp-dev |
 | `SUPABASE_PROD_PROJECT_REF` | scripts `db:*` (solo para bloquearlo); secreto de `db-production.yml` | referencia de producción |
 | `SUPABASE_DB_PASSWORD` | scripts `db:reset`, `test:db`, `db:import` (solo desarrollo) | contraseña de Postgres de pyp-dev |

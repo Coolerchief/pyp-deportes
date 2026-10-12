@@ -37,7 +37,7 @@ Después de activar el entorno: `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pn
 
 ## Despliegue
 
-Cada push a `main` corre `.github/workflows/deploy.yml`: compila el sitio y lo publica con `wrangler deploy` en Cloudflare Workers (Worker `pyp-deportes`, configurado en `apps/web/wrangler.jsonc`). También se puede lanzar a mano desde la pestaña Actions. Usa los secretos del repositorio `CLOUDFLARE_API_TOKEN` (permiso de edición de Workers) y `CLOUDFLARE_ACCOUNT_ID`. Para revisar sin publicar: `pnpm build` y luego `pnpm --filter @pyp/web exec wrangler deploy --dry-run`.
+Cada push a `main` corre `.github/workflows/deploy.yml`: compila el sitio y lo publica con `wrangler deploy` en Cloudflare Workers (Worker `pyp-deportes`, configurado en `apps/web/wrangler.jsonc`). También se puede lanzar a mano desde la pestaña Actions. Usa los secretos del repositorio `CLOUDFLARE_API_TOKEN` (permiso de edición de Workers) y `CLOUDFLARE_ACCOUNT_ID`. Para revisar sin publicar: `pnpm build` y luego `pnpm --filter @pyp/web exec wrangler deploy --dry-run`. Mientras no se haga el cambio de dominio, todo build sale con `noindex` (meta robots y `robots.txt`); solo `SITE_INDEXABLE=true` lo quita.
 
 La base de datos de producción se actualiza solo con `.github/workflows/db-production.yml` (nunca con `supabase link`): aplica las migraciones pendientes, la semilla base la primera vez, apaga el registro público de Auth, crea el primer admin y verifica que `anon` no lea tablas base. Solo se lanza a mano desde la pestaña Actions, sobre `main`, escribiendo `PRODUCCION`. Usa los secretos del repositorio descritos en `docs/02-TRD.md` §9.3.
 | `docs/` | PRD, TRD, UI/UX, flujos, esquema de base de datos, plan de implementación, datos y logos |
