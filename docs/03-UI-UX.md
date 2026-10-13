@@ -222,6 +222,13 @@ En las pantallas los badges miden 22 px de alto con texto de 11 px; en código s
 
 **Footer** (PatrónCancha sobre `noche`) — logo vertical negativo · dirección, horario y teléfono (desde `stores`) · enlaces (Catálogo, Uniformes, Equipos estrenando, Nosotros → `/visitanos#nosotros`, Aviso de privacidad) · redes · DobleDiagonal `lima` de cierre · "© 2026 P&P Deportes Coapa". En escritorio, 4 columnas.
 
+**Implementación (T2.2, 12-oct-2026).** `apps/web/components/layout`: `SiteHeader`, `MobileMenu`, `MegaMenu`, `SiteFooter`, `WhatsAppFab` y `WhatsAppGlyph`, montados en `app/(public)/layout.tsx`. Los datos salen del build (`lib/navigation.ts`): deportes y categorías de primer nivel desde `catalog.json`; dirección, horario, teléfono, redes y WhatsApp desde `settings.json`. El formato del teléfono, del horario y del enlace `wa.me` vive en `packages/shared/src/contact.ts`. Teclado: Escape cierra el menú móvil y el mega menú; mientras están abiertos, Tab no sale del header; al cerrarse, el foco vuelve al botón que los abrió; la página no se desplaza detrás. Se agregó un enlace "Saltar al contenido". Diferencias con `design/`, todas a favor de este documento o de los datos:
+- **WhatsApp:** el diseño dibuja una burbuja genérica; se usa el glifo oficial de `simple-icons` (§5 y TRD §3).
+- **Horario:** el diseño muestra "[HORARIO] Lun–Vie…"; el sitio muestra el horario de `stores.hours` sin el corchete. Sigue pendiente de confirmar (`00-ESTADO` §4.C).
+- **Footer de escritorio:** sin la frase "Tienda deportiva y taller… Desde 1969", que no está en la anatomía de arriba y sería un texto del negocio fijo en el código. La columna Catálogo lista los deportes de la base. En móvil el enlace es "Visítanos", como en el diseño; en escritorio, "Nosotros".
+- **Nombres:** deportes y categorías salen de la base ("Fitness y gimnasio", "Material de entrenamiento", "Accesorios y arbitraje") aunque el diseño los abrevie. El diseño de escritorio escribe "Categorias" sin acento; el sitio, "Categorías".
+- **Pendiente de otras tareas:** la lupa móvil lleva a `/buscar` y el campo de escritorio envía `GET /buscar?q=` (sugerencias en T2.6); el contador de piezas llega con `useQuote` (T3.1); el FAB sube 72 px cuando exista la QuoteBar (T3.3). Los enlaces a `/catalogo/…` y `/deporte/…` dan 404 hasta T2.4.
+
 ### 7.4 Catálogo
 
 **SportTile** — imagen 4:5 (genérica o foto), degradado `noche` abajo y el nombre del deporte en `h3` blanco. **Sin conteo de productos.** Carrusel horizontal con *scroll-snap* en móvil; 7 columnas en escritorio.

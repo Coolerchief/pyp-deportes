@@ -3,6 +3,7 @@
 
 export * from './build-data';
 export * from './catalog';
+export * from './contact';
 export * from './dates';
 export * from './folio';
 export * from './importer';

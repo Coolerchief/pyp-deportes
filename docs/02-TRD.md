@@ -84,7 +84,7 @@ flowchart LR
 | Estado del cliente | Zustand + `persist` | 5.x | Lista de cotización y datos del solicitante |
 | Formularios | React Hook Form + Zod | Zod 4.x | Esquemas Zod compartidos con Edge Functions; Zod es dependencia de `packages/shared` |
 | Búsqueda | MiniSearch | 7.x | Índice construido en el navegador desde `catalog.json`; `autoSuggest` para "¿Quisiste decir…?" |
-| Íconos | lucide-react · simple-icons (solo el glifo de WhatsApp) | última | Trazo 2 px, 20/24 px (`03-UI-UX.md` §5) |
+| Íconos | lucide-react · simple-icons (solo el glifo de WhatsApp) | 1.55 · 16.35 | Trazo 2 px, 20/24 px (`03-UI-UX.md` §5). `simple-icons` se instaló en T2.2; se importa solo `siWhatsapp` |
 | CSV/Excel | Papa Parse · SheetJS (`xlsx`) | última | Importador del admin |
 | Imágenes (subida) | `browser-image-compression` o Canvas API | — | Genera WebP 320/640/1024/1600 |
 | Imágenes genéricas (build) | `sharp` | 0.35.x | Solo desarrollo: `pnpm placeholders` captura `ImagenGenerica` con Playwright y la codifica a WebP en `apps/web/public/img/placeholder/` (misma versión que trae Next) |
