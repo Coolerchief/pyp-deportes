@@ -31,6 +31,10 @@ type ButtonProps = {
   size?: ButtonSize;
   /** Renders a link instead of a button. */
   href?: string;
+  /** With `href`: an outside link (wa.me, maps) that opens in a new tab. */
+  external?: boolean;
+  /** `outline` on a dark background (noche, cancha): white border and text. */
+  tone?: 'light' | 'dark';
   type?: 'button' | 'submit' | 'reset';
   onClick?: MouseEventHandler<HTMLElement>;
   disabled?: boolean;
@@ -54,6 +58,8 @@ export function Button({
   variant = 'primary',
   size = 'md',
   href,
+  external = false,
+  tone = 'light',
   type = 'button',
   onClick,
   disabled = false,
@@ -81,7 +87,9 @@ export function Button({
     'type-button inline-flex items-center justify-center gap-2 whitespace-nowrap no-underline',
     'transition-[background-color,transform] duration-150 ease-brand active:translate-y-px',
     placa && 'placa',
-    VARIANT[variant],
+    variant === 'outline' && tone === 'dark'
+      ? 'text-blanco bg-transparent shadow-[inset_0_0_0_2px_var(--color-blanco)] px-6'
+      : VARIANT[variant],
     fullWidth && 'w-full',
     inactive && 'pointer-events-none opacity-40',
   );
@@ -93,31 +101,46 @@ export function Button({
     </>
   );
 
-  const element = href ? (
-    <Link
-      href={href}
-      className={classes}
-      style={style}
-      onClick={onClick}
-      aria-label={ariaLabel}
-      aria-disabled={inactive || undefined}
-      tabIndex={inactive ? -1 : undefined}
-    >
-      {content}
-    </Link>
-  ) : (
-    <button
-      type={type}
-      className={classes}
-      style={style}
-      onClick={onClick}
-      disabled={inactive}
-      aria-busy={loading || undefined}
-      aria-label={ariaLabel}
-    >
-      {content}
-    </button>
-  );
+  const element =
+    href && external ? (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={classes}
+        style={style}
+        onClick={onClick}
+        aria-label={ariaLabel}
+        aria-disabled={inactive || undefined}
+        tabIndex={inactive ? -1 : undefined}
+      >
+        {content}
+      </a>
+    ) : href ? (
+      <Link
+        href={href}
+        className={classes}
+        style={style}
+        onClick={onClick}
+        aria-label={ariaLabel}
+        aria-disabled={inactive || undefined}
+        tabIndex={inactive ? -1 : undefined}
+      >
+        {content}
+      </Link>
+    ) : (
+      <button
+        type={type}
+        className={classes}
+        style={style}
+        onClick={onClick}
+        disabled={inactive}
+        aria-busy={loading || undefined}
+        aria-label={ariaLabel}
+      >
+        {content}
+      </button>
+    );
 
   return (
     <span

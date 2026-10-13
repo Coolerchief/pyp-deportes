@@ -120,7 +120,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T2.1 (capa de datos del build: `packages/shared/src/build-data.ts` y `apps/web/lib/data`; `out/data/catalog.json` y `out/data/settings.json`). Con pyp-dev: 56 productos, 313 variantes, 7 deportes, 44 categorías, 15 marcas; un registro inválido detiene el build con la vista y el `id`. CI compila con la copia `apps/web/fixtures/build-data.json`. **Pendiente del usuario antes del próximo push a `main`:** agregar los secretos del repositorio `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` de producción; sin ellos `Deploy` falla. Riesgo anotado: `catalog.json` pasaría de 60 KB gzip con 500 productos (se revisa en T6.3). El build no falla con el catálogo vacío (producción hoy): publica el sitio y CI lo comprueba con `fixtures/build-data-empty.json`; cada página de la fase 2 muestra el estado vacío del diseño cuando no hay productos.
 
-**Siguiente paso:** T2.2 (header, menú móvil, mega menú, footer, botón flotante de WhatsApp).
+**Hecho:** T2.2 (header fijo con menú móvil de acordeones, mega menú de escritorio, footer y botón flotante de WhatsApp en `apps/web/components/layout`, alrededor de todas las páginas públicas). Datos desde el build: deportes, categorías, tienda, redes y WhatsApp. Navegación completa con teclado; Escape cierra los menús y devuelve el foco (pruebas de componentes y E2E en móvil y escritorio). Diferencias con el diseño anotadas en UI/UX §7.3 (glifo oficial de WhatsApp, horario sin "[HORARIO]", footer sin frase fija).
+
+**Siguiente paso:** T2.3 (`ProductCard`, `ProductGrid`, `SportTile`, `CategoryTile`, `VolumeNote`, cargador de imágenes).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 

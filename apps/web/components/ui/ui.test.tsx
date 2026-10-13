@@ -17,6 +17,25 @@ describe('Button', () => {
     expect(button.parentElement).toHaveClass('focus-placa');
   });
 
+  it('opens outside links in a new tab and inverts outline on dark backgrounds', () => {
+    render(
+      <>
+        <Button variant="whatsapp" href="https://wa.me/525500000000" external>
+          Cotiza por WhatsApp
+        </Button>
+        <Button variant="outline" tone="dark" href="/cotizacion">
+          Mi cotización
+        </Button>
+      </>,
+    );
+    const whatsapp = screen.getByRole('link', { name: 'Cotiza por WhatsApp' });
+    expect(whatsapp).toHaveAttribute('target', '_blank');
+    expect(whatsapp).toHaveAttribute('rel', 'noopener noreferrer');
+    const quote = screen.getByRole('link', { name: 'Mi cotización' });
+    expect(quote).toHaveClass('text-blanco');
+    expect(quote).not.toHaveAttribute('target');
+  });
+
   it('keeps outline and ghost rectangular', () => {
     render(
       <>

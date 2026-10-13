@@ -58,6 +58,8 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   app/dev/           Hojas de muestra (page.dev.tsx): solo existen con `next dev`, nunca en el build
   components/brand/  Logo, Placa, DobleDiagonal, PatronCancha, CorteA13, ImagenGenerica
   components/ui/     Button, Badge, Chip, FormField, Sheet, EmptyState, Skeleton, SectionHeader
+  components/layout/ SiteHeader (menú móvil y mega menú), SiteFooter, WhatsAppFab: marco de app/(public)/layout.tsx
+  lib/               data (catalog.json y settings.json del build), navigation (menús y contacto), indexing
   scripts/           Generador de imágenes genéricas (placeholders.json + generate-placeholders.mjs)
   wrangler.jsonc     Worker de static assets que sirve apps/web/out
 packages/shared/     Esquemas Zod, tipos, folio, normalización de texto (sin dependencias de Node); database.types.ts generado
