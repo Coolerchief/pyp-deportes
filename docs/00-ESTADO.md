@@ -130,7 +130,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T2.5 (filtros con panel lateral en escritorio y hoja en móvil, orden con menú y hoja, chips activos, "Cargar más", estados cargando, sin resultados y error de red, URL sincronizada). La lógica de filtros y orden está en `packages/shared` con pruebas; las pruebas de componentes y E2E cubren filtrar, ordenar con teclado, la hoja móvil, "Cargar más", "Limpiar filtros" y abrir una URL compartida, que reproduce la vista. Se corrigió un parpadeo de las casillas mientras Next actualiza `useSearchParams`.
 
-**Siguiente paso:** T2.6 (búsqueda: campo, sugerencias, `/buscar`, sin resultados con "¿Quisiste decir…?").
+**Hecho:** T2.6 (búsqueda con MiniSearch en `@pyp/shared/search`; campo con sugerencias en el header, que en móvil convierte el header en el campo; `/buscar` con resultados por relevancia, filtros y orden; "¿Quisiste decir…?"; pantalla sin resultados con accesos y WhatsApp). "futbol" encuentra "Fútbol" y "valon" sugiere "balón" (pruebas unitarias, de componentes y E2E). MiniSearch se carga solo al buscar. Diferencia con el diseño anotada en TRD §7: "valon" muestra resultados con la sugerencia, en vez de la pantalla sin resultados. Pendiente: el evento `search` de analítica (T3.9).
+
+**Siguiente paso:** T2.7 (ficha de producto: galería, información, especificaciones y relacionados; JSON-LD `Product` sin precio).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 

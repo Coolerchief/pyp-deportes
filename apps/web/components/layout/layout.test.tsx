@@ -5,7 +5,11 @@ import type { SiteNav } from '@/lib/navigation';
 import { SiteFooter, SiteHeader, WhatsAppFab } from '.';
 
 const navigation = vi.hoisted(() => ({ pathname: '/' }));
-vi.mock('next/navigation', () => ({ usePathname: () => navigation.pathname }));
+vi.mock('next/navigation', () => ({
+  usePathname: () => navigation.pathname,
+  useRouter: () => ({ push: vi.fn(), back: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 const nav: SiteNav = {
   siteName: 'P&P Deportes Coapa',
@@ -151,10 +155,22 @@ describe('SiteHeader · mega menu', () => {
     render(<SiteHeader nav={nav} />);
     const form = screen.getByRole('search');
     expect(form).toHaveAttribute('action', '/buscar');
-    expect(within(form).getByRole('searchbox', { name: 'Busca en el catálogo' })).toHaveAttribute(
+    expect(within(form).getByRole('combobox', { name: 'Busca en el catálogo' })).toHaveAttribute(
       'name',
       'q',
     );
+  });
+
+  it('turns the mobile header into the search field and back', async () => {
+    const user = userEvent.setup();
+    render(<SiteHeader nav={nav} />);
+    // The first "Buscar" is the mobile magnifier; the second submits the desktop field.
+    await user.click(screen.getAllByRole('button', { name: 'Buscar' })[0]!);
+    expect(screen.getAllByRole('combobox', { name: 'Busca en el catálogo' })).toHaveLength(2);
+    expect(screen.getAllByRole('combobox')[0]).toHaveFocus();
+    await user.click(screen.getByRole('button', { name: 'Cerrar búsqueda' }));
+    expect(screen.getAllByRole('combobox')).toHaveLength(1);
+    expect(screen.getByRole('button', { name: 'Menú' })).toBeVisible();
   });
 });
 

@@ -5,6 +5,10 @@ import type { CatalogProduct } from './catalog';
 import { AUDIENCES, type Audience } from './labels';
 import { SORT_OPTIONS, type SortOption } from './listing';
 
+/** Which orders a page accepts and which one it shows without ?orden= (search: Relevancia). */
+export type SortSettings = { options: readonly SortOption[]; default: SortOption };
+export const LISTING_SORTS: SortSettings = { options: SORT_OPTIONS, default: 'destacados' };
+
 export type ListingFilters = {
   deporte: string[];
   categoria: string[];
@@ -67,7 +71,10 @@ function readQuery(query: string): ParamReader {
  * Reads ?deporte=, ?categoria=, ?marca=, ?para=, ?personalizable=1 and ?orden= (several values
  * separated by commas). Unknown or malformed values are dropped, so any shared URL is safe.
  */
-export function parseListingParams(params: ParamReader | string): ListingState {
+export function parseListingParams(
+  params: ParamReader | string,
+  sorts: SortSettings = LISTING_SORTS,
+): ListingState {
   const search = typeof params === 'string' ? readQuery(params) : params;
   const sort = search.get('orden');
   return {
@@ -80,20 +87,23 @@ export function parseListingParams(params: ParamReader | string): ListingState {
       ),
       personalizable: search.get('personalizable') === '1',
     },
-    sort: (SORT_OPTIONS as readonly string[]).includes(sort ?? '')
+    sort: (sorts.options as readonly string[]).includes(sort ?? '')
       ? (sort as SortOption)
-      : 'destacados',
+      : sorts.default,
   };
 }
 
 /** The query string for a state ('' for the default view), so sharing the URL reproduces it. */
-export function serializeListingParams({ filters, sort }: ListingState): string {
+export function serializeListingParams(
+  { filters, sort }: ListingState,
+  defaultSort: SortOption = LISTING_SORTS.default,
+): string {
   // Values are slugs (parseListingParams only keeps [a-z0-9-]), so they need no escaping.
   const parts: string[] = [];
   for (const key of FILTER_KEYS)
     if (filters[key].length) parts.push(`${key}=${filters[key].join(',')}`);
   if (filters.personalizable) parts.push('personalizable=1');
-  if (sort !== 'destacados') parts.push(`orden=${sort}`);
+  if (sort !== defaultSort) parts.push(`orden=${sort}`);
   return parts.length ? `?${parts.join('&')}` : '';
 }
 

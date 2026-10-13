@@ -7,10 +7,13 @@ import type { CatalogJson, CatalogProduct } from './catalog';
 /** First batch rendered in the HTML of every listing; "Cargar más" adds the same amount. */
 export const LISTING_PAGE_SIZE = 24;
 
+/** Orders of a listing; search adds "Relevancia" first (UI/UX §7.4 SortControl). */
 export const SORT_OPTIONS = ['destacados', 'nuevos', 'nombre', 'marca'] as const;
-export type SortOption = (typeof SORT_OPTIONS)[number];
+export const SEARCH_SORT_OPTIONS = ['relevancia', ...SORT_OPTIONS] as const;
+export type SortOption = (typeof SEARCH_SORT_OPTIONS)[number];
 
 export const SORT_LABELS: Record<SortOption, string> = {
+  relevancia: 'Relevancia',
   destacados: 'Destacados',
   nuevos: 'Más nuevos',
   nombre: 'Nombre: A a la Z',
@@ -20,6 +23,8 @@ export const SORT_LABELS: Record<SortOption, string> = {
 const byName = (a: CatalogProduct, b: CatalogProduct) => a.name.localeCompare(b.name, 'es');
 
 const COMPARE: Record<SortOption, (a: CatalogProduct, b: CatalogProduct) => number> = {
+  // Search results already come by relevance: keep them (Array.sort is stable).
+  relevancia: () => 0,
   // Featured first, then the order set in the admin, then by name.
   destacados: (a, b) =>
     Number(b.featured) - Number(a.featured) || a.sortOrder - b.sortOrder || byName(a, b),

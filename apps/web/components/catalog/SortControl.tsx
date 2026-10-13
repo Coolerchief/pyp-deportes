@@ -1,15 +1,19 @@
 'use client';
 
-import { SORT_LABELS, SORT_OPTIONS, type SortOption } from '@pyp/shared';
+import { SORT_LABELS, type SortOption } from '@pyp/shared';
 import { Check, ChevronDown } from 'lucide-react';
 import { type KeyboardEvent, useEffect, useId, useRef, useState } from 'react';
 import { Sheet } from '@/components/ui';
 import { cx } from '@/lib/cx';
 
-type SortProps = { value: SortOption; onChange: (sort: SortOption) => void };
+type SortProps = {
+  options: readonly SortOption[];
+  value: SortOption;
+  onChange: (sort: SortOption) => void;
+};
 
 /** Mobile (`catalogo-ordenar`): "Destacados ▾" opens a bottom sheet with radio buttons. */
-export function SortSheet({ value, onChange }: SortProps) {
+export function SortSheet({ options, value, onChange }: SortProps) {
   const [open, setOpen] = useState(false);
   const name = useId();
   return (
@@ -27,7 +31,7 @@ export function SortSheet({ value, onChange }: SortProps) {
       <Sheet open={open} onClose={() => setOpen(false)} title="Ordenar por">
         <fieldset>
           <legend className="sr-only">Ordenar por</legend>
-          {SORT_OPTIONS.map((option) => (
+          {options.map((option) => (
             <label
               key={option}
               className="border-linea flex min-h-12 cursor-pointer items-center gap-3 border-b text-base last:border-b-0"
@@ -55,9 +59,9 @@ export function SortSheet({ value, onChange }: SortProps) {
  * Desktop: "Ordenar por [Destacados ▾]" opens a listbox under the button. Arrow keys move,
  * Enter or Space choose, Escape or a click outside close and focus returns to the button.
  */
-export function SortMenu({ value, onChange }: SortProps) {
+export function SortMenu({ options, value, onChange }: SortProps) {
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(SORT_OPTIONS.indexOf(value));
+  const [active, setActive] = useState(options.indexOf(value));
   const button = useRef<HTMLButtonElement>(null);
   const list = useRef<HTMLUListElement>(null);
   const root = useRef<HTMLDivElement>(null);
@@ -74,7 +78,7 @@ export function SortMenu({ value, onChange }: SortProps) {
   }, [open]);
 
   function openList() {
-    setActive(SORT_OPTIONS.indexOf(value));
+    setActive(options.indexOf(value));
     setOpen(true);
   }
 
@@ -85,14 +89,14 @@ export function SortMenu({ value, onChange }: SortProps) {
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLUListElement>) {
-    const last = SORT_OPTIONS.length - 1;
+    const last = options.length - 1;
     const keys: Record<string, () => void> = {
       ArrowDown: () => setActive((i) => Math.min(i + 1, last)),
       ArrowUp: () => setActive((i) => Math.max(i - 1, 0)),
       Home: () => setActive(0),
       End: () => setActive(last),
-      Enter: () => choose(SORT_OPTIONS[active] ?? value),
-      ' ': () => choose(SORT_OPTIONS[active] ?? value),
+      Enter: () => choose(options[active] ?? value),
+      ' ': () => choose(options[active] ?? value),
       Escape: () => {
         setOpen(false);
         button.current?.focus();
@@ -128,11 +132,11 @@ export function SortMenu({ value, onChange }: SortProps) {
           role="listbox"
           tabIndex={-1}
           aria-labelledby={`${id}-label`}
-          aria-activedescendant={`${id}-${SORT_OPTIONS[active]}`}
+          aria-activedescendant={`${id}-${options[active]}`}
           onKeyDown={onKeyDown}
           className="bg-blanco shadow-float absolute top-full right-0 z-20 mt-1 w-56 py-1 outline-none"
         >
-          {SORT_OPTIONS.map((option, index) => (
+          {options.map((option, index) => (
             <li
               key={option}
               id={`${id}-${option}`}

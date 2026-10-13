@@ -83,7 +83,7 @@ flowchart LR
 | Estilos (build) | `@tailwindcss/postcss` | 4.x | Plugin de PostCSS de Tailwind v4 |
 | Estado del cliente | Zustand + `persist` | 5.x | Lista de cotización y datos del solicitante |
 | Formularios | React Hook Form + Zod | Zod 4.x | Esquemas Zod compartidos con Edge Functions; Zod es dependencia de `packages/shared` |
-| Búsqueda | MiniSearch | 7.x | Índice construido en el navegador desde `catalog.json`; `autoSuggest` para "¿Quisiste decir…?" |
+| Búsqueda | MiniSearch | 7.2 (en `packages/shared`, entrada `@pyp/shared/search`) | Índice construido en el navegador desde `catalog.json`; `autoSuggest` para "¿Quisiste decir…?" |
 | Íconos | lucide-react · simple-icons (solo el glifo de WhatsApp) | 1.55 · 16.35 | Trazo 2 px, 20/24 px (`03-UI-UX.md` §5). `simple-icons` se instaló en T2.2; se importa solo `siWhatsapp` |
 | CSV/Excel | Papa Parse · SheetJS (`xlsx`) | última | Importador del admin |
 | Imágenes (subida) | `browser-image-compression` o Canvas API | — | Genera WebP 320/640/1024/1600 |
@@ -285,6 +285,13 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 - **Orden del listado** (`?orden=`): `destacados` (por defecto: `featured` desc, `sort_order`), `nuevos` (`publishedAt` desc), `nombre` (A–Z con `Intl.Collator('es')`), `marca` (A–Z, luego nombre). No existe orden por precio mientras `show_prices = false`.
 - Filtros: AND entre tipos, OR dentro de un tipo; conteos calculados en cliente.
 - **Implementación (T2.5).** `packages/shared/src/filters.ts` (`parseListingParams`, `serializeListingParams`, `applyFilters`, `facetCounts`) y `listing.ts` (`sortProducts`, `listingProducts`). Los valores de la URL que no son *slugs* o que no se reconocen se descartan, así que cualquier URL compartida es segura. En el navegador, `lib/catalog-client.ts` descarga `catalog.json` una sola vez por visita, y si falla se puede reintentar.
+- **Implementación de la búsqueda (T2.6).** `packages/shared/src/search.ts`, entrada propia `@pyp/shared/search` para que las Edge Functions no carguen MiniSearch. Pruebas: "futbol" encuentra "Fútbol"; "valon" sugiere "balón".
+  - **Qué se indexa:** nombre ^3, marca ^2, SKU, categoría y subcategoría (sus nombres) y deportes (sus nombres). Las etiquetas no se indexan: están vacías en todos los productos y `catalog.json` no las lleva. Se agregan cuando el negocio las use.
+  - **Normalización:** `searchTerm` quita acentos y aplica un singular simple ("balones" → "balon", "guantes" → "guante").
+  - **Coincidencia:** todas las palabras deben aparecer (AND), con prefijo y fuzzy 0.2. Un SKU exacto, de producto o de variante, pone su producto primero.
+  - **"¿Quisiste decir…?":** aparece cuando alguna palabra no está en el catálogo tal cual (ni exacta ni como inicio de palabra). La sugerencia sale de `autoSuggest` con fuzzy 0.4 y se muestra con acentos.
+  - **Diferencia con el diseño:** con fuzzy 0.2, "valon" sí encuentra los balones (está a una letra). Por eso `/buscar?q=valon` muestra resultados con "¿Quisiste decir balón?" encima, y la pantalla sin resultados queda para términos que no se parecen a nada ("patineta").
+  - **Carga:** MiniSearch y `catalog.json` se descargan al enfocar el campo o al abrir `/buscar`, no con cada página (`lib/search-client.ts`).
 
 ## 8. Panel de administración
 

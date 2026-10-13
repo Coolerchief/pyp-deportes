@@ -263,6 +263,15 @@ En las pantallas los badges miden 22 px de alto con texto de 11 px; en código s
 
 **SearchBar / resultados** (`busqueda`) — móvil: al tocar buscar, el header se vuelve un campo con "‹" y "×". Resultados: `h1` "Resultados para “balón”" + conteo + chips de categoría + cuadrícula + bloque "¿No encuentras lo que buscas?" con "Pregunta por WhatsApp".
 
+**Implementación (T2.6, 12-oct-2026).** `SearchBox` (combobox con sugerencias: hasta 6 productos y 3 categorías, desde 2 caracteres y con 150 ms de espera), `HeaderSearch` y `SearchPage` (`/buscar`).
+- **Teclado:** flechas, Enter abre la sugerencia marcada o los resultados, Escape cierra la lista y, en móvil, la búsqueda.
+- **Móvil:** la lupa convierte el header en el campo, con "‹" y "×"; en `/buscar` abre así.
+- **Resultados:** reutilizan los filtros y el orden del listado, con "Relevancia" por defecto y chips de las categorías presentes. La URL conserva `?q=` junto a los filtros.
+- **`/buscar` sin `q`:** "Busca en el catálogo", con el campo enfocado y los accesos por deporte.
+- **Sin resultados:** "Entra por tu deporte" (chips), "O por categoría" (tiles) y el cierre con WhatsApp, cuyo mensaje lleva lo buscado. Ese cierre también va al final de los resultados.
+- **Foco:** el anillo rodea todo el campo, no el texto de dentro.
+- **Pendiente:** el evento de analítica `search` llega con T3.9.
+
 **VolumeNote** — franja `gis` con DobleDiagonal: "¿Compras para tu liga o escuela? Precio especial por volumen. Arma tu lista y te cotizamos por WhatsApp." Una vez por listado y en cada ficha. En escritorio incluye el botón "Hablar con un asesor".
 
 **Implementación (T2.3, 12-oct-2026).** `apps/web/components/catalog`: `ProductCard` (y `ProductCardSkeleton`), `ProductGrid` (y `ProductGridSkeleton`), `ProductImage`, `PriceSlot`, `SportTile(s)`, `CategoryTile(s)` y `VolumeNote`; hoja de muestra en `/dev/catalogo` con los datos de pyp-dev. Reglas en `packages/shared/src/product-card.ts`, con pruebas:
