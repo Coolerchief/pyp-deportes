@@ -245,14 +245,21 @@ function distinctCount(values: (string | null)[]): number {
 
 /**
  * Short summary for cards (UI/UX §7.4): '10 tallas · colores a elegir', '3 tamaños · 4 colores',
- * '2 tallas'. Only dimensions with a choice are mentioned (one size or one color says nothing);
- * a color note replaces the color count. A product with only its default variant gets ''.
+ * '2 tallas'. Only dimensions with a choice are counted; a color note replaces the color count.
+ * A product with a single variant names it instead, like the design's ball: 'Tamaño 5 ·
+ * Blanco/Rojo'. A product with only its default variant (no values) gets ''.
  */
 export function catalogMeta(
   product: { option1Name: string; option2Name: string | null; colorNote: string | null },
   variants: { o1: string | null; o2: string | null }[],
 ): string {
   const parts: string[] = [];
+  const only = variants.length === 1 ? variants[0] : undefined;
+  if (only) {
+    if (only.o1) parts.push(`${product.option1Name} ${only.o1}`);
+    if (only.o2) parts.push(only.o2);
+    if (parts.length) return parts.join(' · ');
+  }
   const sizes = distinctCount(variants.map((v) => v.o1));
   if (sizes > 1) parts.push(`${sizes} ${plural(product.option1Name, sizes)}`);
   const colors = distinctCount(variants.map((v) => v.o2));

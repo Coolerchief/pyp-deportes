@@ -118,11 +118,13 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Fase 1 cumplida:** las 8 pruebas de seguridad en verde (pyp-dev y CI) y el catálogo inicial consultable desde las vistas públicas en pyp-dev.
 
-**Hecho:** T2.1 (capa de datos del build: `packages/shared/src/build-data.ts` y `apps/web/lib/data`; `out/data/catalog.json` y `out/data/settings.json`). Con pyp-dev: 56 productos, 313 variantes, 7 deportes, 44 categorías, 15 marcas; un registro inválido detiene el build con la vista y el `id`. CI compila con la copia `apps/web/fixtures/build-data.json`. **Pendiente del usuario antes del próximo push a `main`:** agregar los secretos del repositorio `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` de producción; sin ellos `Deploy` falla. Riesgo anotado: `catalog.json` pasaría de 60 KB gzip con 500 productos (se revisa en T6.3). El build no falla con el catálogo vacío (producción hoy): publica el sitio y CI lo comprueba con `fixtures/build-data-empty.json`; cada página de la fase 2 muestra el estado vacío del diseño cuando no hay productos.
+**Hecho:** T2.1 (capa de datos del build: `packages/shared/src/build-data.ts` y `apps/web/lib/data`; `out/data/catalog.json` y `out/data/settings.json`). Con pyp-dev: 56 productos, 313 variantes, 7 deportes, 44 categorías, 15 marcas; un registro inválido detiene el build con la vista y el `id`. CI compila con la copia `apps/web/fixtures/build-data.json`. Secretos del repositorio `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` de producción cargados (12-oct-2026). Riesgo anotado: `catalog.json` pasaría de 60 KB gzip con 500 productos (se revisa en T6.3). El build no falla con el catálogo vacío (producción hoy): publica el sitio y CI lo comprueba con `fixtures/build-data-empty.json`; cada página de la fase 2 muestra el estado vacío del diseño cuando no hay productos.
 
 **Hecho:** T2.2 (header fijo con menú móvil de acordeones, mega menú de escritorio, footer y botón flotante de WhatsApp en `apps/web/components/layout`, alrededor de todas las páginas públicas). Datos desde el build: deportes, categorías, tienda, redes y WhatsApp. Navegación completa con teclado; Escape cierra los menús y devuelve el foco (pruebas de componentes y E2E en móvil y escritorio). Diferencias con el diseño anotadas en UI/UX §7.3 (glifo oficial de WhatsApp, horario sin "[HORARIO]", footer sin frase fija).
 
-**Siguiente paso:** T2.3 (`ProductCard`, `ProductGrid`, `SportTile`, `CategoryTile`, `VolumeNote`, cargador de imágenes).
+**Hecho:** T2.3 (`ProductCard`, `ProductGrid`, `SportTile`, `CategoryTile`, `VolumeNote`, `PriceSlot` y esqueletos en `apps/web/components/catalog`; cargador de anchos de R2 en `lib/images/loader.ts`; reglas de la tarjeta en `packages/shared`). Tarjetas con y sin foto, sin conteo en los accesos; hoja `/dev/catalogo`. Regla de "NUEVO" decidida en UI/UX §7.4 (30 días, nadie si más de la mitad califica). Botones `sm` con área táctil de 44 px en `outline` y `ghost`.
+
+**Siguiente paso:** T2.4 (páginas de listado estáticas: `/catalogo`, categoría, subcategoría, deporte, marca).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 

@@ -41,6 +41,7 @@ export const ROUTES = {
   catalog: '/catalogo',
   category: (slug: string) => `/catalogo/${slug}`,
   sport: (slug: string) => `/deporte/${slug}`,
+  product: (slug: string) => `/producto/${slug}`,
   search: '/buscar',
   quote: '/cotizacion',
   uniforms: '/uniformes-personalizados',

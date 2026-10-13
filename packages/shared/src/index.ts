@@ -8,6 +8,7 @@ export * from './dates';
 export * from './folio';
 export * from './importer';
 export * from './labels';
+export * from './product-card';
 export * from './quote';
 export * from './text';
 export type { Database, Json } from '../database.types';

@@ -87,6 +87,11 @@ export function Button({
     'type-button inline-flex items-center justify-center gap-2 whitespace-nowrap no-underline',
     'transition-[background-color,transform] duration-150 ease-brand active:translate-y-px',
     placa && 'placa',
+    // sm is 40 px tall; a 2 px invisible margin above and below makes the touch target 44 px
+    // (UI/UX §7.1). Plate variants would clip it, so it only applies to outline and ghost.
+    size === 'sm' &&
+      !placa &&
+      "relative after:absolute after:inset-x-0 after:-inset-y-0.5 after:content-['']",
     variant === 'outline' && tone === 'dark'
       ? 'text-blanco bg-transparent shadow-[inset_0_0_0_2px_var(--color-blanco)] px-6'
       : VARIANT[variant],

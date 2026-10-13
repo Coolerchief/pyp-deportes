@@ -199,6 +199,7 @@ pyp-deportes/
 
   Ruta en R2: `s/{slot}/{imageId}-{640|1024|1600|2400}.webp`.
 - Productos sin foto usan la imagen genérica de su categoría (`/img/placeholder/<categoria>.webp`) y en la ficha el texto "Foto próximamente".
+- **Implementación (T2.3).** `lib/images/loader.ts`: `mediaUrl(keyBase)` arma la URL con `NEXT_PUBLIC_MEDIA_URL` (por defecto `https://media.pypdeportescoapa.com`), y el cargador pide `-{ancho}.webp` con el ancho generado más cercano: 320–1600 para `p/` y `g/`, 640–2400 para `s/`. `next.config` fija `deviceSizes` en `[320, 640, 1024, 1600, 2400]` e `imageSizes` vacío, para que el `srcset` anuncie solo anchos que existen. Los archivos del sitio (`/…`: logos, genéricas) pasan sin cambio y se pintan con `unoptimized`.
 - `_headers`: `Cache-Control: public, max-age=31536000, immutable` para `/_next/static/*`; las fotos en R2 se suben con el mismo encabezado (el nombre incluye `imageId`, nunca se sobrescribe).
 
 ### 6.3 Lista de cotización (cliente)

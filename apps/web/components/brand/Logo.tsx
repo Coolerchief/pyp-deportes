@@ -50,6 +50,8 @@ export function Logo({
       alt={alt}
       className={className}
       priority={priority}
+      // A vector file of the site: no widths to pick.
+      unoptimized
     />
   );
 }

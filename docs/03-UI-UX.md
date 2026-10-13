@@ -252,6 +252,15 @@ En las pantallas los badges miden 22 px de alto con texto de 11 px; en código s
 
 **VolumeNote** — franja `gis` con DobleDiagonal: "¿Compras para tu liga o escuela? Precio especial por volumen. Arma tu lista y te cotizamos por WhatsApp." Una vez por listado y en cada ficha. En escritorio incluye el botón "Hablar con un asesor".
 
+**Implementación (T2.3, 12-oct-2026).** `apps/web/components/catalog`: `ProductCard` (y `ProductCardSkeleton`), `ProductGrid` (y `ProductGridSkeleton`), `ProductImage`, `PriceSlot`, `SportTile(s)`, `CategoryTile(s)` y `VolumeNote`; hoja de muestra en `/dev/catalogo` con los datos de pyp-dev. Reglas en `packages/shared/src/product-card.ts`, con pruebas:
+- **"Sin variantes"** = una sola variante: la tarjeta ofrece "+ Cotizar". Hasta T3.3 ese botón abre la ficha; después agregará una pieza.
+- **"NUEVO"**: ningún documento lo definía. Se decidió que lo llevan los productos publicados en los últimos 30 días antes del build, y nadie si más de la mitad del catálogo califica (día de lanzamiento o importación masiva), porque "Nuevo" en todas las tarjetas no dice nada. Se cambia en `NEW_PRODUCT_DAYS` y `newProductIds`.
+- **Meta de un producto con una sola variante:** la nombra, como el balón del diseño ("Tamaño 5 · Blanco/Rojo"; Esquema §10).
+- **Imágenes:** foto de R2 con el cargador de anchos (TRD §6.2) o la imagen genérica `/img/placeholder/<categoría>.webp`. Si la categoría no tiene archivo generado, se dibuja la misma imagen en CSS (`ImagenGenerica`).
+- **`ProductGrid`:** 2 columnas en móvil y 3 o 4 en escritorio. La nota de volumen va después de 4 tarjetas en móvil y de 6 en escritorio, como en el diseño. Sin productos muestra el contenido `empty` que le pase la página: así el catálogo vacío de producción compila y se ve bien.
+- **Botones `sm`:** miden 40 px, y en `outline` y `ghost` un margen invisible lleva el área táctil a 44 px (§7.1).
+- **Diferencias con `design/`:** la nota de volumen usa en escritorio el mismo texto de §10 que en móvil (el diseño de escritorio agrega "con cantidades por talla"), y "PERSONALIZABLE" va en `noche` (§7.2).
+
 ### 7.5 Ficha de producto
 
 Dos variantes de la misma página:

@@ -689,7 +689,7 @@ type CatalogJson = {
 Cada lectura se valida con Zod en el build; si un registro no cumple, el build falla indicando tabla e `id`.
 
 **Implementación (T2.1).** Esquemas y armado en `packages/shared/src/build-data.ts` (`validateBuildRows`, `buildCatalog`, `buildSettings`, `SettingsJsonSchema`).
-- `meta` solo menciona las dimensiones con opción: "10 tallas · colores a elegir", "3 tamaños · 4 colores", "2 tallas". Una sola talla o un solo color no se mencionan; `color_note` sustituye al conteo de colores; un producto con solo su variante por defecto lleva `''`.
+- `meta` cuenta las dimensiones con opción: "10 tallas · colores a elegir", "3 tamaños · 4 colores", "2 tallas". Una sola talla o un solo color no se cuentan; `color_note` sustituye al conteo de colores. Un producto con una sola variante la nombra, como el balón del diseño: "Tamaño 5 · Blanco/Rojo" (T2.3). Un producto con solo su variante por defecto, sin valores, lleva `''`.
 - `image` es la primera foto sin variante (por `sort_order`); si solo hay fotos de variantes, la primera de ellas.
 - Además de lo que validan las vistas, el build falla si un producto no tiene marca, categoría o subcategoría en las vistas públicas, o no tiene variantes activas (regla 11).
 - `settings.json` lleva también `generatedAt`, `siteName` y `gaMeasurementId`; `flags` va en camelCase (`showPrices`, `enableCheckout`, `enableShipping`, `enableStock`); `store` es la primera tienda activa por `sort_order`; `siteTexts` valida `advisor`, `uniforms_faq`, `store_history` y `privacy_notice`, y deja pasar las demás claves. Faltar cualquiera de los ajustes públicos, los 8 espacios de foto o una tienda activa detiene el build.

@@ -28,7 +28,7 @@ No agregues dependencias sin anotarlas en `docs/02-TRD.md` §3.
 Node 24 y pnpm viven en `.venv` (nodeenv): activa el entorno antes de cualquier comando (`source .venv/Scripts/activate` en Git Bash, `.venv\Scripts\Activate.ps1` en PowerShell). Sin activarlo, Playwright no encuentra sus navegadores. Las dependencias se instalan solo con el entorno activo. Detalle: `README.md`.
 
 ```bash
-pnpm dev            # sitio en http://localhost:3000; en desarrollo también /dev/tokens, /dev/marca, /dev/componentes, /dev/genericas
+pnpm dev            # sitio en http://localhost:3000; en desarrollo también /dev/tokens, /dev/marca, /dev/componentes, /dev/genericas, /dev/catalogo
 pnpm build          # genera apps/web/out con data/catalog.json y data/settings.json leídos de pyp-dev (_redirects llega en T5.6)
 pnpm --filter @pyp/web data:snapshot   # copia las vistas public_* de pyp-dev a apps/web/fixtures/build-data.json y build-data-empty.json (sin productos); CI compila con las dos
 pnpm lint
@@ -59,7 +59,8 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   components/brand/  Logo, Placa, DobleDiagonal, PatronCancha, CorteA13, ImagenGenerica
   components/ui/     Button, Badge, Chip, FormField, Sheet, EmptyState, Skeleton, SectionHeader
   components/layout/ SiteHeader (menú móvil y mega menú), SiteFooter, WhatsAppFab: marco de app/(public)/layout.tsx
-  lib/               data (catalog.json y settings.json del build), navigation (menús y contacto), indexing
+  components/catalog/ ProductCard, ProductGrid, ProductImage, PriceSlot, SportTiles, CategoryTiles, VolumeNote
+  lib/               data (catalog.json y settings.json del build), navigation (menús, contacto y rutas), images/loader (anchos de R2), indexing
   scripts/           Generador de imágenes genéricas (placeholders.json + generate-placeholders.mjs)
   wrangler.jsonc     Worker de static assets que sirve apps/web/out
 packages/shared/     Esquemas Zod, tipos, folio, normalización de texto (sin dependencias de Node); database.types.ts generado
