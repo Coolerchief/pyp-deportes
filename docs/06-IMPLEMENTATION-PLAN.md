@@ -139,6 +139,8 @@ Solo se lanza a mano (`workflow_dispatch`) desde Actions, escribiendo `PRODUCCIO
 | T2.7 | Ficha de producto: galería, información, especificaciones, relacionados; variante completa y sencilla (sin la lógica de agregar) | UI/UX §7.5 | `ficha-uniforme`, `ficha-balon` | Una página por producto publicado; JSON-LD `Product` sin precio | L |
 | T2.8 | Inicio | UI/UX §8.1 | `inicio` | Coincide con el diseño en móvil y escritorio; fotos desde `site_media` o marcador | M |
 
+**Catálogo vacío.** Producción no tiene productos hasta la fase 7 y `deploy.yml` compila contra ella, así que cada página de esta fase debe compilar y verse bien con cero productos: los listados, la búsqueda y las secciones de productos de Inicio muestran el estado vacío del diseño (`EmptyState`, como en `catalogo-sin-resultados`) en lugar de romperse. CI compila primero con `apps/web/fixtures/build-data-empty.json`. Ojo con `output: 'export'`: una ruta dinámica cuyo `generateStaticParams` devuelve `[]` hace fallar el build; las fichas y otras rutas por producto deben resolverlo (por ejemplo, sin rutas dinámicas vacías o con un parámetro de relleno que no se enlaza y responde 404).
+
 **Salida de la fase:** catálogo navegable de punta a punta en `workers.dev`, con Lighthouse ≥ 90 en Inicio, un listado y una ficha.
 
 ---
@@ -219,6 +221,7 @@ Solo se lanza a mano (`workflow_dispatch`) desde Actions, escribiendo `PRODUCCIO
 | 1 | Capturar los datos reales: WhatsApp de ventas, horario, teléfono, correo, coordenadas | ☐ |
 | 2 | Aviso de privacidad completo y revisado | ☐ |
 | 3 | Preguntas frecuentes de uniformes con respuestas reales | ☐ |
+| 3b | Cargar el catálogo real en producción con el importador del panel (T4.6), desde la cuenta de un admin de producción. Hasta aquí producción no tiene productos; nunca se cargan ahí los 56 de prueba de `catalogo-inicial.csv` | ☐ |
 | 4 | Revisar tallas, colores y descripciones del catálogo; subir las fotos disponibles | ☐ |
 | 5 | Ningún texto entre corchetes en el sitio (el build lista los que queden) | ☐ |
 | 6 | Crear las cuentas del personal y probar el alta de un producto con ellos | ☐ |

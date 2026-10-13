@@ -8,3 +8,4 @@ supabase/.temp/
 *.md
 index.html
 packages/shared/database.types.ts
+apps/web/fixtures/

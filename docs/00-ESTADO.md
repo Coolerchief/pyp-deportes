@@ -1,7 +1,7 @@
 # 00 · Estado del proyecto y pendientes
 
 > Índice de la documentación y lista de lo que falta. Se actualiza cada vez que cambia un documento o el diseño.
-> **Última actualización:** 11-oct-2026.
+> **Última actualización:** 12-oct-2026.
 
 ## 1. Qué es
 
@@ -65,6 +65,7 @@ Completa. Los seis documentos y `CLAUDE.md` están escritos. Se actualizan cuand
 - Proyectos de Supabase (plan Free): pyp-dev y producción. ✅
 - Cuenta de Cloudflare: Workers, R2, Turnstile. ✅ Cuenta y token de Workers en los secretos de GitHub (11-oct-2026); R2 y Turnstile se configuran más adelante.
 - ☐ Pendiente: "Crear environment production con Required reviewers y mover ahí los secretos de Supabase".
+- ☐ Pendiente para la fase 7: cargar el catálogo real a producción. Se hará con el importador del panel de administración (T4.6) cuando el negocio entregue los productos reales. Mientras tanto el desarrollo sigue contra pyp-dev con los 56 productos de prueba, que nunca se cargan en producción (decisión del usuario, 12-oct-2026).
 - Acceso al DNS de `pypdeportescoapa.com` (hoy en el hosting de WordPress) y copia de sus registros, sobre todo los de correo.
 - Google Analytics 4 y Search Console.
 
@@ -117,7 +118,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Fase 1 cumplida:** las 8 pruebas de seguridad en verde (pyp-dev y CI) y el catálogo inicial consultable desde las vistas públicas en pyp-dev.
 
-**Siguiente paso:** fase 2, tarea T2.1 (`catalog.json` y datos del build desde las vistas públicas).
+**Hecho:** T2.1 (capa de datos del build: `packages/shared/src/build-data.ts` y `apps/web/lib/data`; `out/data/catalog.json` y `out/data/settings.json`). Con pyp-dev: 56 productos, 313 variantes, 7 deportes, 44 categorías, 15 marcas; un registro inválido detiene el build con la vista y el `id`. CI compila con la copia `apps/web/fixtures/build-data.json`. **Pendiente del usuario antes del próximo push a `main`:** agregar los secretos del repositorio `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` de producción; sin ellos `Deploy` falla. Riesgo anotado: `catalog.json` pasaría de 60 KB gzip con 500 productos (se revisa en T6.3). El build no falla con el catálogo vacío (producción hoy): publica el sitio y CI lo comprueba con `fixtures/build-data-empty.json`; cada página de la fase 2 muestra el estado vacío del diseño cuando no hay productos.
+
+**Siguiente paso:** T2.2 (header, menú móvil, mega menú, footer, botón flotante de WhatsApp).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 

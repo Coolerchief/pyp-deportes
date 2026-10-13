@@ -10,7 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "placeholders": "node scripts/generate-placeholders.mjs"
+    "placeholders": "node scripts/generate-placeholders.mjs",
+    "data:snapshot": "node scripts/snapshot-build-data.mjs"
   },
   "dependencies": {
     "@pyp/shared": "workspace:*",

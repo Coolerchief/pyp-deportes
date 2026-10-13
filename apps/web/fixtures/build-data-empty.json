@@ -1,0 +1,955 @@
+{
+  "source": "pyp-dev sin productos",
+  "takenAt": "2026-10-12T03:14:59.878Z",
+  "views": {
+    "public_products": [],
+    "public_product_variants": [],
+    "public_product_images": [],
+    "public_product_sports": [],
+    "public_sports": [
+      {
+        "id": "263f0712-9973-43ab-8b67-a5a843c2776e",
+        "slug": "natacion",
+        "name": "Natación",
+        "sort_order": 6,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "5c0c3a23-a7b1-4f0a-a8dc-88d3c2e4b560",
+        "slug": "fitness",
+        "name": "Fitness y gimnasio",
+        "sort_order": 5,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "67d5e724-d329-46fb-a41e-6f6c2ce2286e",
+        "slug": "futbol",
+        "name": "Fútbol",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "a401c611-155c-40f7-b1c5-b4c2217eb6e2",
+        "slug": "atletismo",
+        "name": "Atletismo",
+        "sort_order": 7,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "b1af1d85-e176-4182-a0f5-89b618a60db7",
+        "slug": "voleibol",
+        "name": "Voleibol",
+        "sort_order": 3,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "ddfc057e-e277-4560-ac9c-0be65da8f3aa",
+        "slug": "box",
+        "name": "Box",
+        "sort_order": 4,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "f626d300-35d6-453a-88cf-0ba4ba4c42c7",
+        "slug": "basquetbol",
+        "name": "Básquetbol",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      }
+    ],
+    "public_categories": [
+      {
+        "id": "0650e4d6-57a3-411d-8590-338a84e37aa0",
+        "parent_id": "c3cd710c-8dcf-4084-a8f0-5f675e5a498a",
+        "slug": "balones-futbol",
+        "name": "Balones de fútbol",
+        "size_label": "Tamaño",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "070842b1-2e0d-46ab-9728-90e4eac76a1d",
+        "parent_id": "1d0c5629-87dc-4e3a-be7c-6cb856f1e72b",
+        "slug": "pesas",
+        "name": "Pesas",
+        "size_label": "Talla",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "0c1f8b5f-9beb-4c09-bd99-eb686f0f46d0",
+        "parent_id": "dfbd89c1-26e0-4bac-921f-96e498cbc6e7",
+        "slug": "jerseys",
+        "name": "Jerseys",
+        "size_label": "Talla",
+        "sort_order": 4,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "0d6ccb4e-1d58-4e22-8922-2f5af394d8b7",
+        "parent_id": "f2826566-a96b-4270-8644-e4b856d59288",
+        "slug": "porterias",
+        "name": "Porterías",
+        "size_label": "Tamaño",
+        "sort_order": 4,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "0f099487-dd89-442a-a11d-99748f5d8e03",
+        "parent_id": null,
+        "slug": "primeros-auxilios",
+        "name": "Primeros auxilios",
+        "size_label": "Talla",
+        "sort_order": 10,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "17585ea4-b9e5-4344-9af3-4be9825a2d5e",
+        "parent_id": null,
+        "slug": "natacion",
+        "name": "Natación",
+        "size_label": "Talla",
+        "sort_order": 8,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "19321488-cae6-4321-9e44-732b29c9f7a4",
+        "parent_id": "dfbd89c1-26e0-4bac-921f-96e498cbc6e7",
+        "slug": "uniformes-futbol",
+        "name": "Uniformes de fútbol",
+        "size_label": "Talla",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "1a5ab113-d860-4e0b-9f5f-d5053b609c0c",
+        "parent_id": "dfbd89c1-26e0-4bac-921f-96e498cbc6e7",
+        "slug": "uniformes-basquetbol",
+        "name": "Uniformes de básquetbol",
+        "size_label": "Talla",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "1b91c3c8-297e-47c1-a5ff-bfdd1d13fe88",
+        "parent_id": "aee59a76-497b-4c38-9705-d5036bd9b20a",
+        "slug": "shorts",
+        "name": "Shorts",
+        "size_label": "Talla",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "1d0c5629-87dc-4e3a-be7c-6cb856f1e72b",
+        "parent_id": null,
+        "slug": "fitness-y-gimnasio",
+        "name": "Fitness y gimnasio",
+        "size_label": "Talla",
+        "sort_order": 7,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "1fbc166b-6db2-4240-a763-291a4d8c76d7",
+        "parent_id": "0f099487-dd89-442a-a11d-99748f5d8e03",
+        "slug": "aerosoles",
+        "name": "Aerosoles",
+        "size_label": "Talla",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "29ca63c9-8ea1-4448-a523-968fe952f2c8",
+        "parent_id": null,
+        "slug": "box-y-combate",
+        "name": "Box y combate",
+        "size_label": "Peso",
+        "sort_order": 6,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "29f4dc50-8368-407e-990f-369cb560bef7",
+        "parent_id": null,
+        "slug": "accesorios",
+        "name": "Accesorios y arbitraje",
+        "size_label": "Talla",
+        "sort_order": 9,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "591c94cb-81b8-4c4d-a877-716e2d039ecf",
+        "parent_id": "aee59a76-497b-4c38-9705-d5036bd9b20a",
+        "slug": "pantalones",
+        "name": "Pantalones",
+        "size_label": "Talla",
+        "sort_order": 3,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "5e180e05-5d13-4387-b6ee-887c1b8af475",
+        "parent_id": "dfbd89c1-26e0-4bac-921f-96e498cbc6e7",
+        "slug": "uniformes-voleibol",
+        "name": "Uniformes de voleibol",
+        "size_label": "Talla",
+        "sort_order": 3,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "60dadeac-a663-44e9-9865-1bc4b55ede22",
+        "parent_id": "705b1648-4d82-4237-9e88-c26223f8efe3",
+        "slug": "caretas",
+        "name": "Caretas",
+        "size_label": "Talla",
+        "sort_order": 3,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "63d31cf4-a319-46f7-bfc2-db84b47b2989",
+        "parent_id": "f2826566-a96b-4270-8644-e4b856d59288",
+        "slug": "casacas",
+        "name": "Casacas",
+        "size_label": "Tamaño",
+        "sort_order": 3,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "65130570-3830-4953-b939-ce6f8c7fdb41",
+        "parent_id": "17585ea4-b9e5-4344-9af3-4be9825a2d5e",
+        "slug": "gorras",
+        "name": "Gorras",
+        "size_label": "Talla",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "6ea5712d-44ce-4417-8005-35528fdf6191",
+        "parent_id": "aee59a76-497b-4c38-9705-d5036bd9b20a",
+        "slug": "batas",
+        "name": "Batas",
+        "size_label": "Talla",
+        "sort_order": 4,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "705b1648-4d82-4237-9e88-c26223f8efe3",
+        "parent_id": null,
+        "slug": "protecciones",
+        "name": "Protecciones",
+        "size_label": "Talla",
+        "sort_order": 5,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "70cf9a95-fdf0-4274-8efd-73bf9a92ec8b",
+        "parent_id": "29ca63c9-8ea1-4448-a523-968fe952f2c8",
+        "slug": "kits",
+        "name": "Kits",
+        "size_label": "Peso",
+        "sort_order": 3,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "75427b7e-1fc8-4167-9b7e-d86b648c0987",
+        "parent_id": "29f4dc50-8368-407e-990f-369cb560bef7",
+        "slug": "gafetes",
+        "name": "Gafetes",
+        "size_label": "Talla",
+        "sort_order": 3,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "82185284-4845-4461-93a7-2b8c8ee116b5",
+        "parent_id": "f2826566-a96b-4270-8644-e4b856d59288",
+        "slug": "platos",
+        "name": "Platos",
+        "size_label": "Tamaño",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "8b1e11b6-875c-418a-89b7-80b415f2ec96",
+        "parent_id": "1d0c5629-87dc-4e3a-be7c-6cb856f1e72b",
+        "slug": "tapetes",
+        "name": "Tapetes",
+        "size_label": "Talla",
+        "sort_order": 3,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "8f32f82d-3231-4c00-b2f1-7370bc6e98fc",
+        "parent_id": "1d0c5629-87dc-4e3a-be7c-6cb856f1e72b",
+        "slug": "pelotas",
+        "name": "Pelotas",
+        "size_label": "Talla",
+        "sort_order": 4,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "925db3f8-25c0-42b2-b9e6-119f72ed4433",
+        "parent_id": "29f4dc50-8368-407e-990f-369cb560bef7",
+        "slug": "bombas",
+        "name": "Bombas",
+        "size_label": "Talla",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "969ea2a5-4d05-481a-8e90-70685fcc8d89",
+        "parent_id": "17585ea4-b9e5-4344-9af3-4be9825a2d5e",
+        "slug": "goggles",
+        "name": "Goggles",
+        "size_label": "Talla",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "9b479f2a-15f5-4fce-aa2b-98087819a5cd",
+        "parent_id": "0f099487-dd89-442a-a11d-99748f5d8e03",
+        "slug": "botiquines",
+        "name": "Botiquines",
+        "size_label": "Talla",
+        "sort_order": 3,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "9b85c5d8-6443-4a2b-9fdd-f6a3fe5e8d59",
+        "parent_id": "705b1648-4d82-4237-9e88-c26223f8efe3",
+        "slug": "espinilleras",
+        "name": "Espinilleras",
+        "size_label": "Talla",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "9df03489-3a8f-4463-a7e2-155c41cb022a",
+        "parent_id": "29ca63c9-8ea1-4448-a523-968fe952f2c8",
+        "slug": "guantes-box",
+        "name": "Guantes de box",
+        "size_label": "Peso",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "9f3e75fa-1119-43bc-ad6c-9e223dde90d4",
+        "parent_id": "aee59a76-497b-4c38-9705-d5036bd9b20a",
+        "slug": "medias",
+        "name": "Medias",
+        "size_label": "Talla",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "aee59a76-497b-4c38-9705-d5036bd9b20a",
+        "parent_id": null,
+        "slug": "ropa-deportiva",
+        "name": "Ropa deportiva",
+        "size_label": "Talla",
+        "sort_order": 3,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "af760f79-92a7-4d88-a0fa-336691633b4d",
+        "parent_id": "29ca63c9-8ea1-4448-a523-968fe952f2c8",
+        "slug": "manoplas",
+        "name": "Manoplas",
+        "size_label": "Peso",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "b449f149-aa85-4420-8940-be8c6dbf1058",
+        "parent_id": "1d0c5629-87dc-4e3a-be7c-6cb856f1e72b",
+        "slug": "bandas",
+        "name": "Bandas",
+        "size_label": "Talla",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "c3cd710c-8dcf-4084-a8f0-5f675e5a498a",
+        "parent_id": null,
+        "slug": "balones",
+        "name": "Balones",
+        "size_label": "Tamaño",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "c5fe3c42-5790-4e1e-9af9-cdb7db60b36f",
+        "parent_id": "1d0c5629-87dc-4e3a-be7c-6cb856f1e72b",
+        "slug": "cardio",
+        "name": "Cardio",
+        "size_label": "Talla",
+        "sort_order": 5,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "cd410542-5c81-4d38-8354-330f87f58c3e",
+        "parent_id": "f2826566-a96b-4270-8644-e4b856d59288",
+        "slug": "conos",
+        "name": "Conos",
+        "size_label": "Tamaño",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "d7fab7f8-896c-46e6-bdd3-fa8f5bce30d5",
+        "parent_id": "c3cd710c-8dcf-4084-a8f0-5f675e5a498a",
+        "slug": "balones-basquetbol",
+        "name": "Balones de básquetbol",
+        "size_label": "Tamaño",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "dd3f41ed-98df-4b0a-935d-613e0d573fb8",
+        "parent_id": "705b1648-4d82-4237-9e88-c26223f8efe3",
+        "slug": "guantes-portero",
+        "name": "Guantes de portero",
+        "size_label": "Talla",
+        "sort_order": 2,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "dfbd89c1-26e0-4bac-921f-96e498cbc6e7",
+        "parent_id": null,
+        "slug": "uniformes",
+        "name": "Uniformes",
+        "size_label": "Talla",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "e0429dd1-404f-46be-8743-b9e59794e1ec",
+        "parent_id": "0f099487-dd89-442a-a11d-99748f5d8e03",
+        "slug": "pomadas",
+        "name": "Pomadas",
+        "size_label": "Talla",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "e95b3969-e5c5-423d-8de7-92bdbc3f9873",
+        "parent_id": "c3cd710c-8dcf-4084-a8f0-5f675e5a498a",
+        "slug": "balones-voleibol",
+        "name": "Balones de voleibol",
+        "size_label": "Tamaño",
+        "sort_order": 3,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "ecaf23b0-238b-40ca-957f-0038a8f022c0",
+        "parent_id": "29f4dc50-8368-407e-990f-369cb560bef7",
+        "slug": "silbatos",
+        "name": "Silbatos",
+        "size_label": "Talla",
+        "sort_order": 1,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "f2826566-a96b-4270-8644-e4b856d59288",
+        "parent_id": null,
+        "slug": "material-entrenamiento",
+        "name": "Material de entrenamiento",
+        "size_label": "Tamaño",
+        "sort_order": 4,
+        "is_active": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      }
+    ],
+    "public_brands": [
+      {
+        "id": "06d28971-4e6f-4fb0-a69f-37ffa5918508",
+        "slug": "figo",
+        "name": "Figo",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 14,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "0c607e3f-16a3-4087-b5b6-8244c545f271",
+        "slug": "palomares",
+        "name": "Palomares",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 8,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "148aaea6-bc6a-48bd-92be-5b3fe4195deb",
+        "slug": "adidas",
+        "name": "Adidas",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 3,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "1cef8f22-c5c4-4f50-91c4-1ddb084025af",
+        "slug": "wilson",
+        "name": "Wilson",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 12,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "22fdd454-c65e-407a-950e-99bd82d886bc",
+        "slug": "cruzeiro",
+        "name": "Cruzeiro",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 4,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "27690075-14b4-43bf-8040-32d17c1d4ea2",
+        "slug": "rinat",
+        "name": "Rinat",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 9,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "46917bd9-d638-4730-9e4b-65a572499708",
+        "slug": "molten",
+        "name": "Molten",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 7,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "6155d30e-d1b9-4cee-a49f-e650cbc0fcda",
+        "slug": "spalding",
+        "name": "Spalding",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 11,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "6a501b69-e403-401b-b7f5-21c6ee5fc9fb",
+        "slug": "manriquez",
+        "name": "Manríquez",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 6,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "83c8f39b-733a-47cc-81f5-050c782da63e",
+        "slug": "seyer",
+        "name": "Seyer",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 10,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "89f074d5-00ae-4e27-b00c-030db11ce683",
+        "slug": "pyp",
+        "name": "P&P",
+        "logo_key": null,
+        "is_own_brand": true,
+        "sort_order": 1,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "93890dfb-8d94-4cc2-9d0b-b99bc3f54fba",
+        "slug": "maravillosa",
+        "name": "Maravillosa",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 15,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "9a148977-0ae9-4774-a11f-b25b33783b00",
+        "slug": "adx",
+        "name": "ADX",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 2,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "e1237efe-9cf2-4925-9cf0-e249db0b5a7f",
+        "slug": "futre",
+        "name": "Futre",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 13,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "id": "f84ca481-2948-4f48-acce-7ae29426de2f",
+        "slug": "escualo",
+        "name": "Escualo",
+        "logo_key": null,
+        "is_own_brand": false,
+        "sort_order": 5,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      }
+    ],
+    "public_stores": [
+      {
+        "id": "2601c12a-5f97-4776-adbf-29a6891dba87",
+        "slug": "coapa",
+        "name": "P&P Deportes Coapa",
+        "street": "Calz. del Hueso 921, local 42",
+        "neighborhood": "Granjas Coapa",
+        "borough": "Tlalpan",
+        "postal_code": "14330",
+        "city": "Ciudad de México",
+        "lat": 19.3005,
+        "lng": -99.127,
+        "phone": "5565822426",
+        "email": "pyp_coapa@hotmail.com",
+        "hours": [
+          {
+            "days": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "open": "10:00",
+            "close": "19:00"
+          },
+          {
+            "days": [
+              6
+            ],
+            "open": "10:00",
+            "close": "17:00"
+          }
+        ],
+        "directions": "[REFERENCIAS PARA LLEGAR Y ESTACIONAMIENTO]",
+        "is_active": true,
+        "sort_order": 1,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      }
+    ],
+    "public_settings": [
+      {
+        "key": "flags",
+        "value": {
+          "show_prices": false,
+          "enable_stock": false,
+          "enable_checkout": false,
+          "enable_shipping": false
+        },
+        "is_public": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "key": "ga_measurement_id",
+        "value": null,
+        "is_public": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "key": "site_name",
+        "value": "P&P Deportes Coapa",
+        "is_public": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "key": "social",
+        "value": {
+          "facebook": "pypcoapa",
+          "instagram": "pyp_coapa"
+        },
+        "is_public": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "key": "whatsapp_sales_number",
+        "value": "5500000000",
+        "is_public": true,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      }
+    ],
+    "public_site_texts": [
+      {
+        "key": "advisor",
+        "value": {
+          "name": "[Ana Martínez]",
+          "role": "Asesora de uniformes",
+          "quote": "Cuéntame qué deporte juegan, cuántos son y para cuándo lo necesitan. Te armo la cotización."
+        },
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "key": "privacy_notice",
+        "value": {
+          "version": "2026-10",
+          "sections": [
+            {
+              "body": "P&P Deportes Coapa, Calz. del Hueso 921, local 42, Granjas Coapa, Tlalpan, 14330, CDMX.\n\n[RAZÓN SOCIAL]",
+              "title": "Quién es responsable"
+            },
+            {
+              "body": "Solo los que escribes al enviar una cotización:\n\n- Nombre\n- Número de WhatsApp\n- Tipo de cliente y nombre del equipo o institución\n- Fecha en que necesitas tu pedido\n- Forma de entrega y si requieres factura\n- Notas que escribas en tu cotización",
+              "title": "Qué datos pedimos"
+            },
+            {
+              "body": "Para responder tu cotización por WhatsApp y dar seguimiento a tu pedido.\n\n[OTROS USOS]",
+              "title": "Para qué los usamos"
+            },
+            {
+              "body": "[TRANSFERENCIAS DE DATOS]",
+              "title": "Con quién los compartimos"
+            },
+            {
+              "body": "Puedes pedir acceso, rectificación, cancelación u oposición al uso de tus datos (derechos ARCO).\n\n[MEDIO PARA EJERCERLOS]",
+              "title": "Tus derechos (ARCO)"
+            },
+            {
+              "body": "[CÓMO SE AVISAN LOS CAMBIOS]",
+              "title": "Cambios a este aviso"
+            },
+            {
+              "body": "55 6582 2426 · [CORREO DE CONTACTO]",
+              "title": "Contacto"
+            }
+          ],
+          "updatedAt": "[FECHA]"
+        },
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "key": "store_history",
+        "value": {
+          "text": "[HISTORIA DE LA TIENDA]"
+        },
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "key": "uniforms_faq",
+        "value": [
+          {
+            "answer": "[PEDIDO MÍNIMO]",
+            "question": "¿Cuál es el pedido mínimo?"
+          },
+          {
+            "answer": "[TIEMPO DE ENTREGA]",
+            "question": "¿Cuánto tarda la entrega?"
+          },
+          {
+            "answer": "Sí, en tallas infantiles y de adulto. [CONDICIONES DE REPOSICIÓN]",
+            "question": "¿Puedo pedir reposiciones después?"
+          },
+          {
+            "answer": "Sí. Indícalo al enviar tu cotización.",
+            "question": "¿Dan factura?"
+          }
+        ],
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      }
+    ],
+    "public_site_media": [
+      {
+        "slot": "advisor",
+        "key_base": null,
+        "alt": "",
+        "width": null,
+        "height": null,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "slot": "home_hero",
+        "key_base": null,
+        "alt": "",
+        "width": null,
+        "height": null,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "slot": "store_front",
+        "key_base": null,
+        "alt": "",
+        "width": null,
+        "height": null,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "slot": "store_workshop",
+        "key_base": null,
+        "alt": "",
+        "width": null,
+        "height": null,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "slot": "technique_bordado",
+        "key_base": null,
+        "alt": "",
+        "width": null,
+        "height": null,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "slot": "technique_sublimacion",
+        "key_base": null,
+        "alt": "",
+        "width": null,
+        "height": null,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "slot": "technique_vinil",
+        "key_base": null,
+        "alt": "",
+        "width": null,
+        "height": null,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      },
+      {
+        "slot": "uniforms_hero",
+        "key_base": null,
+        "alt": "",
+        "width": null,
+        "height": null,
+        "created_at": "2026-10-11T21:05:31.042627+00:00",
+        "updated_at": "2026-10-11T21:05:31.042627+00:00"
+      }
+    ]
+  }
+}
