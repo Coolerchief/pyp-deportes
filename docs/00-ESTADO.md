@@ -132,7 +132,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T2.6 (búsqueda con MiniSearch en `@pyp/shared/search`; campo con sugerencias en el header, que en móvil convierte el header en el campo; `/buscar` con resultados por relevancia, filtros y orden; "¿Quisiste decir…?"; pantalla sin resultados con accesos y WhatsApp). "futbol" encuentra "Fútbol" y "valon" sugiere "balón" (pruebas unitarias, de componentes y E2E). MiniSearch se carga solo al buscar. Diferencia con el diseño anotada en TRD §7: "valon" muestra resultados con la sugerencia, en vez de la pantalla sin resultados. Pendiente: el evento `search` de analítica (T3.9).
 
-**Siguiente paso:** T2.7 (ficha de producto: galería, información, especificaciones y relacionados; JSON-LD `Product` sin precio).
+**Hecho:** T2.7 (ficha de producto `/producto/[slug]`: una página por producto publicado (56 con pyp-dev; con el catálogo vacío, solo `/producto/_`). Lleva galería, información, opciones disponibles, especificaciones, deportes, nota de volumen, relacionados y "Preguntar por este producto". JSON-LD `Product` sin `offers` (pruebas unitarias, de componentes y E2E). La matriz de cantidades y agregar a la cotización llegan en T3.2. `NEXT_PUBLIC_SITE_URL` se agrega a `deploy.yml` con el cambio de dominio (fase 7, paso 10b).
+
+**Siguiente paso:** T2.8 (Inicio).
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
