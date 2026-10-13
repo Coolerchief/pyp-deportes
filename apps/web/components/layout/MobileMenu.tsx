@@ -31,6 +31,8 @@ export function MobileMenu({
   const { contact, pages } = nav;
 
   function accordion(section: Section, label: string, links: NavLink[]) {
+    // No published products yet (production before phase 7): nothing to list.
+    if (links.length === 0) return null;
     const open = openSection === section;
     const panelId = `${baseId}-${section}`;
     const Chevron = open ? ChevronDown : ChevronRight;

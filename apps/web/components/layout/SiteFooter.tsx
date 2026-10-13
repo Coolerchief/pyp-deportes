@@ -106,6 +106,11 @@ export function SiteFooter({ nav, year = mexicoCityYear() }: { nav: SiteNav; yea
                 {link.label}
               </Link>
             ))}
+            {nav.sports.length === 0 && (
+              <Link href={ROUTES.catalog} className={LINK}>
+                Ver catálogo
+              </Link>
+            )}
           </nav>
           <nav aria-label="P&P" className="flex flex-col gap-3">
             <p className={COLUMN_TITLE}>P&amp;P</p>

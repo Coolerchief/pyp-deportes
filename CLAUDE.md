@@ -60,7 +60,7 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   components/ui/     Button, Badge, Chip, FormField, Sheet, EmptyState, Skeleton, SectionHeader
   components/layout/ SiteHeader (menú móvil y mega menú), SiteFooter, WhatsAppFab: marco de app/(public)/layout.tsx
   components/catalog/ ProductCard, ProductGrid, ProductImage, PriceSlot, SportTiles, CategoryTiles, VolumeNote
-  lib/               data (catalog.json y settings.json del build), navigation (menús, contacto y rutas), images/loader (anchos de R2), indexing
+  lib/               data (catalog.json y settings.json del build), navigation (menús, contacto y rutas), listing (listados estáticos), images/loader (anchos de R2), indexing
   scripts/           Generador de imágenes genéricas (placeholders.json + generate-placeholders.mjs)
   wrangler.jsonc     Worker de static assets que sirve apps/web/out
 packages/shared/     Esquemas Zod, tipos, folio, normalización de texto (sin dependencias de Node); database.types.ts generado

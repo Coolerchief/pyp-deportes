@@ -24,7 +24,9 @@ describe('build data', () => {
   it('builds an empty catalog without failing', async () => {
     const { catalog, settings } = await loadBuildData({ BUILD_DATA_FILE: EMPTY_FIXTURE });
     expect(catalog.products).toEqual([]);
-    expect(catalog.categories.length).toBeGreaterThan(0);
+    // Like production: the public taxonomy views only list rows with published products.
+    expect(catalog.categories).toEqual([]);
+    expect(catalog.sports).toEqual([]);
     expect(settings.store.slug).toBe('coapa');
   });
 

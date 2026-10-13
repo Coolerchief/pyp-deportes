@@ -375,6 +375,16 @@ Sin diseñar todavía (se resuelven con los mismos componentes): página de marc
 ### 8.2 Listado
 Breadcrumb · `h1` + descripción · en páginas de deporte, dos accesos grandes ("Uniformes de fútbol", "Equipo de entrenamiento") · chips de subcategoría (scroll horizontal) · barra de filtrar/conteo/ordenar · chips de filtros activos · ProductGrid (2 columnas móvil; 3 con panel lateral en escritorio) · VolumeNote tras la primera tanda · "Cargar más" · Footer.
 
+**Implementación (T2.4, 12-oct-2026).** Rutas estáticas `/catalogo`, `/catalogo/[categoria]`, `/catalogo/[categoria]/[sub]`, `/deporte/[deporte]` y `/marca/[marca]` (`app/(public)`), con el componente `ListingPage` y `Breadcrumbs`. Cada HTML lleva los primeros 24 productos en orden "Destacados" y, si hay más, "Mostrando 24 de n". Las reglas viven en `packages/shared/src/listing.ts`, con pruebas.
+- **Descripción bajo el `h1`:** la base no guarda textos por deporte ni por categoría, así que bajo el título va solo el conteo ("28 productos"). Si el negocio quiere textos como "Uniformes completos, balones y todo para entrenar a tu equipo.", hace falta una columna nueva (migración). Queda pendiente.
+- **Accesos grandes del deporte:** las dos subcategorías con más productos de ese deporte; en un empate gana la que pertenece a la categoría que va primero (Uniformes). En fútbol: "Balones de fútbol" y "Uniformes de fútbol". El diseño dice "Equipo de entrenamiento", que no es una subcategoría.
+- **Chips:**
+  - En `/catalogo` llevan a cada categoría.
+  - En una categoría o subcategoría llevan a sus subcategorías; son rutas reales.
+  - En deporte y marca filtran la misma página con `?categoria=`, que se aplica en el navegador desde T2.5.
+- **Escritorio:** la cuadrícula va a 4 columnas hasta que T2.5 agregue el panel de filtros (entonces, 3).
+- **Sin productos:** "Pronto verás aquí nuestros productos", con el botón "Pregunta por WhatsApp" (§10).
+
 ### 8.3 Ficha
 Ver §7.5. En móvil la barra de total queda fija abajo; al agregar se abre el AddedNotice.
 
@@ -444,6 +454,7 @@ Sistema visual: **shadcn/ui** con los tokens de §2 (fuente Barlow, primario `no
 | Búsqueda sin resultados | Sin resultados para “{q}” · Revisa cómo está escrito o busca por deporte, categoría o marca. · ¿Quisiste decir {sugerencia}? |
 | Cierre de búsqueda | ¿No encuentras lo que buscas? Escríbenos y te decimos si lo tenemos en tienda. · Pregunta por WhatsApp |
 | Cargando | Cargando productos… |
+| Catálogo vacío (antes de cargar productos) | Pronto verás aquí nuestros productos · Estamos cargando el catálogo. Mientras, escríbenos y te decimos qué tenemos en tienda. · Pregunta por WhatsApp |
 | 404 | ¡Fuera de lugar! · Esta página no existe o cambió de dirección. · Ir al inicio · Ver catálogo · Buscar un producto |
 | Volumen | ¿Compras para tu liga o escuela? Precio especial por volumen. Arma tu lista y te cotizamos por WhatsApp. |
 | Sin foto | Foto próximamente |
