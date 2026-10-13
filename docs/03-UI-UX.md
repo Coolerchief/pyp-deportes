@@ -404,6 +404,15 @@ Sin diseñar todavía (se resuelven con los mismos componentes): página de marc
 9. **Visítanos en Coapa**: mapa, dirección, estado abierto/cerrado, "Cómo llegar" y "Llamar".
 10. Footer.
 
+**Implementación (T2.8, 13-oct-2026).** `app/(public)/page.tsx` con `components/home`: `HomeHero`, `UniformsBand`, `HowItWorks`, `AdvisorCard`, `StoreInfo` y `StoreStatus`, más `components/content/SitePhoto` (foto de `site_media` o su marcador).
+- **Destacados:** 4 productos, primero los marcados como destacados y luego el orden "Destacados" (`featuredProducts`).
+- **Mensajes de WhatsApp:** "Cotiza por WhatsApp" y "Escríbele a {nombre}" envían `Hola, quiero cotizar.`.
+- **Estado de la tienda:** "Abierto ahora / Cerrado" se calcula en el navegador con la hora de Ciudad de México y se actualiza cada minuto (`storeStatus`). "Cómo llegar" abre Google Maps con las coordenadas de la tienda.
+- **Sin datos todavía:**
+  - "Equipos estrenando" muestra 4 marcadores hasta que exista la galería (`/equipos`, fase 5), sin pies inventados.
+  - El mapa es un marcador `[MAPA]` hasta decidir entre mapa embebido o imagen.
+- **Catálogo vacío (producción hoy):** se ocultan "Entra por tu deporte", "Destacados" y "Categorías".
+
 ### 8.2 Listado
 Breadcrumb · `h1` + descripción · en páginas de deporte, dos accesos grandes ("Uniformes de fútbol", "Equipo de entrenamiento") · chips de subcategoría (scroll horizontal) · barra de filtrar/conteo/ordenar · chips de filtros activos · ProductGrid (2 columnas móvil; 3 con panel lateral en escritorio) · VolumeNote tras la primera tanda · "Cargar más" · Footer.
 

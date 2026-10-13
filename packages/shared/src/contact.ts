@@ -53,3 +53,76 @@ export function whatsappUrl(number: string, text?: string): string {
   const base = `https://wa.me/52${digitsOnly(number)}`;
   return text ? `${base}?text=${encodeURIComponent(text)}` : base;
 }
+
+const DAY_NAMES = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+
+/** Day of the week (1 = lunes … 7 = domingo) and "HH:MM" in Mexico City at `at`. */
+export function mexicoCityClock(at: Date): { day: number; time: string } {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Mexico_City',
+    weekday: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(at);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  const day = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(get('weekday')) + 1;
+  return { day, time: `${get('hour')}:${get('minute')}` };
+}
+
+export type StoreStatus = { open: boolean; text: string };
+
+/**
+ * "Abierto ahora · cierra 19:00", "Cerrado · abre hoy 10:00", "Cerrado · abre mañana 10:00" or
+ * "Cerrado · abre el lunes 10:00" (APP-FLOW §5), in Mexico City time. null without hours.
+ */
+export function storeStatus(hours: readonly StoreHoursBlock[], at: Date): StoreStatus | null {
+  if (hours.length === 0) return null;
+  const { day, time } = mexicoCityClock(at);
+  const blocksOn = (d: number) =>
+    hours.filter((b) => b.days.includes(d)).sort((a, b) => a.open.localeCompare(b.open));
+  const today = blocksOn(day);
+  const current = today.find((b) => b.open <= time && time < b.close);
+  if (current) return { open: true, text: `Abierto ahora · cierra ${current.close}` };
+  const later = today.find((b) => b.open > time);
+  if (later) return { open: false, text: `Cerrado · abre hoy ${later.open}` };
+  for (let offset = 1; offset <= 7; offset++) {
+    const next = ((day - 1 + offset) % 7) + 1;
+    const [first] = blocksOn(next);
+    if (!first) continue;
+    const when = offset === 1 ? 'mañana' : `el ${DAY_NAMES[next - 1]}`;
+    return { open: false, text: `Cerrado · abre ${when} ${first.open}` };
+  }
+  return null;
+}
+
+/** Google Maps directions to the store ("Cómo llegar"): coordinates, or the address. */
+export function directionsUrl(store: {
+  lat: number | null;
+  lng: number | null;
+  street: string;
+  neighborhood: string;
+  city: string;
+}): string {
+  const destination =
+    store.lat !== null && store.lng !== null
+      ? `${store.lat},${store.lng}`
+      : `${store.street}, ${store.neighborhood}, ${store.city}`;
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
+}
+
+/** First name for "Escríbele a Ana", without the brackets of pending data ("[Ana Martínez]"). */
+export function firstName(name: string): string {
+  return name.replace(/[[\]]/g, '').trim().split(/\s+/)[0] ?? '';
+}
+
+/** Initials for the avatar without a photo: "[Ana Martínez]" → "AM". */
+export function initials(name: string): string {
+  return name
+    .replace(/[[\]]/g, '')
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase())
+    .join('');
+}

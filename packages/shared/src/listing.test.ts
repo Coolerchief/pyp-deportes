@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { CatalogJson, CatalogProduct } from './catalog';
 import {
   categoriesIn,
+  featuredProducts,
   listingProducts,
   productCount,
   sortProducts,
@@ -163,5 +164,16 @@ describe('productCount', () => {
     expect(productCount(1)).toBe('1 producto');
     expect(productCount(28)).toBe('28 productos');
     expect(productCount(0)).toBe('0 productos');
+  });
+});
+
+describe('featuredProducts', () => {
+  it('takes the featured products first and fills up with the rest', () => {
+    expect(names(featuredProducts(catalog.products, 3))).toEqual([
+      'Short',
+      'Jersey',
+      'Balón Adidas',
+    ]);
+    expect(featuredProducts([], 4)).toEqual([]);
   });
 });

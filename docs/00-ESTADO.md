@@ -134,7 +134,49 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T2.7 (ficha de producto `/producto/[slug]`: una página por producto publicado (56 con pyp-dev; con el catálogo vacío, solo `/producto/_`). Lleva galería, información, opciones disponibles, especificaciones, deportes, nota de volumen, relacionados y "Preguntar por este producto". JSON-LD `Product` sin `offers` (pruebas unitarias, de componentes y E2E). La matriz de cantidades y agregar a la cotización llegan en T3.2. `NEXT_PUBLIC_SITE_URL` se agrega a `deploy.yml` con el cambio de dominio (fase 7, paso 10b).
 
-**Siguiente paso:** T2.8 (Inicio).
+**Hecho:** T2.8 (Inicio con portada y corte a 13°, deportes, franja de uniformes, destacados, "¿Compras para tu liga o escuela?" con los 4 pasos y la asesora, equipos (marcadores), categorías y tienda con estado abierto/cerrado, "Cómo llegar" y "Llamar"). Fotos desde `site_media` o su marcador. Pruebas de componentes y E2E; revisado contra `inicio` en móvil y escritorio.
+
+**Fase 2 construida.** Falta su criterio de salida: el catálogo navegable en `workers.dev` con Lighthouse ≥ 90 en Inicio, un listado y una ficha. Para medirlo hay que publicar `develop` en `main`, y esa decisión es del usuario.
+
+**Siguiente paso:** fase 3, T3.1 (almacén de la lista `useQuote` y `lib/commerce`).
+
+### F. Pendientes acumulados (13-oct-2026)
+
+**Del negocio o del usuario**
+- ☐ Datos reales: número de WhatsApp de ventas (hoy `5500000000`), horario, teléfono, correo, coordenadas, aviso de privacidad completo, respuestas de las preguntas frecuentes de uniformes, nombre y foto de la asesora, historia de la tienda y archivos maestros del logo (ver §4.C).
+- ☐ Fotos: portada, uniformes, 3 muestras de técnicas, tienda, taller, equipos y productos.
+- ☐ Catálogo real a producción en la fase 7 con el importador del panel (T4.6); nunca los 56 productos de prueba.
+- ☐ Descripciones, especificaciones y etiquetas de productos: hoy solo existe la descripción corta.
+- ☐ Decidir si se quieren textos por deporte o categoría bajo el título de los listados (requiere una columna nueva).
+- ☐ Decidir el mapa de Visítanos e Inicio: embebido o imagen.
+- ☐ Definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:setup` para entrar como `admin@pyp.test`.
+- ☐ *Environment* `production` con aprobación y los secretos de Supabase (pospuesto).
+- ☐ Publicar `develop` en `main` cuando se quiera revisar la fase 2 en `workers.dev` y medir Lighthouse.
+- ☐ Confirmar las decisiones tomadas sin diseño ni documento:
+  - Glifo oficial de WhatsApp en lugar de la burbuja del diseño.
+  - Regla de "NUEVO".
+  - "valon" muestra resultados con la sugerencia.
+  - Accesos grandes de los deportes.
+  - Grupo "Deporte" en los filtros.
+  - Footer sin la frase "Desde 1969".
+
+**Técnicos, con tarea asignada**
+- T3.1–T3.3: lista de cotización, contador del header, "+ Cotizar" desde la tarjeta, "En tu cotización" y `useCommerceMode()`.
+- T3.2: matriz de cantidades, personalización y "Agregar a mi cotización" en la ficha.
+- T3.9: eventos de analítica (`search`, `view_item_list`, `whatsapp_click`…).
+- Fase 5: galería de "Equipos estrenando", Visítanos, Uniformes, aviso de privacidad, 404, sitemap y JSON-LD de la tienda.
+- T6.3:
+  - `catalog.json` pasaría de 60 KB gzip con 500 productos.
+  - Next 16 pide la precarga por segmento con un nombre que el export no genera (404 desperdiciado).
+  - Medir Lighthouse.
+- Fase 7, paso 10b: `SITE_INDEXABLE` y `NEXT_PUBLIC_SITE_URL` en `deploy.yml`.
+- Fase 7, pasos 1 y 5: hacer que el build de producción falle con el WhatsApp de ejemplo y con textos entre corchetes; todavía no está implementado.
+
+**Técnicos menores, sin tarea**
+- `has_unpublished_changes` no detecta productos borrados.
+- Los nombres de las imágenes genéricas van dentro de los archivos: si se renombra una categoría hay que regenerarlas (`pnpm placeholders`).
+- `prettier --check` marca unos 49 archivos por finales de línea (CRLF en Windows); conviene un `.gitattributes` con `eol=lf`.
+- "Deportes" y "Marcas" en la miga de pan no tienen página propia.
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
