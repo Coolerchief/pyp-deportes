@@ -31,8 +31,9 @@ describe('buildSiteNav', () => {
       BUILD_DATA_FILE: fixture('build-data-empty.json'),
     });
     const nav = buildSiteNav(catalog, settings);
-    expect(nav.sports).toHaveLength(7);
-    expect(nav.categories).toHaveLength(10);
+    expect(nav.sports).toEqual([]);
+    expect(nav.categories).toEqual([]);
+    expect(nav.contact.phone).toBe('55 6582 2426');
   });
 });
 

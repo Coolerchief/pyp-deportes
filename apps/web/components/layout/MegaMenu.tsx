@@ -29,21 +29,24 @@ export function MegaMenu({
       className="bg-blanco text-noche shadow-float absolute inset-x-0 top-full"
     >
       <div className="container-page grid grid-cols-12 items-start gap-6 pt-10 pb-12">
-        <section className="col-span-3 flex flex-col">
-          <h2 className={COLUMN_TITLE}>Deportes</h2>
-          <ul>
-            {nav.sports.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className={LINK} onClick={onNavigate}>
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
+        {nav.sports.length > 0 && (
+          <section className="col-span-3 flex flex-col">
+            <h2 className={COLUMN_TITLE}>Deportes</h2>
+            <ul>
+              {nav.sports.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className={LINK} onClick={onNavigate}>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         <section className="col-span-5 flex flex-col">
           <h2 className={COLUMN_TITLE}>Categorías</h2>
           <ul className="grid grid-cols-2 gap-x-6">
+            {/* Empty until products are published: only "Ver todo el catálogo" remains. */}
             {nav.categories.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className={LINK} onClick={onNavigate}>

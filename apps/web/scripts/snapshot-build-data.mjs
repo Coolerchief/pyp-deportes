@@ -13,12 +13,19 @@ const here = dirname(fileURLToPath(import.meta.url));
 const output = resolve(here, '../fixtures/build-data.json');
 const emptyOutput = resolve(here, '../fixtures/build-data-empty.json');
 
-/** Views emptied in the empty-catalog copy; taxonomy, settings, texts and media stay. */
+/**
+ * Views emptied in the empty-catalog copy. Sports, categories and brands go too: their public
+ * views only list rows with at least one published product, so production shows none of them
+ * until the catalog is loaded. Store, settings, texts and media stay.
+ */
 export const PRODUCT_VIEWS = [
   'public_products',
   'public_product_variants',
   'public_product_images',
   'public_product_sports',
+  'public_sports',
+  'public_categories',
+  'public_brands',
 ];
 
 /** The snapshot as production looks before the real catalog is loaded (phase 7). */

@@ -40,6 +40,8 @@ export const ROUTES = {
   home: '/',
   catalog: '/catalogo',
   category: (slug: string) => `/catalogo/${slug}`,
+  subcategory: (category: string, slug: string) => `/catalogo/${category}/${slug}`,
+  brand: (slug: string) => `/marca/${slug}`,
   sport: (slug: string) => `/deporte/${slug}`,
   product: (slug: string) => `/producto/${slug}`,
   search: '/buscar',
