@@ -50,6 +50,11 @@ export const productStatusLabels: Record<ProductStatus, string> = {
 
 export const AUDIENCES = ['adulto', 'infantil', 'unisex'] as const;
 export type Audience = (typeof AUDIENCES)[number];
+export const audienceLabels: Record<Audience, string> = {
+  adulto: 'Adulto',
+  infantil: 'Infantil',
+  unisex: 'Unisex',
+};
 
 export const TECHNIQUES = ['sublimacion', 'vinil', 'bordado', 'serigrafia'] as const;
 export type Technique = (typeof TECHNIQUES)[number];

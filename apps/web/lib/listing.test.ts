@@ -48,7 +48,12 @@ describe('buildListing', () => {
       { label: 'Balones de fútbol', href: '/catalogo/balones/balones-futbol' },
       { label: 'Uniformes de fútbol', href: '/catalogo/uniformes/uniformes-futbol' },
     ]);
-    expect(sport?.chips[1]?.href).toMatch(/^\/deporte\/futbol\?categoria=/);
+    // Its chips filter the same page (?categoria=) instead of leading to other routes.
+    expect(sport?.chips).toEqual([]);
+    expect(sport?.tabs?.[0]).toEqual({ label: 'Todo', category: null });
+    expect(sport?.tabs?.map((t) => t.category)).toContain('balones');
+    expect(sport?.basePath).toBe('/deporte/futbol');
+    expect(sport?.scopeCounts.categoria.length).toBeGreaterThan(1);
 
     const brand = buildListing(catalog, WA, { kind: 'brand', brand: 'molten' });
     expect(brand?.products.every((p) => p.brand.slug === 'molten')).toBe(true);

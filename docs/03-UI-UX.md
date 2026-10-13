@@ -248,6 +248,19 @@ En las pantallas los badges miden 22 px de alto con texto de 11 px; en código s
 
 **SortControl** (`catalogo-ordenar`) — móvil: hoja inferior "Ordenar por" con radios. Escritorio: menú desplegable bajo "Ordenar por". Opciones: **Destacados · Más nuevos · Nombre: A a la Z · Marca: A a la Z**. En búsqueda, además "Relevancia" (por defecto). Sin orden por precio mientras el sitio no muestre precios.
 
+**Implementación de filtros y orden (T2.5, 12-oct-2026).** `ListingResults`, `FilterPanel` y `SortControl` (`SortSheet` en móvil, `SortMenu` en escritorio) en `components/catalog`. Lógica en `packages/shared/src/filters.ts` (parámetros de URL, Y entre tipos y O dentro de un tipo, conteos) y grupos del panel en `lib/facets.ts`, con pruebas.
+- **Grupos:** Personalizable, Deporte, Categoría, Marca y Para.
+  - "Deporte" no estaba en este documento; se agregó porque APP-FLOW §1 ya define `?deporte=` y en `/catalogo` sirve.
+  - Un grupo aparece solo si el listado tiene al menos dos opciones y la ruta no lo fija ya: en un deporte no hay "Deporte", en una marca no hay "Marca", en una categoría no hay "Categoría".
+  - Marcas: 3 visibles en móvil y 4 en escritorio, más "Ver n marcas más".
+- **Conteos:** cada opción cuenta con los demás filtros aplicados, pero sin los de su propio grupo. Una opción elegida sigue visible con 0 para poder quitarla.
+- **Estado y URL:** la URL es la fuente de verdad (`history.replaceState`, sin recargar ni crear una entrada nueva en el historial). Una copia local cambia al instante para que las casillas no parpadeen mientras Next actualiza `useSearchParams`.
+- **HTML estático:** guarda los primeros 24 productos como respaldo de `<Suspense>`.
+- **Chips en deporte y marca:** son botones que fijan `?categoria=` y se marcan según la URL.
+- **Escritorio:** la cuadrícula pasa a 3 columnas junto al panel.
+- **`catalog.json`:** se descarga la primera vez que hace falta (un filtro, otro orden, "Cargar más" o abrir la hoja de filtros). Mientras tanto se ven esqueletos con "Cargando productos…" y el contador dice "Cargando…".
+- **Error al descargar:** el listado estático sigue visible, con un aviso, "Reintentar" y WhatsApp (§10).
+
 **SearchBar / resultados** (`busqueda`) — móvil: al tocar buscar, el header se vuelve un campo con "‹" y "×". Resultados: `h1` "Resultados para “balón”" + conteo + chips de categoría + cuadrícula + bloque "¿No encuentras lo que buscas?" con "Pregunta por WhatsApp".
 
 **VolumeNote** — franja `gis` con DobleDiagonal: "¿Compras para tu liga o escuela? Precio especial por volumen. Arma tu lista y te cotizamos por WhatsApp." Una vez por listado y en cada ficha. En escritorio incluye el botón "Hablar con un asesor".
@@ -454,6 +467,7 @@ Sistema visual: **shadcn/ui** con los tokens de §2 (fuente Barlow, primario `no
 | Búsqueda sin resultados | Sin resultados para “{q}” · Revisa cómo está escrito o busca por deporte, categoría o marca. · ¿Quisiste decir {sugerencia}? |
 | Cierre de búsqueda | ¿No encuentras lo que buscas? Escríbenos y te decimos si lo tenemos en tienda. · Pregunta por WhatsApp |
 | Cargando | Cargando productos… |
+| Error al cargar el catálogo | No pudimos cargar todos los productos. Revisa tu conexión e inténtalo de nuevo. · Reintentar · Pregunta por WhatsApp |
 | Catálogo vacío (antes de cargar productos) | Pronto verás aquí nuestros productos · Estamos cargando el catálogo. Mientras, escríbenos y te decimos qué tenemos en tienda. · Pregunta por WhatsApp |
 | 404 | ¡Fuera de lugar! · Esta página no existe o cambió de dirección. · Ir al inicio · Ver catálogo · Buscar un producto |
 | Volumen | ¿Compras para tu liga o escuela? Precio especial por volumen. Arma tu lista y te cotizamos por WhatsApp. |

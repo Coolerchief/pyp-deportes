@@ -5,6 +5,8 @@
 import {
   categoriesIn,
   type CatalogJson,
+  EMPTY_FILTERS,
+  facetCounts,
   type ListingScope,
   listingProducts,
   newProductIds,
@@ -13,6 +15,7 @@ import {
 import type { ComponentProps } from 'react';
 import type { ListingPage } from '@/components/catalog/ListingPage';
 import { getBuildData } from './data';
+import { serializeCounts } from './facets';
 import { buildSiteNav, ROUTES } from './navigation';
 
 export type ListingProps = ComponentProps<typeof ListingPage>;
@@ -41,10 +44,19 @@ export function buildListing(
 ): ListingProps | null {
   const category = (slug: string) => catalog.categories.find((c) => c.slug === slug);
   const products = listingProducts(catalog, scope);
+  const names = <T extends { slug: string; name: string }>(rows: T[]) =>
+    Object.fromEntries(rows.map((row) => [row.slug, row.name]));
   const base = {
+    scope,
     products,
-    categoryNames: Object.fromEntries(catalog.categories.map((c) => [c.slug, c.name])),
-    newIds: newProductIds(catalog.products, catalog.generatedAt),
+    categoryNames: names(catalog.categories),
+    labels: {
+      deporte: names(catalog.sports),
+      categoria: names(catalog.categories),
+      marca: names(catalog.brands),
+    },
+    scopeCounts: serializeCounts(facetCounts(products, EMPTY_FILTERS)),
+    newIds: [...newProductIds(catalog.products, catalog.generatedAt)],
     whatsappUrl,
   };
 
@@ -53,6 +65,7 @@ export function buildListing(
       return {
         ...base,
         title: 'Catálogo',
+        basePath: ROUTES.catalog,
         breadcrumbs: [HOME, { label: 'Catálogo' }],
         chips: [
           { label: 'Todo', href: ROUTES.catalog, active: true },
@@ -78,6 +91,7 @@ export function buildListing(
       return {
         ...base,
         title: sub?.name ?? parent.name,
+        basePath: sub ? ROUTES.subcategory(parent.slug, sub.slug) : categoryHref,
         breadcrumbs: sub
           ? [HOME, CATALOG, { label: parent.name, href: categoryHref }, { label: sub.name }]
           : [HOME, CATALOG, { label: parent.name }],
@@ -102,19 +116,17 @@ export function buildListing(
       return {
         ...base,
         title: entity.name,
+        basePath: href,
         breadcrumbs: [
           HOME,
           { label: scope.kind === 'sport' ? 'Deportes' : 'Marcas' },
           { label: entity.name },
         ],
-        // Category chips filter this same listing (?categoria=, applied in the browser in T2.5).
-        chips: [
-          { label: 'Todo', href, active: true },
-          ...categoriesIn(catalog, products).map((c) => ({
-            label: c.name,
-            href: `${href}?categoria=${c.slug}`,
-            active: false,
-          })),
+        // No other route per category here: its chips filter this listing with ?categoria=.
+        chips: [],
+        tabs: [
+          { label: 'Todo', category: null },
+          ...categoriesIn(catalog, products).map((c) => ({ label: c.name, category: c.slug })),
         ],
         shortcuts:
           scope.kind === 'sport'

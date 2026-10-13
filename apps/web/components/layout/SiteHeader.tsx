@@ -136,9 +136,17 @@ export function SiteHeader({ nav, pieces = 0 }: { nav: SiteNav; pieces?: number 
           </button>
           <Link href={ROUTES.home} aria-label="P&P Deportes Coapa, inicio" className="flex">
             {isCompact ? (
-              <Logo variant="monograma" tone="negativo" width={64} alt="" />
+              // Separate keys: reusing one <img> would stretch the old file while the new loads.
+              <Logo key="monograma" variant="monograma" tone="negativo" width={64} alt="" />
             ) : (
-              <Logo variant="horizontal" tone="negativo" width={158} alt="" priority />
+              <Logo
+                key="horizontal"
+                variant="horizontal"
+                tone="negativo"
+                width={158}
+                alt=""
+                priority
+              />
             )}
           </Link>
           <div className="flex items-center">

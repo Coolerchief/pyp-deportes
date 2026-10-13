@@ -5,6 +5,7 @@ export * from './build-data';
 export * from './catalog';
 export * from './contact';
 export * from './dates';
+export * from './filters';
 export * from './folio';
 export * from './importer';
 export * from './labels';
