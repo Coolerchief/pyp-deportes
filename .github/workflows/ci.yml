@@ -66,6 +66,13 @@ jobs:
         run: pnpm test
 
       # CI has no database: the build reads the snapshot of pyp-dev's public views (T2.1).
+      # Production has no products until phase 7, so the empty catalog must build too. It runs
+      # first; the full build below overwrites out/ for Playwright.
+      - name: Build with an empty catalog
+        env:
+          BUILD_DATA_FILE: fixtures/build-data-empty.json
+        run: pnpm build
+
       - name: Build
         env:
           BUILD_DATA_FILE: fixtures/build-data.json

@@ -30,7 +30,7 @@ Node 24 y pnpm viven en `.venv` (nodeenv): activa el entorno antes de cualquier 
 ```bash
 pnpm dev            # sitio en http://localhost:3000; en desarrollo también /dev/tokens, /dev/marca, /dev/componentes, /dev/genericas
 pnpm build          # genera apps/web/out con data/catalog.json y data/settings.json leídos de pyp-dev (_redirects llega en T5.6)
-pnpm --filter @pyp/web data:snapshot   # copia las vistas public_* de pyp-dev a apps/web/fixtures/build-data.json (la usa CI)
+pnpm --filter @pyp/web data:snapshot   # copia las vistas public_* de pyp-dev a apps/web/fixtures/build-data.json y build-data-empty.json (sin productos); CI compila con las dos
 pnpm lint
 pnpm typecheck
 pnpm format         # Prettier sobre todo el repo

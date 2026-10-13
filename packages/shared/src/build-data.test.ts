@@ -302,6 +302,17 @@ describe('buildCatalog', () => {
     expect(catalog.brands).toEqual([{ slug: 'pyp', name: 'P&P' }]);
   });
 
+  it('accepts a catalog without products (production before phase 7)', () => {
+    const raw = rawRows();
+    raw.public_products = [];
+    raw.public_product_variants = [];
+    raw.public_product_images = [];
+    raw.public_product_sports = [];
+    const catalog = buildCatalog(validateBuildRows(raw), NOW);
+    expect(catalog.products).toEqual([]);
+    expect(catalog.categories).toHaveLength(2);
+  });
+
   it('fails when a product has no variants or its brand is missing', () => {
     const raw = rawRows();
     raw.public_product_variants = [];

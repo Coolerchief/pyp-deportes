@@ -4,10 +4,11 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { BUILD_VIEWS } from '@pyp/shared';
 import { describe, expect, it } from 'vitest';
-import { SNAPSHOT_VIEWS } from '../../scripts/snapshot-build-data.mjs';
+import { SNAPSHOT_VIEWS, withoutProducts } from '../../scripts/snapshot-build-data.mjs';
 import { loadBuildData } from './index';
 
 const FIXTURE = resolve(__dirname, '../../fixtures/build-data.json');
+const EMPTY_FIXTURE = resolve(__dirname, '../../fixtures/build-data-empty.json');
 
 describe('build data', () => {
   it('builds catalog.json and settings.json from the CI snapshot', async () => {
@@ -17,6 +18,19 @@ describe('build data', () => {
     expect(catalog.sports.map((s) => s.slug)).toContain('futbol');
     expect(settings.store.slug).toBe('coapa');
     expect(Object.keys(settings.siteMedia)).toHaveLength(8);
+  });
+
+  // Production has no products until phase 7: the deploy must still publish the site.
+  it('builds an empty catalog without failing', async () => {
+    const { catalog, settings } = await loadBuildData({ BUILD_DATA_FILE: EMPTY_FIXTURE });
+    expect(catalog.products).toEqual([]);
+    expect(catalog.categories.length).toBeGreaterThan(0);
+    expect(settings.store.slug).toBe('coapa');
+  });
+
+  it('keeps the empty copy in step with the CI snapshot', () => {
+    const read = (file: string) => JSON.parse(readFileSync(file, 'utf8'));
+    expect(read(EMPTY_FIXTURE)).toEqual(withoutProducts(read(FIXTURE)));
   });
 
   it('fails with the view and the row id when a record is invalid', async () => {
