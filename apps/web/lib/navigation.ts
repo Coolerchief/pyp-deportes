@@ -62,7 +62,7 @@ export function activeSection(pathname: string): 'uniforms' | 'teams' | 'visit' 
 }
 
 /** CDMX is how the design writes Ciudad de México in short addresses. */
-function shortCity(city: string): string {
+export function shortCity(city: string): string {
   return city.trim().toLowerCase() === 'ciudad de méxico' ? 'CDMX' : city;
 }
 

@@ -61,6 +61,8 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   components/layout/ SiteHeader (menú móvil y mega menú), SiteFooter, WhatsAppFab: marco de app/(public)/layout.tsx
   components/catalog/ ProductCard, ProductGrid, ListingPage/ListingResults (filtros y orden), SearchPage, SportTiles, CategoryTiles, VolumeNote
   components/product/ ProductPage y ProductGallery (ficha; la matriz de cantidades llega en T3.2)
+  components/home/   Secciones de Inicio (HomeHero, UniformsBand, HowItWorks, AdvisorCard, StoreInfo)
+  components/content/ SitePhoto: foto de site_media o su marcador
   lib/               data (catalog.json y settings.json del build), navigation (menús, contacto y rutas), listing (listados estáticos), images/loader (anchos de R2), indexing
   scripts/           Generador de imágenes genéricas (placeholders.json + generate-placeholders.mjs)
   wrangler.jsonc     Worker de static assets que sirve apps/web/out

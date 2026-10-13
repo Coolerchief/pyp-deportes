@@ -111,3 +111,11 @@ export function sportShortcuts(
 export function productCount(count: number): string {
   return `${count} ${count === 1 ? 'producto' : 'productos'}`;
 }
+
+/**
+ * "Destacados" on Inicio: featured products first (in their admin order) and, when there are
+ * fewer than `limit`, the next ones in the default order.
+ */
+export function featuredProducts(products: readonly CatalogProduct[], limit = 4): CatalogProduct[] {
+  return sortProducts(products).slice(0, limit);
+}
