@@ -284,6 +284,7 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 - **Sin resultados:** se pide `autoSuggest` con fuzzy más amplio (0.4) y, si hay sugerencia, se muestra "¿Quisiste decir **{sugerencia}**?" enlazada a esa búsqueda; además accesos por deporte y categoría y el CTA de WhatsApp.
 - **Orden del listado** (`?orden=`): `destacados` (por defecto: `featured` desc, `sort_order`), `nuevos` (`publishedAt` desc), `nombre` (A–Z con `Intl.Collator('es')`), `marca` (A–Z, luego nombre). No existe orden por precio mientras `show_prices = false`.
 - Filtros: AND entre tipos, OR dentro de un tipo; conteos calculados en cliente.
+- **Implementación (T2.5).** `packages/shared/src/filters.ts` (`parseListingParams`, `serializeListingParams`, `applyFilters`, `facetCounts`) y `listing.ts` (`sortProducts`, `listingProducts`). Los valores de la URL que no son *slugs* o que no se reconocen se descartan, así que cualquier URL compartida es segura. En el navegador, `lib/catalog-client.ts` descarga `catalog.json` una sola vez por visita, y si falla se puede reintentar.
 
 ## 8. Panel de administración
 

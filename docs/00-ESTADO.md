@@ -128,7 +128,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 - Textos por deporte o categoría: no existen en la base (UI/UX §8.2).
 - Next 16 pide la precarga por segmento como `__next.….txt`, que el export escribe en carpetas: la petición da 404 y se desperdicia, aunque la navegación funciona. Se revisa en T6.3.
 
-**Siguiente paso:** T2.5 (filtros, orden, chips activos, "Cargar más", estados cargando y sin productos, URL sincronizada).
+**Hecho:** T2.5 (filtros con panel lateral en escritorio y hoja en móvil, orden con menú y hoja, chips activos, "Cargar más", estados cargando, sin resultados y error de red, URL sincronizada). La lógica de filtros y orden está en `packages/shared` con pruebas; las pruebas de componentes y E2E cubren filtrar, ordenar con teclado, la hoja móvil, "Cargar más", "Limpiar filtros" y abrir una URL compartida, que reproduce la vista. Se corrigió un parpadeo de las casillas mientras Next actualiza `useSearchParams`.
+
+**Siguiente paso:** T2.6 (búsqueda: campo, sugerencias, `/buscar`, sin resultados con "¿Quisiste decir…?").
 
 ## 5. Reglas vigentes que cambian cómo se construye
 
