@@ -377,6 +377,7 @@ sequenceDiagram
 - `generateMetadata` por página: título `{Producto} | P&P Deportes Coapa`, descripción de ≤ 155 caracteres, `canonical`, Open Graph con la foto 1024 px.
 - `sitemap.ts` con todas las páginas estáticas públicas y `lastModified` desde `updated_at`.
 - JSON-LD: `Product` (sin `offers` mientras `show_prices = false`), `SportingGoodsStore` con dirección, geo, horario y teléfono desde `stores`, `Organization`, `BreadcrumbList`.
+- **Implementación de `Product` (T2.7).** En cada ficha (`lib/product.ts`): nombre, SKU, marca, categoría, descripción corta e imágenes, sin `offers`. La `url` y las imágenes genéricas absolutas solo se agregan si existe `NEXT_PUBLIC_SITE_URL`, que hoy no está en `deploy.yml`: se agrega con el cambio de dominio (fase 7, paso 10b). `SportingGoodsStore`, `Organization` y `BreadcrumbList` llegan con el SEO de la fase 5.
 - Redirecciones 301 en `_redirects` (generado): `/producto/:slug/` → `/producto/:slug`, `/pp-deportes/` → `/visitanos#nosotros`, categorías de WooCommerce → `/catalogo/<categoria>`, y comodín final a `/catalogo`.
 - `lang="es-MX"`; URLs en minúsculas y sin acentos.
 

@@ -305,6 +305,16 @@ Dos variantes de la misma página:
 
 **ProductInfo** — orden: badges · marca · nombre · SKU · descripción corta · VariantMatrix · personalización · "Preguntar por este producto" (whatsapp) · Especificaciones (tabla) · "Para: Fútbol" (chips) · VolumeNote · relacionados.
 
+**Implementación (T2.7, 12-oct-2026).** `/producto/[slug]`, una página estática por producto publicado (`app/(public)/producto`, `components/product`: `ProductPage` y `ProductGallery`; datos en `lib/product.ts`; reglas en `packages/shared/src/product-detail.ts`, con pruebas).
+- **Pendiente para T3.2:** la matriz de cantidades, la personalización y "Agregar a mi cotización". Mientras tanto, el bloque gris lista las tallas, tamaños o pesos y los colores disponibles.
+- **Especificaciones:** se arman con lo que dicen los datos (marca, tallas, colores o `color_note`, técnicas si es personalizable, pedido sugerido) y después las que se escriban en el admin; si una tiene el mismo nombre que una calculada, gana la del admin. Hoy ningún producto de prueba tiene especificaciones ni descripción larga, todos tienen la corta.
+- **Relacionados (4):**
+  - Personalizable ("Completa el uniforme"): piezas del mismo deporte de otras subcategorías, primero las personalizables.
+  - Sencilla ("También te puede interesar"): la misma subcategoría, luego la categoría, luego el deporte.
+- **Galería:** en móvil las fotos se deslizan a lo ancho; en escritorio hay miniaturas de 88 px junto a la principal. Sin fotos, la imagen genérica con "Foto próximamente".
+- **"Preguntar por este producto":** abre WhatsApp con `Hola, me interesa *{nombre}* ({sku}). {url}`; la URL solo va si existe `NEXT_PUBLIC_SITE_URL`.
+- **Nota de volumen:** usa la versión apilada (`stacked`) para la columna angosta.
+
 ### 7.6 Cotización
 
 **AddedNotice** (`ficha-agregado`) — sustituye al toast. Móvil: hoja inferior sobre velo. Escritorio: aviso anclado bajo "Mi cotización", con borde superior `lima`. Contenido: check en círculo `lima` + "Agregado a tu cotización" · producto con miniatura, SKU, "con personalización" si aplica, piezas y desglose por talla · "Tu lista: 3 productos · 42 piezas" · **"Ver mi cotización"** (primary) y **"Seguir viendo el catálogo"** (outline). Se cierra con "×", Escape o tocando el velo. `aria-live="polite"`.

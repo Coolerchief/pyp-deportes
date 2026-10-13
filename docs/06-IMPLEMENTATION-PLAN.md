@@ -229,7 +229,7 @@ Solo se lanza a mano (`workflow_dispatch`) desde Actions, escribiendo `PRODUCCIO
 | 8 | Mover el DNS a Cloudflare conservando todos los registros, sobre todo los de correo | ☐ |
 | 9 | Apuntar el dominio al sitio nuevo y verificar HTTPS | ☐ |
 | 10 | Verificar las 48 redirecciones en el dominio real | ☐ |
-| 10b | Agregar `SITE_INDEXABLE: 'true'` al paso de build de `deploy.yml` y comprobar que `robots.txt` y la meta robots ya permiten indexar (hasta aquí el sitio sale con `noindex`) | ☐ |
+| 10b | Agregar `SITE_INDEXABLE: 'true'` y `NEXT_PUBLIC_SITE_URL` (el dominio final, para las URL absolutas del JSON-LD y del mensaje "Preguntar por este producto") al paso de build de `deploy.yml` y comprobar que `robots.txt` y la meta robots ya permiten indexar (hasta aquí el sitio sale con `noindex`) | ☐ |
 | 11 | Enviar el sitemap en Search Console | ☐ |
 | 12 | Confirmar que el latido, la publicación nocturna y el respaldo corrieron una vez | ☐ |
 | 13 | Guardar el WordPress anterior 30 días antes de darlo de baja | ☐ |
