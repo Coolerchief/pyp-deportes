@@ -100,6 +100,21 @@ describe('parseListingParams and serializeListingParams', () => {
   });
 });
 
+describe('search orders', () => {
+  it('accepts "relevancia" only where the page allows it, and omits its default', () => {
+    expect(parseListingParams('?orden=relevancia').sort).toBe('destacados');
+    const sorts = { options: ['relevancia', 'nombre'] as const, default: 'relevancia' as const };
+    expect(parseListingParams('', sorts).sort).toBe('relevancia');
+    expect(parseListingParams('?orden=nombre', sorts).sort).toBe('nombre');
+    expect(
+      serializeListingParams({ filters: EMPTY_FILTERS, sort: 'relevancia' }, 'relevancia'),
+    ).toBe('');
+    expect(
+      serializeListingParams({ filters: EMPTY_FILTERS, sort: 'destacados' }, 'relevancia'),
+    ).toBe('?orden=destacados');
+  });
+});
+
 describe('applyFilters', () => {
   it('ORs values inside a type and ANDs between types', () => {
     expect(

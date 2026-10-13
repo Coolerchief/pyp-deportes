@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./search": "./src/search.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
@@ -16,6 +17,7 @@
     "vitest": "^5.0.3"
   },
   "dependencies": {
+    "minisearch": "^7.2.0",
     "zod": "^4.6.5"
   }
 }

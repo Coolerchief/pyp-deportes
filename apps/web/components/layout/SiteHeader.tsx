@@ -1,12 +1,13 @@
 'use client';
 
-import { ChevronDown, ClipboardList, Menu, Search, X } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ClipboardList, Menu, Search, X } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Logo } from '@/components/brand';
 import { cx } from '@/lib/cx';
 import { activeSection, ROUTES, type SiteNav } from '@/lib/navigation';
+import { HeaderSearch } from './HeaderSearch';
 import { MegaMenu } from './MegaMenu';
 import { MobileMenu } from './MobileMenu';
 import { useOverlay } from './useOverlay';
@@ -43,7 +44,10 @@ function QuoteCount({ pieces }: { pieces: number }) {
  */
 export function SiteHeader({ nav, pieces = 0 }: { nav: SiteNav; pieces?: number }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  // Mobile: the magnifier turns the header into the search field; /buscar opens with it.
+  const [searchOpen, setSearchOpen] = useState(pathname === ROUTES.search);
   const [megaOpen, setMegaOpen] = useState(false);
   const [compact, setCompact] = useState(false);
 
@@ -75,6 +79,12 @@ export function SiteHeader({ nav, pieces = 0 }: { nav: SiteNav; pieces?: number 
     setShownPath(pathname);
     setMenuOpen(false);
     setMegaOpen(false);
+    setSearchOpen(pathname === ROUTES.search);
+  }
+
+  function closeSearch() {
+    if (pathname === ROUTES.search) router.back();
+    else setSearchOpen(false);
   }
 
   useEffect(() => {
@@ -113,60 +123,93 @@ export function SiteHeader({ nav, pieces = 0 }: { nav: SiteNav; pieces?: number 
     <header className="bg-noche fixed inset-x-0 top-0 z-40">
       {/* Mobile */}
       <div ref={mobileScope} className="lg:hidden">
-        <div
-          className={cx(
-            'flex items-center justify-between px-1.5 transition-[height] duration-150',
-            isCompact ? 'h-14' : 'h-16',
-          )}
-        >
-          <button
-            ref={menuToggle}
-            type="button"
-            className={ICON_BUTTON}
-            aria-expanded={menuOpen}
-            aria-controls={menuId}
-            aria-label={menuOpen ? 'Cerrar menú' : 'Menú'}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            {menuOpen ? (
-              <X aria-hidden="true" className="size-6" />
-            ) : (
-              <Menu aria-hidden="true" className="size-6" />
-            )}
-          </button>
-          <Link href={ROUTES.home} aria-label="P&P Deportes Coapa, inicio" className="flex">
-            {isCompact ? (
-              // Separate keys: reusing one <img> would stretch the old file while the new loads.
-              <Logo key="monograma" variant="monograma" tone="negativo" width={64} alt="" />
-            ) : (
-              <Logo
-                key="horizontal"
-                variant="horizontal"
-                tone="negativo"
-                width={158}
-                alt=""
-                priority
-              />
-            )}
-          </Link>
-          <div className="flex items-center">
-            <Link href={ROUTES.search} aria-label="Buscar" className={ICON_BUTTON}>
-              <Search aria-hidden="true" className="size-6" />
-            </Link>
+        {searchOpen ? (
+          <div className="flex h-16 items-center gap-1 px-1.5">
+            <button
+              type="button"
+              aria-label="Cerrar búsqueda"
+              onClick={closeSearch}
+              className={ICON_BUTTON}
+            >
+              <ChevronLeft aria-hidden="true" className="size-6" />
+            </button>
+            <HeaderSearch
+              variant="mobile"
+              autoFocus={pathname !== ROUTES.search}
+              onEscape={closeSearch}
+            />
             <Link
               href={ROUTES.quote}
               aria-label={quoteLabel(pieces)}
-              className={cx(ICON_BUTTON, 'relative w-12')}
+              className={cx(ICON_BUTTON, 'relative w-12 shrink-0')}
             >
               <ClipboardList aria-hidden="true" className="size-6" />
-              {pieces > 0 && (
-                <span className="absolute top-0 right-0">
-                  <QuoteCount pieces={pieces} />
-                </span>
-              )}
             </Link>
           </div>
-        </div>
+        ) : (
+          <div
+            className={cx(
+              'flex items-center justify-between px-1.5 transition-[height] duration-150',
+              isCompact ? 'h-14' : 'h-16',
+            )}
+          >
+            <button
+              ref={menuToggle}
+              type="button"
+              className={ICON_BUTTON}
+              aria-expanded={menuOpen}
+              aria-controls={menuId}
+              aria-label={menuOpen ? 'Cerrar menú' : 'Menú'}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              {menuOpen ? (
+                <X aria-hidden="true" className="size-6" />
+              ) : (
+                <Menu aria-hidden="true" className="size-6" />
+              )}
+            </button>
+            <Link href={ROUTES.home} aria-label="P&P Deportes Coapa, inicio" className="flex">
+              {isCompact ? (
+                // Separate keys: reusing one <img> would stretch the old file while the new loads.
+                <Logo key="monograma" variant="monograma" tone="negativo" width={64} alt="" />
+              ) : (
+                <Logo
+                  key="horizontal"
+                  variant="horizontal"
+                  tone="negativo"
+                  width={158}
+                  alt=""
+                  priority
+                />
+              )}
+            </Link>
+            <div className="flex items-center">
+              <button
+                type="button"
+                aria-label="Buscar"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setSearchOpen(true);
+                }}
+                className={ICON_BUTTON}
+              >
+                <Search aria-hidden="true" className="size-6" />
+              </button>
+              <Link
+                href={ROUTES.quote}
+                aria-label={quoteLabel(pieces)}
+                className={cx(ICON_BUTTON, 'relative w-12')}
+              >
+                <ClipboardList aria-hidden="true" className="size-6" />
+                {pieces > 0 && (
+                  <span className="absolute top-0 right-0">
+                    <QuoteCount pieces={pieces} />
+                  </span>
+                )}
+              </Link>
+            </div>
+          </div>
+        )}
         {menuOpen && <MobileMenu id={menuId} nav={nav} onNavigate={closeMenu} />}
       </div>
 
@@ -205,23 +248,7 @@ export function SiteHeader({ nav, pieces = 0 }: { nav: SiteNav; pieces?: number 
               Visítanos
             </Link>
           </nav>
-          <form
-            role="search"
-            action={ROUTES.search}
-            method="get"
-            className="bg-blanco text-grafito-suave rounded-sm flex h-11 min-w-0 grow items-center gap-2 px-3"
-          >
-            <button type="submit" aria-label="Buscar" className="flex h-11 items-center">
-              <Search aria-hidden="true" className="size-5" />
-            </button>
-            <input
-              type="search"
-              name="q"
-              placeholder="Busca en el catálogo"
-              aria-label="Busca en el catálogo"
-              className="text-noche placeholder:text-grafito-suave min-w-0 grow border-0 bg-transparent text-[15px] outline-none"
-            />
-          </form>
+          <HeaderSearch variant="desktop" />
           <Link
             href={ROUTES.quote}
             aria-label={pieces > 0 ? quoteLabel(pieces) : undefined}

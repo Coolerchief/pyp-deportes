@@ -9,6 +9,7 @@ import {
   facetCounts,
   FILTER_KEYS,
   type FilterKey,
+  LISTING_SORTS,
   LISTING_PAGE_SIZE,
   type ListingFilters,
   type ListingScope,
@@ -16,6 +17,7 @@ import {
   listingProducts,
   parseListingParams,
   type ParamReader,
+  type SortSettings,
   productCount,
   serializeListingParams,
   sortProducts,
@@ -57,6 +59,13 @@ export type ListingResultsProps = {
   newIds: string[];
   tabs?: ListingTab[];
   whatsappUrl: string;
+  /**
+   * Search: every result, by relevance. The products come from here instead of `scope` and
+   * catalog.json, and the option counts are computed from them.
+   */
+  sourceProducts?: CatalogProduct[];
+  /** Orders offered and the default one (search adds "Relevancia"). */
+  sorts?: SortSettings;
 };
 
 /** Interactive listing: reads the filters and order from the URL (APP-FLOW §3.2). */
@@ -82,26 +91,31 @@ function Results({
   newIds,
   tabs = [],
   whatsappUrl,
+  sourceProducts,
+  sorts = LISTING_SORTS,
   query,
 }: ListingResultsProps & { query: ParamReader | null }) {
   // The URL is the source of truth, but Next updates useSearchParams a moment after
   // replaceState: a local copy changes at once (no checkbox flicker) and follows the URL when it
   // changes from outside (back button, a link with ?categoria=).
   const queryString = query?.toString() ?? '';
-  const [state, setState] = useState<ListingState>(() => parseListingParams(query ?? ''));
+  const [state, setState] = useState<ListingState>(() => parseListingParams(query ?? '', sorts));
   const [shownQuery, setShownQuery] = useState(queryString);
   // "Cargar más" grows the page; a new filter or order starts over at 24.
   const [visible, setVisible] = useState(LISTING_PAGE_SIZE);
   if (shownQuery !== queryString) {
     setShownQuery(queryString);
-    const fromUrl = parseListingParams(query ?? '');
-    if (serializeListingParams(fromUrl) !== serializeListingParams(state)) {
+    const fromUrl = parseListingParams(query ?? '', sorts);
+    if (
+      serializeListingParams(fromUrl, sorts.default) !==
+      serializeListingParams(state, sorts.default)
+    ) {
       setState(fromUrl);
       setVisible(LISTING_PAGE_SIZE);
     }
   }
   const { filters, sort } = state;
-  const stateKey = serializeListingParams(state);
+  const stateKey = serializeListingParams(state, sorts.default);
   const filterCount = activeFilterCount(filters);
 
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -109,12 +123,18 @@ function Results({
 
   const needsCatalog =
     query !== null &&
-    (filterCount > 0 || sort !== 'destacados' || visible > LISTING_PAGE_SIZE || sheetOpen);
+    !sourceProducts &&
+    (filterCount > 0 || sort !== sorts.default || visible > LISTING_PAGE_SIZE || sheetOpen);
   const { catalog, status, retry } = useCatalog(needsCatalog);
 
   const scopeProducts = useMemo(
-    () => (catalog ? listingProducts(catalog, scope) : null),
-    [catalog, scope],
+    () => sourceProducts ?? (catalog ? listingProducts(catalog, scope) : null),
+    [sourceProducts, catalog, scope],
+  );
+  const baseCounts = useMemo(
+    () =>
+      sourceProducts ? serializeCounts(facetCounts(sourceProducts, EMPTY_FILTERS)) : scopeCounts,
+    [sourceProducts, scopeCounts],
   );
   const results = useMemo(
     () => (scopeProducts ? sortProducts(applyFilters(scopeProducts, filters), sort) : null),
@@ -133,18 +153,22 @@ function Results({
     setState(next);
     setVisible(LISTING_PAGE_SIZE);
     // Next keeps useSearchParams in sync with the History API; no reload, no new entry.
-    window.history.replaceState(null, '', `${basePath}${serializeListingParams(next)}`);
+    const query = serializeListingParams(next, sorts.default);
+    // basePath may carry its own query (/buscar?q=…): append to it.
+    const url =
+      basePath.includes('?') && query ? `${basePath}&${query.slice(1)}` : `${basePath}${query}`;
+    window.history.replaceState(null, '', url);
   }
   const setFilters = (next: ListingFilters) => update({ filters: next, sort });
 
   const panelProps = (current: ListingFilters, onChange: (f: ListingFilters) => void) => {
     const counts = scopeProducts
       ? serializeCounts(facetCounts(scopeProducts, current))
-      : scopeCounts;
+      : baseCounts;
     return {
-      groups: buildFacetGroups(counts, scopeCounts, current, labels, fixedGroup(scope.kind)),
+      groups: buildFacetGroups(counts, baseCounts, current, labels, fixedGroup(scope.kind)),
       personalizableCount: counts.personalizable,
-      showPersonalizable: scopeCounts.personalizable > 0,
+      showPersonalizable: baseCounts.personalizable > 0,
       filters: current,
       onToggle: (key: FilterKey, value: string) => onChange(toggleFilter(current, key, value)),
       onTogglePersonalizable: () =>
@@ -176,8 +200,9 @@ function Results({
   ];
 
   const draftCount = scopeProducts ? applyFilters(scopeProducts, draft).length : null;
-  const emptyDescription =
-    scope.kind === 'all'
+  const emptyDescription = sourceProducts
+    ? 'Quita alguno o límpialos para ver todos los resultados.'
+    : scope.kind === 'all'
       ? 'Quita alguno o límpialos para ver todo el catálogo.'
       : `Quita alguno o límpialos para ver todo lo de ${title}.`;
 
@@ -250,7 +275,11 @@ function Results({
             <span aria-live="polite" className="type-small text-grafito-suave">
               {loading ? 'Cargando…' : productCount(matching)}
             </span>
-            <SortSheet value={sort} onChange={(next) => update({ filters, sort: next })} />
+            <SortSheet
+              options={sorts.options}
+              value={sort}
+              onChange={(next) => update({ filters, sort: next })}
+            />
           </div>
 
           {/* Desktop bar: Mostrando x de n · Ordenar por */}
@@ -258,7 +287,11 @@ function Results({
             <span aria-live="polite" className="type-small text-grafito-suave">
               {loading ? 'Cargando…' : `Mostrando ${products.length} de ${productCount(matching)}`}
             </span>
-            <SortMenu value={sort} onChange={(next) => update({ filters, sort: next })} />
+            <SortMenu
+              options={sorts.options}
+              value={sort}
+              onChange={(next) => update({ filters, sort: next })}
+            />
           </div>
 
           {activeChips.length > 0 && (
