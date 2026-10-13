@@ -214,8 +214,12 @@ describe('catalogMeta', () => {
     ).toBe('2 tallas');
   });
 
+  it('names the only variant of a product, as the design does for a ball', () => {
+    expect(meta('Tamaño', [['5', 'Blanco/Rojo']], 'Color')).toBe('Tamaño 5 · Blanco/Rojo');
+    expect(meta('Talla', [['Unitalla', null]])).toBe('Talla Unitalla');
+  });
+
   it('only mentions dimensions with a choice', () => {
-    expect(meta('Tamaño', [['5', 'Blanco/Negro']], 'Color')).toBe('');
     expect(
       meta(
         'Talla',

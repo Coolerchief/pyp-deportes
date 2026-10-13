@@ -6,4 +6,13 @@ describe('next.config', () => {
     expect(nextConfig.output).toBe('export');
     expect(nextConfig.trailingSlash).toBe(false);
   });
+
+  it('maps images to the widths generated in R2', () => {
+    expect(nextConfig.images).toEqual({
+      loader: 'custom',
+      loaderFile: './lib/images/loader.ts',
+      deviceSizes: [320, 640, 1024, 1600, 2400],
+      imageSizes: [],
+    });
+  });
 });
