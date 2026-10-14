@@ -251,7 +251,7 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 
 ### 6.5 Mensaje de WhatsApp
 
-- Función pura `buildQuoteMessage(input): string` en `lib/whatsapp/`, con pruebas unitarias con *snapshots*.
+- Función pura `buildQuoteMessage(input): string`, con pruebas unitarias con *snapshots*. Vive en `packages/shared/src/whatsapp.ts` y no en `lib/whatsapp/`, porque es una regla de negocio (regla 10 de `CLAUDE.md`).
 - URL: `https://wa.me/<52 + 10 dígitos>?text=<encodeURIComponent(mensaje)>`. El número sale de `settings.whatsapp_sales_number`.
 - Formato (texto plano, negritas con `*` de WhatsApp, sin emojis salvo uno de saludo opcional):
 
@@ -275,6 +275,15 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 
 - Si la URL codificada supera **4 000 caracteres**, se usa el **formato compacto**: encabezado + una línea por producto con total de piezas + "Detalle completo en el folio". Sin folio (fallback) siempre se envía el formato completo.
 - Botón "Preguntar por este producto": `Hola, me interesa *{nombre}* ({sku}). {url del producto}`.
+- **Implementación (T3.6, 14-oct-2026).** `packages/shared/src/whatsapp.ts`: `buildQuoteMessage` (completo), `buildCompactQuoteMessage` y `buildWaUrl(number, input) → { url, message, format }`; pruebas con *snapshots* de los tres formatos y de una lista de 100 líneas.
+  - **Entrada:** `apps/web/lib/commerce/quote-message.ts` (`quoteMessageInput`) arma la entrada desde la lista y el formulario. Toma el SKU de cada variante de `catalog.json`, porque la lista solo guarda el del producto.
+  - **Detalles del formato:**
+    - "Cliente" usa las etiquetas del formulario ("Liga o equipo", "Particular"); el ejemplo de arriba decía "Liga/Equipo".
+    - "Entrega" dice "Recoger en tienda" o "Envío".
+    - Un producto con una sola variante lleva su etiqueta y su SKU en la misma línea; con varias, una segunda línea "CH 4 · M 8".
+    - Personalizado sin texto: "✎ Personalizar: por definir".
+    - "1 pza" en singular.
+  - **Formato compacto:** si no cabe en 4 000 caracteres ni siquiera con una línea por producto, los últimos se resumen en "… y n productos más"; el detalle queda en el folio. Sin folio siempre se envía el mensaje completo, aunque la URL pase de 4 000.
 
 ### 6.6 Estados de carga y vacío
 

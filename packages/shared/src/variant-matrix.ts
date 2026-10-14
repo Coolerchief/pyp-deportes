@@ -112,9 +112,10 @@ export function cleanQuantity(value: string | number): number {
   return Math.min(QUOTE_LIMITS.quantityMax, Math.floor(n));
 }
 
-/** "6 pzs" or "—" next to each row; "1 pieza" / "18 piezas" for the total. */
+/** "6 pzs", "1 pza" or "—" next to each row; "1 pieza" / "18 piezas" for the total. */
 export function rowPieces(quantity: number): string {
-  return quantity > 0 ? `${quantity} pzs` : '—';
+  if (quantity <= 0) return '—';
+  return `${quantity} ${quantity === 1 ? 'pza' : 'pzs'}`;
 }
 export function piecesText(total: number): string {
   return `${total} ${total === 1 ? 'pieza' : 'piezas'}`;
