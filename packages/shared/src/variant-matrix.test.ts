@@ -98,6 +98,7 @@ describe('quantities and texts', () => {
 
   it('writes the row and total texts of the design', () => {
     expect(rowPieces(6)).toBe('6 pzs');
+    expect(rowPieces(1)).toBe('1 pza');
     expect(rowPieces(0)).toBe('—');
     expect(piecesText(1)).toBe('1 pieza');
     expect(piecesText(18)).toBe('18 piezas');

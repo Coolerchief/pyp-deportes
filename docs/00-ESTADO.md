@@ -148,7 +148,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T3.5 (paso 2 "Tus datos": formulario con el esquema Zod compartido, resumen "Faltan n datos…" con el foco, mensaje con ícono en cada campo que se limpia al corregir, atajos de fecha, "Particular" oculta la institución, datos recordados en `pyp.requester.v1` sin el aviso, resumen de la lista en móvil y panel "Tu lista" en escritorio). Pruebas de componentes y E2E. El envío real llega con T3.6–T3.8.
 
-**Siguiente paso:** T3.6 (`buildQuoteMessage` completo, compacto y sin folio, y `buildWaUrl`).
+**Hecho:** T3.6 (mensaje de WhatsApp en `packages/shared/src/whatsapp.ts`: completo, compacto y sin folio, y `buildWaUrl`, que elige el formato según el largo de la URL; adaptador `quoteMessageInput` en `lib/commerce`). Pruebas con *snapshots* de los tres formatos; una lista de 100 líneas da una URL válida de 4 000 caracteres o menos con folio.
+
+**Siguiente paso:** T3.7 (Edge Function `submit-quote` con Turnstile, validación y límite de envíos).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
@@ -173,7 +175,7 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
   - Footer sin la frase "Desde 1969".
 
 **Técnicos, con tarea asignada**
-- T3.6–T3.8: el mensaje de WhatsApp, Turnstile y el envío con folio (los pasos 1 y 2 de `/cotizacion` ya existen; hoy un envío válido solo confirma que los datos están completos).
+- T3.7–T3.8: Turnstile, la Edge Function `submit-quote` y el envío con folio (el mensaje de WhatsApp ya existe desde T3.6) (los pasos 1 y 2 de `/cotizacion` ya existen; hoy un envío válido solo confirma que los datos están completos).
 - T3.2: matriz de cantidades, personalización y "Agregar a mi cotización" en la ficha.
 - T3.9: eventos de analítica (`search`, `view_item_list`, `whatsapp_click`…).
 - Fase 5: galería de "Equipos estrenando", Visítanos, Uniformes, aviso de privacidad, 404, sitemap y JSON-LD de la tienda.

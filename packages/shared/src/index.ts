@@ -17,4 +17,5 @@ export * from './quote-list';
 export * from './requester';
 export * from './text';
 export * from './variant-matrix';
+export * from './whatsapp';
 export type { Database, Json } from '../database.types';
