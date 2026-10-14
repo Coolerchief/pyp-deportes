@@ -58,3 +58,28 @@ test('the mobile quote bar appears with pieces and survives a reload', async ({
     .boundingBox();
   expect((fab?.y ?? 0) + (fab?.height ?? 0)).toBeLessThanOrEqual(barBox?.y ?? 0);
 });
+
+test('step 1 lists, edits, removes with undo and continues', async ({ page }) => {
+  await page.goto('/producto/uniforme-basquetbol-completo', { waitUntil: 'networkidle' });
+  await page.getByRole('button', { name: 'Equipo de 12' }).click();
+  await page.getByRole('button', { name: 'Agregar a mi cotización' }).click();
+  await page.getByRole('dialog').getByRole('link', { name: 'Ver mi cotización' }).click();
+
+  await expect(page).toHaveURL(/\/cotizacion$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Mi cotización' })).toBeVisible();
+  await expect(page.getByText('1 producto · 12 piezas')).toBeVisible();
+  const card = page.getByRole('article', { name: 'Uniforme de Básquetbol Completo' });
+  await card.getByRole('button', { name: 'Editar cantidades' }).click();
+  await card.getByRole('button', { name: 'Sumar una pieza, CH' }).click();
+  await expect(page.getByText('1 producto · 13 piezas')).toBeVisible();
+
+  await card.getByRole('button', { name: 'Quitar Uniforme de Básquetbol Completo' }).click();
+  await expect(page.getByText('Tu lista está vacía')).toBeVisible();
+  await page.getByRole('button', { name: 'Deshacer' }).click();
+  await expect(page.getByText('1 producto · 13 piezas')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await expect(page).toHaveURL(/\/cotizacion\?paso=2$/);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/cotizacion$/);
+});

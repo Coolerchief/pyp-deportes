@@ -2,7 +2,6 @@
 
 import {
   type CatalogProduct,
-  cleanQuantity,
   matrixLayout,
   type MatrixRow,
   piecesText,
@@ -12,10 +11,10 @@ import {
   teamPreset,
   variantLabel,
 } from '@pyp/shared';
-import { Minus, Plus } from 'lucide-react';
-import { type KeyboardEvent, useEffect, useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import { chipStyle } from '@/components/catalog/chip-style';
 import { Button } from '@/components/ui';
+import { QuantityInput } from '@/components/ui/QuantityInput';
 import { useQuote } from '@/lib/commerce';
 import { useAddedNotice } from '@/lib/commerce/added-notice';
 import { cx } from '@/lib/cx';
@@ -42,52 +41,17 @@ function Stepper({
   value: number;
   onChange: (value: number) => void;
 }) {
-  const name = dimension === 'pieza' ? 'Cantidad' : `Cantidad ${dimension} ${row.label}`;
-  function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-      event.preventDefault();
-      onChange(cleanQuantity(value + (event.key === 'ArrowUp' ? 1 : -1)));
-    }
-  }
-  const step =
-    'border-borde-control text-noche flex size-11 shrink-0 items-center justify-center border disabled:opacity-40';
   return (
     <div className="flex items-center gap-3">
       <span className="font-display w-14 shrink-0 text-[18px] leading-none font-bold">
         {row.label}
       </span>
-      <div className="flex items-center">
-        <button
-          type="button"
-          aria-label={`Restar una pieza, ${row.label}`}
-          disabled={value === 0}
-          onClick={() => onChange(cleanQuantity(value - 1))}
-          className={cx(step, 'rounded-l-sm')}
-        >
-          <Minus aria-hidden="true" className="size-4" />
-        </button>
-        <input
-          type="text"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          autoComplete="off"
-          aria-label={name}
-          value={String(value)}
-          onFocus={(event) => event.currentTarget.select()}
-          onChange={(event) => onChange(cleanQuantity(event.target.value))}
-          onKeyDown={onKeyDown}
-          className="border-borde-control type-body-strong h-11 w-14 border-y text-center tabular-nums"
-        />
-        <button
-          type="button"
-          aria-label={`Sumar una pieza, ${row.label}`}
-          disabled={value >= QUOTE_LIMITS.quantityMax}
-          onClick={() => onChange(cleanQuantity(value + 1))}
-          className={cx(step, 'rounded-r-sm')}
-        >
-          <Plus aria-hidden="true" className="size-4" />
-        </button>
-      </div>
+      <QuantityInput
+        value={value}
+        onChange={onChange}
+        label={dimension === 'pieza' ? 'Cantidad' : `Cantidad ${dimension} ${row.label}`}
+        shortLabel={row.label}
+      />
       <span aria-hidden="true" className="type-small text-grafito-suave ml-auto w-14 text-right">
         {rowPieces(value)}
       </span>
