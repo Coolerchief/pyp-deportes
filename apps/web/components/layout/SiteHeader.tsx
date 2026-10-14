@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Logo } from '@/components/brand';
+import { useQuoteTotals } from '@/lib/commerce';
 import { cx } from '@/lib/cx';
 import { activeSection, ROUTES, type SiteNav } from '@/lib/navigation';
 import { HeaderSearch } from './HeaderSearch';
@@ -39,11 +40,11 @@ function QuoteCount({ pieces }: { pieces: number }) {
 /**
  * Site header (UI/UX §7.3), fixed on noche. Mobile (64 px): menu · logo · search · quote; it
  * compacts to 56 px with the monogram after scrolling. Desktop (72 px): logo · Deportes ▾ ·
- * Categorías ▾ · pages · search field · "Mi cotización". `pieces` comes from the quote store
- * in T3.1.
+ * Categorías ▾ · pages · search field · "Mi cotización" with the pieces in the quote list.
  */
-export function SiteHeader({ nav, pieces = 0 }: { nav: SiteNav; pieces?: number }) {
+export function SiteHeader({ nav }: { nav: SiteNav }) {
   const pathname = usePathname();
+  const { pieces } = useQuoteTotals();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   // Mobile: the magnifier turns the header into the search field; /buscar opens with it.

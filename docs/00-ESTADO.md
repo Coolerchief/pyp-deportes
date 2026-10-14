@@ -142,7 +142,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T3.2 (matriz de cantidades en la ficha: una o dos columnas, selector de color, atajos "Equipo de 12 / 18 / 24", teclado, personalización y barra de total fija en móvil; "Agregar a mi cotización" guarda una línea por variante). Capturar 20 piezas en 4 tallas solo con teclado toma menos de 30 s (E2E). Reparto de los atajos generalizado y documentado en UI/UX §7.5.
 
-**Siguiente paso:** T3.3 (aviso de agregado, `QuoteBar`, contador del header y "+ Cotizar" en tarjetas).
+**Hecho:** T3.3 (aviso de agregado con "Ver mi cotización" y "Seguir viendo el catálogo", `QuoteBar` en móvil, contador de piezas en el header, "+ Cotizar" en las tarjetas sin variantes y "En tu cotización" en la tarjeta). E2E: agregar desde la ficha y desde un listado, volver al listado, la barra móvil sobrevive a recargar y el botón de WhatsApp sube.
+
+**Siguiente paso:** T3.4 (paso 1 de `/cotizacion`: la lista, editar cantidades, quitar con deshacer, editar personalización, lista vacía y productos no disponibles).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
@@ -166,7 +168,7 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
   - Footer sin la frase "Desde 1969".
 
 **Técnicos, con tarea asignada**
-- T3.3: aviso de agregado, `QuoteBar`, contador del header, "+ Cotizar" desde la tarjeta y "En tu cotización" (la lista existe desde T3.1 y la ficha ya agrega desde T3.2).
+- T3.4–T3.8: la página `/cotizacion` (hoy "Ver mi cotización" y el contador llevan a un 404), el formulario, el mensaje de WhatsApp y el envío con folio.
 - T3.2: matriz de cantidades, personalización y "Agregar a mi cotización" en la ficha.
 - T3.9: eventos de analítica (`search`, `view_item_list`, `whatsapp_click`…).
 - Fase 5: galería de "Equipos estrenando", Visítanos, Uniformes, aviso de privacidad, 404, sitemap y JSON-LD de la tienda.

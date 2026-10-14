@@ -1,4 +1,5 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
+import { useQuote } from '@/lib/commerce';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { SiteNav } from '@/lib/navigation';
@@ -181,7 +182,24 @@ describe('QuoteButton', () => {
       'href',
       '/cotizacion',
     );
-    rerender(<SiteHeader nav={nav} pieces={42} />);
+    act(() =>
+      useQuote.setState({
+        hydrated: true,
+        lines: [
+          {
+            lineId: 'l1',
+            productId: '00000000-0000-4000-8000-000000000001',
+            variantId: '00000000-0000-4000-8000-000000000002',
+            quantity: 42,
+            personalize: false,
+            notes: '',
+            snapshot: { name: 'Jersey', sku: 'J', slug: 'jersey', variantLabel: 'M', image: null },
+            addedAt: '2026-10-13T00:00:00.000Z',
+          },
+        ],
+      }),
+    );
+    rerender(<SiteHeader nav={nav} />);
     expect(screen.getAllByRole('link', { name: 'Mi cotización, 42 piezas' })).toHaveLength(2);
   });
 });

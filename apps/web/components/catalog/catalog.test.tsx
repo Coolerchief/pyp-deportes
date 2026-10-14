@@ -1,7 +1,9 @@
-import type { CatalogProduct } from '@pyp/shared';
+import { type CatalogProduct, EMPTY_QUOTE } from '@pyp/shared';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { useQuote } from '@/lib/commerce';
+import { useAddedNotice } from '@/lib/commerce/added-notice';
 import { MEDIA_URL } from '@/lib/images/loader';
 import { CategoryTiles, ProductCard, ProductGrid, SportTiles, VolumeNote } from '.';
 
@@ -44,6 +46,12 @@ const ball = product({
   customizable: false,
   variants: [variant(3, '5', 'Blanco/Rojo')],
   meta: 'Tamaño 5 · Blanco/Rojo',
+});
+
+beforeEach(() => {
+  window.localStorage.clear();
+  useQuote.setState({ ...EMPTY_QUOTE, hydrated: true });
+  useAddedNotice.setState({ notice: null });
 });
 
 describe('ProductCard', () => {
@@ -92,23 +100,43 @@ describe('ProductCard', () => {
     expect(screen.getByText('Nueva')).toBeInTheDocument();
   });
 
-  it('offers "+ Cotizar" for a product without choices', async () => {
+  it('adds one piece with "+ Cotizar" and opens the added notice', async () => {
     const user = userEvent.setup();
-    const onQuickAdd = vi.fn();
-    const { rerender } = render(<ProductCard product={ball} categoryName="Balones" />);
-    expect(screen.getByRole('link', { name: 'Cotizar Balón Fútbol Molten' })).toHaveAttribute(
-      'href',
-      '/producto/balon-molten',
-    );
+    render(<ProductCard product={ball} categoryName="Balones" />);
     expect(screen.queryByText('Personalizable')).not.toBeInTheDocument();
-
-    rerender(<ProductCard product={ball} categoryName="Balones" onQuickAdd={onQuickAdd} />);
     await user.click(screen.getByRole('button', { name: 'Cotizar Balón Fútbol Molten' }));
-    expect(onQuickAdd).toHaveBeenCalledWith(ball);
+    expect(useQuote.getState().lines).toMatchObject([{ productId: ball.id, quantity: 1 }]);
+    expect(useAddedNotice.getState().notice).toMatchObject({
+      product: { name: 'Balón Fútbol Molten', categoryName: 'Balones' },
+      lines: [{ label: '5 · Blanco/Rojo', quantity: 1 }],
+    });
+    // The card now says it is in the quote.
+    expect(screen.getByText('En tu cotización · 1 pieza')).toBeVisible();
   });
 
   it('says how many pieces are already in the quote', () => {
-    render(<ProductCard product={ball} categoryName="Balones" piecesInQuote={12} />);
+    useQuote.setState({
+      hydrated: true,
+      lines: [
+        {
+          lineId: 'l1',
+          productId: ball.id,
+          variantId: ball.variants[0]!.id,
+          quantity: 12,
+          personalize: false,
+          notes: '',
+          snapshot: {
+            name: ball.name,
+            sku: ball.sku,
+            slug: ball.slug,
+            variantLabel: null,
+            image: null,
+          },
+          addedAt: '2026-10-13T00:00:00.000Z',
+        },
+      ],
+    });
+    render(<ProductCard product={ball} categoryName="Balones" />);
     expect(screen.getByText('En tu cotización · 12 piezas')).toBeVisible();
   });
 });
