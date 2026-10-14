@@ -14,6 +14,7 @@ import { useMemo } from 'react';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { WhatsAppGlyph } from '@/components/layout/WhatsAppGlyph';
 import { Button } from '@/components/ui';
+import { useRememberListing } from '@/lib/commerce/added-notice';
 import { serializeCounts } from '@/lib/facets';
 import type { NavLink } from '@/lib/navigation';
 import { searchHref, useCatalogSearch } from '@/lib/search-client';
@@ -69,6 +70,7 @@ function AskOnWhatsApp({ href }: { href: string }) {
  */
 export function SearchPage({ sports, categories, whatsappNumber }: SearchPageProps) {
   const q = useSearchParams().get('q')?.trim() ?? '';
+  useRememberListing();
   const { catalog, api, search, status, retry } = useCatalogSearch(true);
 
   const results = useMemo(

@@ -56,7 +56,7 @@ const field = (name: string) => screen.getByRole('textbox', { name });
 describe('VariantMatrix', () => {
   it('asks for pieces until there are some, then offers "Agregar a mi cotización"', async () => {
     const user = userEvent.setup();
-    render(<VariantMatrix product={uniform} customizable />);
+    render(<VariantMatrix product={uniform} categoryName="Uniformes" customizable />);
     expect(screen.getByRole('heading', { name: 'Cantidad por talla' })).toBeVisible();
     expect(screen.getByText('Indica cuántas piezas necesitas por talla')).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'Sumar una pieza, M' }));
@@ -67,7 +67,7 @@ describe('VariantMatrix', () => {
 
   it('works with the keyboard: Tab between fields, ↑/↓ add or subtract, typing caps at 9 999', async () => {
     const user = userEvent.setup();
-    render(<VariantMatrix product={uniform} customizable />);
+    render(<VariantMatrix product={uniform} categoryName="Uniformes" customizable />);
     await user.click(field('Cantidad talla CH'));
     await user.keyboard('{ArrowUp}{ArrowUp}{ArrowUp}{ArrowDown}');
     expect(field('Cantidad talla CH')).toHaveValue('2');
@@ -82,7 +82,7 @@ describe('VariantMatrix', () => {
 
   it('fills a team with the shortcuts, as in the design', async () => {
     const user = userEvent.setup();
-    render(<VariantMatrix product={uniform} customizable />);
+    render(<VariantMatrix product={uniform} categoryName="Uniformes" customizable />);
     await user.click(screen.getByRole('button', { name: 'Equipo de 12' }));
     expect(
       ['CH', 'M', 'G', 'XG'].map((s) => (field(`Cantidad talla ${s}`) as HTMLInputElement).value),
@@ -97,7 +97,7 @@ describe('VariantMatrix', () => {
 
   it('adds one line per variant with pieces, with the personalization, and starts over at 0', async () => {
     const user = userEvent.setup();
-    render(<VariantMatrix product={uniform} customizable />);
+    render(<VariantMatrix product={uniform} categoryName="Uniformes" customizable />);
     await user.type(field('Cantidad talla CH'), '5');
     await user.type(field('Cantidad talla G'), '7');
     await user.click(screen.getByRole('checkbox', { name: 'Quiero personalizarlo' }));
@@ -120,7 +120,7 @@ describe('VariantMatrix', () => {
 
   it('shows the simple page without shortcuts or personalization, with a color selector', async () => {
     const user = userEvent.setup();
-    render(<VariantMatrix product={ball} customizable={false} />);
+    render(<VariantMatrix product={ball} categoryName="Balones" customizable={false} />);
     expect(screen.getByRole('heading', { name: 'Cantidad por tamaño' })).toBeVisible();
     expect(screen.queryByRole('button', { name: /Equipo de/ })).toBeNull();
     expect(screen.queryByRole('checkbox')).toBeNull();

@@ -53,7 +53,11 @@ export function ProductPage({ data }: { data: ProductPageData }) {
               )}
             </section>
 
-            <VariantMatrix product={product} customizable={data.customizable} />
+            <VariantMatrix
+              product={product}
+              categoryName={data.categoryName}
+              customizable={data.customizable}
+            />
 
             <Button
               variant="whatsapp"

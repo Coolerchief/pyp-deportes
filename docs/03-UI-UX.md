@@ -334,6 +334,18 @@ Dos variantes de la misma página:
 
 **QuoteBar** (solo móvil) — barra fija inferior `noche`, visible con 1 pieza o más y fuera de `/cotizacion`: "Mi cotización · 3 productos · 42 piezas" + botón "Ver". El botón flotante de WhatsApp sube 72 px mientras está visible.
 
+**Implementación (T3.3, 13-oct-2026).** `components/quote`: `AddedNotice`, `QuoteBar` y `QuickAdd` (`QuickAddButton` e `InQuoteBadge`), más `lib/commerce/added-notice.ts`, el estado del aviso y el último listado visitado. El aviso y la barra viven en `app/(public)/layout.tsx`.
+- **Aviso de agregado:**
+  - Lo abren la ficha ("Agregar a mi cotización") y "+ Cotizar".
+  - El foco va a "Ver mi cotización" y vuelve al botón que agregó al cerrar.
+  - "Seguir viendo el catálogo" cierra y, si se llegó desde un listado o una búsqueda, regresa ahí (APP-FLOW §4.1).
+  - En escritorio no lleva velo y se cierra también con un clic fuera.
+  - Si la lista llegó a 100 renglones, lo avisa.
+- **QuoteBar:** también se oculta en las fichas, porque ahí la barra de total ocupa el borde inferior. Deja un espacio de 72 px al final de la página y sube el botón de WhatsApp con `--bottom-bar`.
+- **Contador del header:** muestra las piezas de la lista (`useQuoteTotals`), con 0 hasta leer lo guardado.
+- **Tarjetas:** "+ Cotizar" agrega 1 pieza de la única variante, y "En tu cotización · n piezas" aparece en la tarjeta en cuanto el producto está en la lista.
+- **Mientras tanto:** "Ver mi cotización" y el contador llevan a `/cotizacion`, que llega en T3.4.
+
 **StepIndicator** — tres Placas: "1 · Tu lista", "2 · Tus datos", "3 · Enviar". Activa `noche`, completada `lima`, pendiente `gis`.
 
 **QuoteLine** — miniatura 64 px 4:5 · nombre (enlace) · SKU · total de piezas · desglose por variante en pastillas ("CH × 3") · bloque de personalización sobre `gis` con ícono de lápiz y "Editar" · quitar (ícono de basura).

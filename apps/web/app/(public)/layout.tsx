@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { SiteFooter, SiteHeader, WhatsAppFab } from '@/components/layout';
+import { AddedNotice } from '@/components/quote/AddedNotice';
+import { QuoteBar } from '@/components/quote/QuoteBar';
 import { CommerceProvider } from '@/lib/commerce';
 import { getBuildData } from '@/lib/data';
 import { buildSiteNav } from '@/lib/navigation';
@@ -21,7 +23,9 @@ export default async function PublicLayout({ children }: { children: ReactNode }
         {children}
       </main>
       <SiteFooter nav={nav} />
+      <QuoteBar />
       <WhatsAppFab href={nav.contact.whatsappUrl} />
+      <AddedNotice />
     </CommerceProvider>
   );
 }

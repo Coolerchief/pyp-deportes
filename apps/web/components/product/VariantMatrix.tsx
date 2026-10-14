@@ -7,7 +7,6 @@ import {
   type MatrixRow,
   piecesText,
   QUOTE_LIMITS,
-  QUOTE_MESSAGES,
   rowPieces,
   TEAM_PRESETS,
   teamPreset,
@@ -18,6 +17,7 @@ import { type KeyboardEvent, useEffect, useId, useMemo, useState } from 'react';
 import { chipStyle } from '@/components/catalog/chip-style';
 import { Button } from '@/components/ui';
 import { useQuote } from '@/lib/commerce';
+import { useAddedNotice } from '@/lib/commerce/added-notice';
 import { cx } from '@/lib/cx';
 
 /** Height of the fixed total bar on mobile; the floating WhatsApp button rises above it. */
@@ -25,6 +25,8 @@ const BAR_HEIGHT = '88px';
 
 type VariantMatrixProps = {
   product: CatalogProduct;
+  /** For the generic image in the added notice. */
+  categoryName: string;
   /** Full page: team shortcuts and personalization. Simple page: neither. */
   customizable: boolean;
 };
@@ -99,7 +101,7 @@ function Stepper({
  * with "Agregar a mi cotización" (fixed at the bottom on mobile). Adding creates one quote line
  * per variant with pieces and puts the quantities back to 0.
  */
-export function VariantMatrix({ product, customizable }: VariantMatrixProps) {
+export function VariantMatrix({ product, categoryName, customizable }: VariantMatrixProps) {
   const layout = useMemo(() => matrixLayout(product), [product]);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [colorIndex, setColorIndex] = useState(0);
@@ -148,33 +150,39 @@ export function VariantMatrix({ product, customizable }: VariantMatrixProps) {
 
   function add() {
     const byId = new Map(product.variants.map((v) => [v.id, v]));
+    const lines = allRows
+      .filter((row) => (quantities[row.variantId] ?? 0) > 0)
+      .map((row) => {
+        const variant = byId.get(row.variantId);
+        return {
+          variantId: row.variantId,
+          label: variant ? variantLabel(variant.o1, variant.o2) : null,
+          quantity: quantities[row.variantId] ?? 0,
+        };
+      });
+    const withNotes = customizable && personalize;
     const { skipped } = useQuote.getState().add({
       productId: product.id,
-      personalize: customizable && personalize,
-      notes: customizable && personalize ? notes : '',
+      personalize: withNotes,
+      notes: withNotes ? notes : '',
       product: {
         name: product.name,
         sku: product.sku,
         slug: product.slug,
         image: product.image?.keyBase ?? null,
       },
-      variants: allRows
-        .filter((row) => (quantities[row.variantId] ?? 0) > 0)
-        .map((row) => {
-          const variant = byId.get(row.variantId);
-          return {
-            variantId: row.variantId,
-            label: variant ? variantLabel(variant.o1, variant.o2) : null,
-            quantity: quantities[row.variantId] ?? 0,
-          };
-        }),
+      variants: lines,
     });
     setQuantities({});
     setPreset(null);
-    // The "added" notice with its two exits arrives in T3.3; until then a short confirmation.
-    setStatus(
-      skipped > 0 ? QUOTE_MESSAGES.linesLimit : `Agregado a tu cotización: ${piecesText(total)}.`,
-    );
+    useAddedNotice.getState().show({
+      product: { ...product, categoryName },
+      personalize: withNotes,
+      lines: lines.map(({ label, quantity }) => ({ label, quantity })),
+      skipped,
+    });
+    // For screen readers; the notice itself also announces the list total.
+    setStatus(`Agregado a tu cotización: ${piecesText(total)}.`);
   }
 
   return (

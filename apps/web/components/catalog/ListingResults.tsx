@@ -29,6 +29,7 @@ import { useMemo, useState } from 'react';
 import { WhatsAppGlyph } from '@/components/layout/WhatsAppGlyph';
 import { Button, Chip, EmptyState, Sheet } from '@/components/ui';
 import { useCatalog } from '@/lib/catalog-client';
+import { useRememberListing } from '@/lib/commerce/added-notice';
 import {
   type FacetLabels,
   buildFacetGroups,
@@ -71,6 +72,7 @@ export type ListingResultsProps = {
 /** Interactive listing: reads the filters and order from the URL (APP-FLOW §3.2). */
 export function ListingResults(props: ListingResultsProps) {
   const params = useSearchParams();
+  useRememberListing();
   return <Results {...props} query={params} />;
 }
 

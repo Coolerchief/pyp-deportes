@@ -1,7 +1,7 @@
 import { type CatalogProduct, hasVariantChoice, productBadges } from '@pyp/shared';
-import { Check } from 'lucide-react';
 import Link from 'next/link';
 import { Badge, Button, Skeleton } from '@/components/ui';
+import { InQuoteBadge, QuickAddButton } from '@/components/quote/QuickAdd';
 import { ROUTES } from '@/lib/navigation';
 import { PriceSlot } from './PriceSlot';
 import { ProductImage } from './ProductImage';
@@ -14,13 +14,6 @@ type ProductCardProps = {
   categoryName: string;
   /** "Nuevo" badge (newProductIds in @pyp/shared decides it once per build). */
   isNew?: boolean;
-  /** Pieces of this product already in the quote: shows "En tu cotización" (T3.3). */
-  piecesInQuote?: number;
-  /**
-   * "+ Cotizar" on a product without choices adds one piece and shows the added notice (T3.3).
-   * Until the quote exists, the button opens the product page.
-   */
-  onQuickAdd?: (product: CatalogProduct) => void;
   priority?: boolean;
   headingLevel?: 'h2' | 'h3';
 };
@@ -28,14 +21,13 @@ type ProductCardProps = {
 /**
  * Product card (UI/UX §7.4): 4:5 image with up to two badges, brand, name (two lines), meta,
  * the price slot (empty while the site shows no prices) and one action. The whole card links
- * to the product page; with choices the action is "Ver tallas", without them "+ Cotizar".
+ * to the product page; with choices the action is "Ver tallas", without them "+ Cotizar" (adds
+ * one piece). "En tu cotización" appears once the product is in the quote list.
  */
 export function ProductCard({
   product,
   categoryName,
   isNew = false,
-  piecesInQuote = 0,
-  onQuickAdd,
   priority,
   headingLevel: Heading = 'h3',
 }: ProductCardProps) {
@@ -72,12 +64,7 @@ export function ProductCard({
         {product.meta && <span className="type-small text-grafito-suave">{product.meta}</span>}
         <PriceSlot />
       </Link>
-      {piecesInQuote > 0 && (
-        <p className="type-small text-exito flex items-center gap-1 font-semibold">
-          <Check aria-hidden="true" className="size-4" />
-          En tu cotización · {piecesInQuote} {piecesInQuote === 1 ? 'pieza' : 'piezas'}
-        </p>
-      )}
+      <InQuoteBadge productId={product.id} />
       <div>
         {choice ? (
           <Button
@@ -88,19 +75,8 @@ export function ProductCard({
           >
             Ver tallas
           </Button>
-        ) : onQuickAdd ? (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onQuickAdd(product)}
-            aria-label={`Cotizar ${product.name}`}
-          >
-            + Cotizar
-          </Button>
         ) : (
-          <Button variant="outline" size="sm" href={href} aria-label={`Cotizar ${product.name}`}>
-            + Cotizar
-          </Button>
+          <QuickAddButton product={product} categoryName={categoryName} />
         )}
       </div>
     </article>
