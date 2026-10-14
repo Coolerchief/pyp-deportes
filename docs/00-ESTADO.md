@@ -150,7 +150,7 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T3.6 (mensaje de WhatsApp en `packages/shared/src/whatsapp.ts`: completo, compacto y sin folio, y `buildWaUrl`, que elige el formato según el largo de la URL; adaptador `quoteMessageInput` en `lib/commerce`). Pruebas con *snapshots* de los tres formatos; una lista de 100 líneas da una URL válida de 4 000 caracteres o menos con folio.
 
-**Hecho:** T3.7 (Edge Function `supabase/functions/submit-quote`: CORS con lista, Turnstile, validación con el mismo `QuoteSubmissionSchema` del formulario, límite de 5 por hora por IP y por teléfono leído de `settings`, y `create_quote_request`). Responde 201, 200 (reintento), 400, 403, 409, 429 y 500; 25 pruebas en Deno, una por código de respuesta más la capa de Siteverify y PostgREST (`pnpm test:functions`, dentro de `pnpm test` y de CI). `packages/shared` ahora importa con extensión `.ts` para que Deno lo cargue tal cual. `pnpm functions:deploy` la despliega a pyp-dev.
+**Hecho:** T3.7 (Edge Function `supabase/functions/submit-quote`: CORS con lista, Turnstile, validación con el mismo `QuoteSubmissionSchema` del formulario, límite de 5 por hora por IP y por teléfono leído de `settings`, y `create_quote_request`). Responde 201, 200 (reintento), 400, 403, 409, 429 y 500; 25 pruebas en Deno, una por código de respuesta más la capa de Siteverify y PostgREST (`pnpm test:functions`, dentro de `pnpm test` y de CI). `packages/shared` ahora importa con extensión `.ts` para que Deno lo cargue tal cual. `pnpm functions:deploy` la despliega a pyp-dev. Probada en vivo en pyp-dev el 14-oct-2026 con datos inventados: 204 (CORS), 403 (origen y token), 405, 400, 201, 200 (reintento, mismo folio), 409 y 429 al sexto envío del mismo teléfono; en la base, 5 solicitudes `PYP-2026-000001` a `000005` con IP solo como hash de 64 caracteres, líneas con nombre y SKU tomados del catálogo e historial `new`.
 
 **Siguiente paso:** T3.8 (envío desde el sitio: Turnstile, tiempo máximo de 6 s, respaldo sin folio, paso 3 y botón "Abrir WhatsApp").
 
@@ -165,7 +165,6 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 - ☐ Decidir el mapa de Visítanos e Inicio: embebido o imagen.
 - ☐ Definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:setup` para entrar como `admin@pyp.test`.
 - ☐ *Environment* `production` con aprobación y los secretos de Supabase (pospuesto).
-- ☐ Renovar la sesión de la CLI de Supabase (`node_modules\.bin\supabase login` en tu terminal; la actual dice "Invalid access token") y correr `pnpm functions:deploy` para publicar `submit-quote` en pyp-dev y probarla de punta a punta.
 - ☐ Turnstile real: crear el sitio en Cloudflare (dominio `workers.dev` y luego el definitivo) y dar la llave pública (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`) y la secreta (`TURNSTILE_SECRET_KEY`). En pyp-dev y en pruebas se usan las llaves de prueba públicas de Cloudflare.
 - ☐ Desplegar `submit-quote` a producción con sus secretos (`TURNSTILE_SECRET_KEY`, `IP_HASH_SALT` y `ALLOWED_ORIGINS` con el origen de `workers.dev`): falta un paso en `db-production.yml` o un flujo propio; no se lanza sin tu permiso.
 - ☐ Publicar `develop` en `main` cuando se quiera revisar la fase 2 en `workers.dev` y medir Lighthouse.
