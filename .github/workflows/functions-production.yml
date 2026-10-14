@@ -1,0 +1,72 @@
+name: Functions production
+
+# Deploys the Edge Functions (today submit-quote, T3.7) to the production Supabase project and
+# checks them. Production is never linked (CLAUDE.md, rule 8): every CLI call uses
+# --project-ref. TURNSTILE_SECRET_KEY is loaded by hand in Supabase (Edge Functions → Secrets),
+# never through the repository; scripts/functions-prod.mjs only checks that it exists, creates
+# IP_HASH_SALT once and sets ALLOWED_ORIGINS from the input below. Safe to run again.
+#
+# Repository secrets: SUPABASE_PROD_PROJECT_REF and SUPABASE_ACCESS_TOKEN.
+#
+# Only by hand from the Actions tab, and only from main.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Escribe PRODUCCION para desplegar las funciones en producción
+        required: true
+        type: string
+      allowed_origins:
+        description: Orígenes con CORS (https, separados por comas)
+        required: true
+        type: string
+        default: https://pyp-deportes.gael-marroquin2004.workers.dev,https://pypdeportescoapa.com,https://www.pypdeportescoapa.com
+
+concurrency:
+  group: functions-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: submit-quote
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SUPABASE_PROD_PROJECT_REF: ${{ secrets.SUPABASE_PROD_PROJECT_REF }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROD_ALLOWED_ORIGINS: ${{ inputs.allowed_origins }}
+    steps:
+      - name: Only from main
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "::error::Este flujo solo corre desde main (se lanzó desde ${GITHUB_REF})."
+          exit 1
+
+      - name: Confirm
+        if: inputs.confirm != 'PRODUCCION'
+        run: |
+          echo "::error::Escribe PRODUCCION en el campo de confirmación para continuar."
+          exit 1
+
+      - uses: actions/checkout@v5
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.120.0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Secrets (Turnstile present, salt once, allowed origins)
+        run: node scripts/functions-prod.mjs secrets
+
+      # verify_jwt = false and the import map come from supabase/config.toml.
+      - name: Deploy submit-quote
+        run: supabase functions deploy submit-quote --project-ref "$SUPABASE_PROD_PROJECT_REF" --use-api
+
+      - name: Verify
+        run: node scripts/functions-prod.mjs verify

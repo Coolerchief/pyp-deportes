@@ -47,7 +47,7 @@ pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev con admin_im
 pnpm functions:deploy   # secretos y despliegue de submit-quote en pyp-dev (sin Docker)
 ```
 
-**Despliegue.** `.github/workflows/deploy.yml` publica en Cloudflare Workers (`apps/web/wrangler.jsonc`) con cada push a `main` o a mano desde Actions. No subas ni fusiones nada a `main` sin que el usuario lo pida. `ci.yml` corre los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP) en cada PR. `db-production.yml` (T1.8) aplica migraciones, semilla base, ajustes de Auth y primer admin al proyecto de producción con `supabase db push --db-url` y `scripts/supabase-prod.mjs`, sin enlazarlo; lee secretos del repositorio y solo corre a mano desde `main` (escribiendo `PRODUCCION`). No lo lances sin que el usuario lo pida.
+**Despliegue.** `.github/workflows/deploy.yml` publica en Cloudflare Workers (`apps/web/wrangler.jsonc`) con cada push a `main` o a mano desde Actions. No subas ni fusiones nada a `main` sin que el usuario lo pida. `ci.yml` corre los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP) en cada PR. `db-production.yml` (T1.8) aplica migraciones, semilla base, ajustes de Auth y primer admin al proyecto de producción con `supabase db push --db-url` y `scripts/supabase-prod.mjs`, sin enlazarlo; lee secretos del repositorio y solo corre a mano desde `main` (escribiendo `PRODUCCION`). No lo lances sin que el usuario lo pida. `functions-production.yml` despliega las Edge Functions a producción con `--project-ref` y `scripts/functions-prod.mjs` (misma regla: manual, desde `main`, con `PRODUCCION`, nunca sin permiso).
 
 **Modo sin Docker.** No hay base de datos local: los comandos `db:*` y `test:db` usan el proyecto remoto de desarrollo **pyp-dev** con `--linked`, a través de `scripts/supabase-dev.mjs`, que aborta si el proyecto enlazado no es `SUPABASE_DEV_PROJECT_REF`. La configuración vive en `.env.local` de la raíz (plantilla: `.env.example`). En GitHub Actions, el trabajo `db` corre pgTAP contra un Postgres desechable del runner. Detalle: `docs/06-IMPLEMENTATION-PLAN.md`, fase 1.
 
@@ -74,9 +74,9 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   wrangler.jsonc     Worker de static assets que sirve apps/web/out
 packages/shared/     Esquemas Zod, tipos, folio, normalización de texto (sin dependencias de Node); database.types.ts generado
 supabase/            migrations/, functions/ (submit-quote: handler con dependencias inyectadas + index.ts; _shared/ con CORS, PostgREST y Turnstile), seeds/ (base.sql para todos, dev-admin.sql solo desarrollo), tests/
-scripts/             supabase-dev.mjs (candado pyp-dev), supabase-prod.mjs (solo GitHub Actions), pgtap.mjs, folio-concurrency.mjs (prueba 8) e import-catalog.mjs, con sus pruebas
+scripts/             supabase-dev.mjs (candado pyp-dev), supabase-prod.mjs y functions-prod.mjs (solo GitHub Actions), pgtap.mjs, folio-concurrency.mjs (prueba 8) e import-catalog.mjs, con sus pruebas
 workers/cron/        Latido, publicación nocturna, respaldo
-.github/workflows/   ci.yml, deploy.yml y db-production.yml
+.github/workflows/   ci.yml, deploy.yml, db-production.yml y functions-production.yml
 docs/                Documentación (fuente de verdad)
 design/              Referencia visual exportada de Claude Design (no es código de la app)
 ```
