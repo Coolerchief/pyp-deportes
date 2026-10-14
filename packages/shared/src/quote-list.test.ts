@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   addToQuote,
   EMPTY_QUOTE,
+  groupQuoteLines,
   piecesOf,
   type QuoteAddition,
   QUOTE_STORAGE_VERSION,
@@ -178,5 +179,39 @@ describe('restoreQuote', () => {
     expect(restoreQuote('basura', QUOTE_STORAGE_VERSION, NOW)).toEqual(EMPTY_QUOTE);
     const mixed = { ...saved, lines: [...saved.lines, { lineId: 'x', quantity: -1 }] };
     expect(restoreQuote(mixed, QUOTE_STORAGE_VERSION, NOW).lines).toHaveLength(1);
+  });
+});
+
+describe('groupQuoteLines', () => {
+  it('groups lines by product in the order they were added', () => {
+    let { state } = addToQuote(
+      EMPTY_QUOTE,
+      uniform(
+        [
+          [1, 'CH', 3],
+          [2, 'M', 6],
+        ],
+        { personalize: true, notes: 'Escudo' },
+      ),
+      NOW,
+      newId,
+    );
+    ({ state } = addToQuote(
+      state,
+      {
+        ...uniform([[9, '#5', 12]]),
+        productId: uuid(2),
+        product: { name: 'Balón', sku: 'BAL', slug: 'balon', image: null },
+      },
+      NOW,
+      newId,
+    ));
+    const groups = groupQuoteLines(state.lines);
+    expect(
+      groups.map((g) => [g.snapshot.name, g.pieces, g.lines.length, g.personalize, g.notes]),
+    ).toEqual([
+      ['Uniforme', 9, 2, true, 'Escudo'],
+      ['Balón', 12, 1, false, ''],
+    ]);
   });
 });

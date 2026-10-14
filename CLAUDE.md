@@ -57,13 +57,13 @@ Antes de dar una tarea por terminada: `pnpm lint && pnpm typecheck && pnpm test`
 apps/web/            Next.js: sitio público en app/(public), panel en app/admin (fase 4)
   app/dev/           Hojas de muestra (page.dev.tsx): solo existen con `next dev`, nunca en el build
   components/brand/  Logo, Placa, DobleDiagonal, PatronCancha, CorteA13, ImagenGenerica
-  components/ui/     Button, Badge, Chip, FormField, Sheet, EmptyState, Skeleton, SectionHeader
+  components/ui/     Button, Badge, Chip, FormField, Sheet, EmptyState, Skeleton, SectionHeader, QuantityInput
   components/layout/ SiteHeader (menú móvil y mega menú), SiteFooter, WhatsAppFab: marco de app/(public)/layout.tsx
   components/catalog/ ProductCard, ProductGrid, ListingPage/ListingResults (filtros y orden), SearchPage, SportTiles, CategoryTiles, VolumeNote
   components/product/ ProductPage, ProductGallery y VariantMatrix (cantidades por talla, atajos, personalización, barra de total)
   components/home/   Secciones de Inicio (HomeHero, UniformsBand, HowItWorks, AdvisorCard, StoreInfo)
   components/content/ SitePhoto: foto de site_media o su marcador
-  components/quote/  AddedNotice, QuoteBar, QuickAddButton/InQuoteBadge (y en T3.4+ la página de cotización)
+  components/quote/  AddedNotice, QuoteBar, QuickAddButton/InQuoteBadge y la página /cotizacion (QuotePage, StepIndicator, QuoteListStep, QuoteLineCard, PersonalizationEditor)
   lib/               data (catalog.json y settings.json del build), navigation (menús, contacto y rutas), listing (listados estáticos), images/loader (anchos de R2), indexing
   lib/commerce/      useQuote (lista de cotización, pyp.quote.v1), CommerceProvider/useCommerceMode, interfaces CartService/PricingService/CheckoutProvider
   scripts/           Generador de imágenes genéricas (placeholders.json + generate-placeholders.mjs)

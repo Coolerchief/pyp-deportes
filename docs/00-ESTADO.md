@@ -144,7 +144,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T3.3 (aviso de agregado con "Ver mi cotización" y "Seguir viendo el catálogo", `QuoteBar` en móvil, contador de piezas en el header, "+ Cotizar" en las tarjetas sin variantes y "En tu cotización" en la tarjeta). E2E: agregar desde la ficha y desde un listado, volver al listado, la barra móvil sobrevive a recargar y el botón de WhatsApp sube.
 
-**Siguiente paso:** T3.4 (paso 1 de `/cotizacion`: la lista, editar cantidades, quitar con deshacer, editar personalización, lista vacía y productos no disponibles).
+**Hecho:** T3.4 (`/cotizacion` paso 1: lista agrupada por producto con desglose, "Editar cantidades", quitar con "Deshacer" de 5 s, editor de personalización, lista vacía con deportes, productos "No disponible" que bloquean "Continuar", aviso si el navegador no guarda, indicador de pasos y resumen). Pruebas de componentes y E2E del flujo hasta "Continuar". El paso 2 es un marcador hasta T3.5.
+
+**Siguiente paso:** T3.5 (paso 2: formulario con validación, resumen de errores, atajos de fecha y datos recordados).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
@@ -165,10 +167,11 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
   - Accesos grandes de los deportes.
   - Grupo "Deporte" en los filtros.
   - Reparto de los atajos "Equipo de 12 / 18 / 24" en productos sin tallas CH–XG.
+  - "Editar cantidades" en el paso 1 (el diseño solo muestra pastillas).
   - Footer sin la frase "Desde 1969".
 
 **Técnicos, con tarea asignada**
-- T3.4–T3.8: la página `/cotizacion` (hoy "Ver mi cotización" y el contador llevan a un 404), el formulario, el mensaje de WhatsApp y el envío con folio.
+- T3.5–T3.8: el formulario del paso 2, el mensaje de WhatsApp y el envío con folio (el paso 1 de `/cotizacion` ya existe).
 - T3.2: matriz de cantidades, personalización y "Agregar a mi cotización" en la ficha.
 - T3.9: eventos de analítica (`search`, `view_item_list`, `whatsapp_click`…).
 - Fase 5: galería de "Equipos estrenando", Visítanos, Uniformes, aviso de privacidad, 404, sitemap y JSON-LD de la tienda.

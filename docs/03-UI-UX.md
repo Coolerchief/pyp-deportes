@@ -469,6 +469,18 @@ Ver §7.5. En móvil la barra de total queda fija abajo; al agregar se abre el A
 ### 8.6 Mi cotización
 StepIndicator siempre visible. Paso 1: QuoteLines + "+ Seguir agregando productos" + total + "Continuar". Paso 2: QuoteForm. Paso 3: QuoteConfirmation. Los pasos son estados de la misma página.
 
+**Implementación del paso 1 (T3.4, 13-oct-2026).** `/cotizacion` (`app/(public)/cotizacion`) con `QuotePage`, `StepIndicator`, `QuoteListStep`, `QuoteLineCard`, `PersonalizationEditor`, `UndoNotice` y `components/ui/QuantityInput`, el mismo control de la ficha. La agrupación por producto vive en `groupQuoteLines` (`packages/shared`).
+- **Cantidades:** el diseño muestra el desglose solo como pastillas, pero APP-FLOW §4.2 pide poder cambiar las cantidades. Se resolvió con "Editar cantidades" en cada producto, que cambia las pastillas por un control − / + por variante (mínimo 1) y un botón para quitar esa variante; "Listo" vuelve a las pastillas. Decisión pendiente de confirmar.
+- **Quitar:** el ícono de basura quita el producto entero, y el aviso "Quitaste {producto}" con "Deshacer" dura 5 s. Lo mismo al quitar una sola variante.
+- **Personalización:** "Editar" abre el editor. Guardar con el texto vacío, o "Quitar personalización", la elimina. Un producto personalizable sin personalización ofrece "+ Agregar personalización".
+- **No disponible:** al cargar `catalog.json`, un producto que ya no está se marca "No disponible. Quítalo para enviar tu lista." y "Continuar" queda desactivado hasta quitarlo.
+- **Lista vacía:** "Tu lista está vacía" con "Ver catálogo" y los deportes; el indicador de pasos se oculta.
+- **Otros:**
+  - Si el navegador no guarda, se avisa "Tu lista no se guardará si cierras esta página.".
+  - "+ Seguir agregando productos" vuelve al último listado (o a `/catalogo`).
+  - En escritorio, el resumen es un panel fijo a la derecha.
+- **Navegación entre pasos:** "Continuar" lleva a `?paso=2`, que es una nueva entrada del historial, así que "atrás" regresa al paso 1. `?paso=2` con la lista vacía vuelve al paso 1. El formulario del paso 2 llega en T3.5; mientras tanto ese paso solo muestra "Tus datos" y "Regresar a tu lista".
+
 ### 8.7 Visítanos (incluye Nosotros)
 Mapa + dirección + estado + "Cómo llegar" / "Llamar" + `[REFERENCIAS PARA LLEGAR Y ESTACIONAMIENTO]` · **Horario** (tabla por día) · **Contacto** (WhatsApp, teléfono, Instagram, Facebook como filas con flecha) · **Nosotros** (ancla `#nosotros`, sobre `gis`): "Desde 1969", descripción, `[HISTORIA DE LA TIENDA]`, `[FOTO DE LA TIENDA]` y `[FOTO DEL TALLER]`. No existe una página `/nosotros` aparte.
 

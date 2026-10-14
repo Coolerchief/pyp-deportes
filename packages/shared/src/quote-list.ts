@@ -214,3 +214,40 @@ export function restoreQuote(saved: unknown, version: number, now: string): Quot
     .slice(0, QUOTE_LIMITS.itemsMax);
   return { lines: valid, updatedAt };
 }
+
+export type QuoteGroup = {
+  productId: string;
+  /** Lines of the product, in the order they were added. */
+  lines: QuoteLine[];
+  pieces: number;
+  snapshot: QuoteLine['snapshot'];
+  personalize: boolean;
+  notes: string;
+};
+
+/**
+ * Lines grouped by product, as the list shows them (TRD §6.3: one line per variant, grouped in
+ * the UI). Products keep the order in which they were first added.
+ */
+export function groupQuoteLines(lines: readonly QuoteLine[]): QuoteGroup[] {
+  const groups = new Map<string, QuoteGroup>();
+  for (const line of lines) {
+    const group = groups.get(line.productId);
+    if (group) {
+      group.lines.push(line);
+      group.pieces += line.quantity;
+      group.personalize ||= line.personalize;
+      group.notes ||= line.notes;
+    } else {
+      groups.set(line.productId, {
+        productId: line.productId,
+        lines: [line],
+        pieces: line.quantity,
+        snapshot: line.snapshot,
+        personalize: line.personalize,
+        notes: line.notes,
+      });
+    }
+  }
+  return [...groups.values()];
+}
