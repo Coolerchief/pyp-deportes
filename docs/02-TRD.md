@@ -81,7 +81,7 @@ flowchart LR
 | Componentes admin | shadcn/ui + Radix | última | Solo en `/admin`; el sitio público usa componentes propios de marca |
 | Tipografía | Barlow + Barlow Condensed | vía `next/font/local` (autoalojadas) | Los 8 `woff2` del paquete de diseño (licencia OFL) copiados a `apps/web/app/fonts/`: solo las caras que usa la escala, sin descargar de Google en el build |
 | Estilos (build) | `@tailwindcss/postcss` | 4.x | Plugin de PostCSS de Tailwind v4 |
-| Estado del cliente | Zustand + `persist` | 5.x | Lista de cotización y datos del solicitante |
+| Estado del cliente | Zustand + `persist` | 5.0 (instalado en T3.1) | Lista de cotización y datos del solicitante |
 | Formularios | React Hook Form + Zod | Zod 4.x | Esquemas Zod compartidos con Edge Functions; Zod es dependencia de `packages/shared` |
 | Búsqueda | MiniSearch | 7.2 (en `packages/shared`, entrada `@pyp/shared/search`) | Índice construido en el navegador desde `catalog.json`; `autoSuggest` para "¿Quisiste decir…?" |
 | Íconos | lucide-react · simple-icons (solo el glifo de WhatsApp) | 1.55 · 16.35 | Trazo 2 px, 20/24 px (`03-UI-UX.md` §5). `simple-icons` se instaló en T2.2; se importa solo `siWhatsapp` |
@@ -229,6 +229,14 @@ type QuoteLine = {
 - Al cargar el sitio, las líneas cuyo `productId` ya no esté en `catalog.json` se marcan como "No disponible" (no se borran en silencio).
 - **Al agregar** se abre `AddedNotice` (hoja inferior en móvil, aviso bajo "Mi cotización" en escritorio) con el producto, sus variantes y el total de la lista. No hay toast ni panel lateral de cotización: el botón del header y la `QuoteBar` navegan a `/cotizacion`.
 - **Editar personalización** desde la lista actualiza `personalize` y `notes` de todas las líneas del mismo producto.
+- **Implementación (T3.1, 13-oct-2026).**
+  - **Reglas:** en `packages/shared/src/quote-list.ts`, con pruebas: `addToQuote`, `setQuantity`, `removeLines`/`restoreLines` para "Deshacer", `setPersonalization`, `quoteTotals`, `piecesOf`, `unavailableLineIds` y `restoreQuote`. `QuoteLineSchema` valida lo guardado.
+  - **Almacén:** `useQuote` en `apps/web/lib/commerce/quote-store.ts` (Zustand `persist`, clave `pyp.quote.v1`, versión 1).
+  - **Lectura de lo guardado:** se hace en un efecto de `CommerceProvider` (`skipHydration`), así que el HTML estático y el primer render del navegador coinciden; antes de leer, la lista cuenta 0 piezas.
+  - **Lo que se descarta:** una versión desconocida, datos rotos o una lista con más de 30 días sin cambios empiezan vacíos; las líneas inválidas se descartan una por una.
+  - **Sin almacenamiento:** si el navegador no deja guardar, cada lectura y escritura cae a memoria y `storageAvailable = false` permite avisar "Tu lista no se guardará si cierras esta página." (T3.4).
+  - **Al agregar:** si la lista llega a 100 renglones, las variantes nuevas se omiten y se informan (`skipped`) para mostrar el aviso de §4.1. Una variante que ya está en la lista suma aunque se haya llegado al tope.
+  - **Datos del solicitante (`pyp.requester.v1`):** llegan con el formulario (T3.5).
 
 ### 6.4 Envío de la cotización
 
@@ -473,6 +481,13 @@ interface CheckoutProvider {     // hoy: WhatsAppQuoteCheckout
 
 - Los componentes **nunca** leen flags directamente: usan `useCommerceMode()` → `'catalog' | 'store'`.
 - `PriceSlot` existe en `ProductCard` y `ProductDetail` desde v1 y no renderiza nada en modo catálogo.
+- **Implementación (T3.1).** `apps/web/lib/commerce`:
+  - Interfaces en `types.ts` (`CartService`, `PricingService`, `CheckoutProvider`, `CommerceMode`).
+  - `quoteCart`: el `CartService` sobre `useQuote`.
+  - `catalogPricing`: el `PricingService`, que siempre devuelve `null`.
+  - `CommerceProvider` (en `app/(public)/layout.tsx`) da `useCommerceMode()`, que solo vale `'store'` con `enable_checkout`, y lee la lista guardada.
+  - `useQuoteTotals()`: piezas y productos para el contador (T3.3).
+  - El `CheckoutProvider` de WhatsApp llega en T3.8.
 
 ### 19.2 Flags en `settings`
 

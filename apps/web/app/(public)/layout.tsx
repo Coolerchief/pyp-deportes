@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { SiteFooter, SiteHeader, WhatsAppFab } from '@/components/layout';
+import { CommerceProvider } from '@/lib/commerce';
 import { getBuildData } from '@/lib/data';
 import { buildSiteNav } from '@/lib/navigation';
 
@@ -8,7 +9,7 @@ export default async function PublicLayout({ children }: { children: ReactNode }
   const { catalog, settings } = await getBuildData();
   const nav = buildSiteNav(catalog, settings);
   return (
-    <>
+    <CommerceProvider flags={settings.flags}>
       <a
         href="#contenido"
         className="bg-lima text-noche type-body-strong sr-only z-50 px-4 py-3 focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
@@ -21,6 +22,6 @@ export default async function PublicLayout({ children }: { children: ReactNode }
       </main>
       <SiteFooter nav={nav} />
       <WhatsAppFab href={nav.contact.whatsappUrl} />
-    </>
+    </CommerceProvider>
   );
 }
