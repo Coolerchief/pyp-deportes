@@ -17,7 +17,7 @@ export default async function CotizacionPage() {
     <div className="container-page pt-4 pb-16 lg:pt-8 lg:pb-20">
       {/* useSearchParams (?paso=) suspends while prerendering. */}
       <Suspense>
-        <QuotePage sports={nav.sports} />
+        <QuotePage sports={nav.sports} privacyVersion={settings.privacyVersion} />
       </Suspense>
     </div>
   );

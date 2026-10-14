@@ -38,7 +38,7 @@ describe('QuotePage', () => {
         },
       ],
     });
-    render(<QuotePage sports={[]} />);
+    render(<QuotePage sports={[]} privacyVersion="2026-10" />);
     const steps = screen.getByRole('navigation', { name: 'Pasos' });
     expect(steps.querySelector('[aria-current="step"]')).toHaveTextContent('1 · Tu lista');
   });
@@ -46,7 +46,7 @@ describe('QuotePage', () => {
   it('sends ?paso=2 with an empty list back to step 1', async () => {
     nav.search = '?paso=2';
     useQuote.setState({ ...EMPTY_QUOTE, hydrated: true });
-    render(<QuotePage sports={[]} />);
+    render(<QuotePage sports={[]} privacyVersion="2026-10" />);
     await waitFor(() => expect(nav.replace).toHaveBeenCalledWith('/cotizacion'));
   });
 });
