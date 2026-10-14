@@ -78,9 +78,13 @@ jobs:
           BUILD_DATA_FILE: fixtures/build-data-empty.json
         run: pnpm build
 
+      # Playwright intercepts submit-quote and Turnstile (e2e/submit.spec.ts): a fake project URL
+      # and Cloudflare's public test site key are enough for the send to run.
       - name: Build
         env:
           BUILD_DATA_FILE: fixtures/build-data.json
+          NEXT_PUBLIC_SUPABASE_URL: https://pyp-e2e.supabase.co
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
         run: pnpm build
 
       - name: Install Playwright Chromium

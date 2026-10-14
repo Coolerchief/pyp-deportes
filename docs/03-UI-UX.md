@@ -365,11 +365,13 @@ Dos variantes de la misma página:
 - **Fecha:** la mínima es hoy (Ciudad de México). Los atajos "Esta semana / 2 semanas / 1 mes" ponen hoy + 7, + 14 o + 30 y se marcan si coinciden. El diseño de escritorio no los muestra; se dejan también ahí.
 - **Datos recordados (`pyp.requester.v1`):** al enviar datos válidos se guardan nombre, WhatsApp, tipo, institución, entrega y factura (nunca el aviso, la fecha ni la nota); duran 30 días, como la lista, y prellenan el formulario la siguiente vez.
 - **Botón de envío:** en escritorio va en el panel "Tu lista", fuera del `<form>` (usa el atributo `form`). En móvil hay un resumen plegable arriba.
-- **Pendiente (T3.6–T3.8):** el mensaje de WhatsApp, Turnstile y el envío con folio. Mientras tanto, un envío válido solo muestra "Tus datos están completos.".
+- **Envío (T3.8):** el botón se desactiva y dice "Enviando…" mientras dura el envío; sin conexión, debajo del botón aparece "Sin conexión. Tu lista está guardada: inténtalo de nuevo cuando tengas señal." (con ícono) y no se envía nada. El widget de Turnstile va debajo del formulario y solo se ve si Cloudflare pide interacción.
 
 **QuoteSummary** (escritorio, paso 1) — panel "Resumen" sobre `gis`: productos, total en `number`, "Continuar" y la nota de guardado.
 
 **QuoteConfirmation** (`cotizacion-3-confirmacion`) — PatrónCancha: eyebrow lima "SOLICITUD ENVIADA" · `display` "¡LISTO!" · folio en Placa lima con botón copiar · "Te contestamos por WhatsApp en horario de tienda. Si WhatsApp no se abrió, toca el botón." · "Abrir WhatsApp" (whatsapp lg) · "Seguir viendo el catálogo" (outline blanco) · "Vaciar mi lista" (ghost lima). Variante **sin folio** (fallback): mismo diseño sin la placa de folio y con el titular "Tu lista está lista para enviarse".
+
+**Implementación del paso 3 (T3.8, 14-oct-2026).** `QuoteConfirmation` (`components/quote`), a todo lo ancho bajo el header (`/cotizacion` ya no envuelve los pasos en `container-page`: cada paso lo hace). El foco va al titular. WhatsApp se abre solo al mostrarse la confirmación (así `?enviada=` ya está en el historial y "atrás" vuelve a ella) y solo una vez: recargar no lo reabre. "Copiar folio" usa el portapapeles y dice "Copiado"; "Seguir viendo el catálogo" regresa al último listado; "Vaciar mi lista" vacía y deja "Vaciamos tu lista." (no aparece si la lista ya está vacía). La doble diagonal lima va a la derecha en escritorio y abajo a la derecha en móvil. `Button` ganó `ghost` con `tone="dark"` (texto `lima`). Diferencias con el diseño: "¡LISTO!" usa el estilo `display` de la escala (48/80 px); el diseño lo dibuja más grande. La variante sin folio, que no está diseñada, no lleva el eyebrow "Solicitud enviada" (no se guardó nada) y su titular usa `h1` porque es largo. Pendiente de confirmar.
 
 ### 7.7 Contenido
 

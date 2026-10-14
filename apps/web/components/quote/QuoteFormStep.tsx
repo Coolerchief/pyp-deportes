@@ -1,7 +1,7 @@
 'use client';
 
 import { groupQuoteLines, piecesText, type QuoteRequester, quoteTotals } from '@pyp/shared';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, CircleAlert } from 'lucide-react';
 import Link from 'next/link';
 import { useId, useMemo, useState } from 'react';
 import { WhatsAppGlyph } from '@/components/layout/WhatsAppGlyph';
@@ -46,9 +46,15 @@ function ListSummary() {
 export function QuoteFormStep({
   privacyVersion,
   onValid,
+  sending = false,
+  notice = null,
 }: {
   privacyVersion: string;
   onValid: (values: QuoteRequester) => void;
+  /** While sending, the button is disabled and says "Enviando…" (double tap, APP-FLOW §4.3). */
+  sending?: boolean;
+  /** A message under the button, e.g. without connection. */
+  notice?: string | null;
 }) {
   const formId = useId();
   const lines = useQuote((s) => s.lines);
@@ -63,10 +69,17 @@ export function QuoteFormStep({
       type="submit"
       form={formId}
       fullWidth
+      loading={sending}
       icon={<WhatsAppGlyph size={22} />}
     >
       Enviar cotización por WhatsApp
     </Button>
+  );
+  const message = notice && (
+    <p role="alert" className="type-small text-rojo-profundo flex items-start gap-1 font-medium">
+      <CircleAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+      {notice}
+    </p>
   );
 
   return (
@@ -101,6 +114,7 @@ export function QuoteFormStep({
 
         <div className="flex flex-col gap-2 lg:hidden">
           {send}
+          {message}
           <p className="type-caption text-grafito-suave">{NOTE}</p>
         </div>
       </div>
@@ -121,6 +135,7 @@ export function QuoteFormStep({
           <span className="type-number">{piecesText(pieces)}</span>
         </div>
         {send}
+        {message}
         <p className="type-caption text-grafito-suave">{NOTE}</p>
       </aside>
     </div>

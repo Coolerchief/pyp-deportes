@@ -33,7 +33,7 @@ type ButtonProps = {
   href?: string;
   /** With `href`: an outside link (wa.me, maps) that opens in a new tab. */
   external?: boolean;
-  /** `outline` on a dark background (noche, cancha): white border and text. */
+  /** On a dark background (noche, cancha): `outline` in white, `ghost` in lima. */
   tone?: 'light' | 'dark';
   type?: 'button' | 'submit' | 'reset';
   /** id of the form a submit button belongs to when it sits outside it. */
@@ -98,9 +98,11 @@ export function Button({
     size === 'sm' &&
       !placa &&
       "relative after:absolute after:inset-x-0 after:-inset-y-0.5 after:content-['']",
-    variant === 'outline' && tone === 'dark'
+    tone === 'dark' && variant === 'outline'
       ? 'text-blanco bg-transparent shadow-[inset_0_0_0_2px_var(--color-blanco)] px-6'
-      : VARIANT[variant],
+      : tone === 'dark' && variant === 'ghost'
+        ? 'text-lima bg-transparent px-2 hover:underline underline-offset-4'
+        : VARIANT[variant],
     fullWidth && 'w-full',
     inactive && 'pointer-events-none opacity-40',
   );

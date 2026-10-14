@@ -161,6 +161,14 @@ describe('buildWaUrl', () => {
     expect(message).toMatch(/\n… y \d+ productos más\n/);
   });
 
+  it('says "1 pieza" in the title for a single piece', () => {
+    const one = buildQuoteMessage({
+      ...input,
+      products: [{ ...input.products[1]!, lines: [{ label: '#5', quantity: 1 }] }],
+    });
+    expect(one).toContain('*Productos (1 · 1 pieza)*');
+  });
+
   it('always sends the full message without folio, however long', () => {
     const { url, format } = buildWaUrl(NUMBER, { ...big, folio: null });
     expect(format).toBe('full');

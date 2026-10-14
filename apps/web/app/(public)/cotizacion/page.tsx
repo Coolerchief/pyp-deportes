@@ -9,16 +9,18 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: `Mi cotización · ${settings.siteName}` };
 }
 
-/** /cotizacion (T3.4): a static shell; the list lives in the visitor's browser. */
+/** /cotizacion (T3.4–T3.8): a static shell; the list lives in the visitor's browser. */
 export default async function CotizacionPage() {
   const { catalog, settings } = await getBuildData();
   const nav = buildSiteNav(catalog, settings);
   return (
-    <div className="container-page pt-4 pb-16 lg:pt-8 lg:pb-20">
-      {/* useSearchParams (?paso=) suspends while prerendering. */}
-      <Suspense>
-        <QuotePage sports={nav.sports} privacyVersion={settings.privacyVersion} />
-      </Suspense>
-    </div>
+    // useSearchParams (?paso=, ?enviada=) suspends while prerendering.
+    <Suspense>
+      <QuotePage
+        sports={nav.sports}
+        privacyVersion={settings.privacyVersion}
+        whatsappNumber={settings.whatsappSalesNumber}
+      />
+    </Suspense>
   );
 }
