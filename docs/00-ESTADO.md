@@ -140,7 +140,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T3.1 (lista de cotización `useQuote` con Zustand, guardada en `pyp.quote.v1` con versión; reglas de §4.1 y §4.5 en `packages/shared/src/quote-list.ts` (13 pruebas): una línea por variante, suma con tope 9 999, nota nueva que sustituye a la anterior, 100 renglones, quitar con deshacer, editar la personalización de un producto, descartar tras 30 días y marcar "No disponible". Funciona en memoria si el navegador no deja guardar. `lib/commerce` con `CartService`, `PricingService`, `CheckoutProvider`, `useCommerceMode()` y `useQuoteTotals()`. Todavía nada en la página agrega a la lista: eso llega en T3.2 y T3.3.
 
-**Siguiente paso:** T3.2 (`VariantMatrix`, personalización y barra de total en la ficha).
+**Hecho:** T3.2 (matriz de cantidades en la ficha: una o dos columnas, selector de color, atajos "Equipo de 12 / 18 / 24", teclado, personalización y barra de total fija en móvil; "Agregar a mi cotización" guarda una línea por variante). Capturar 20 piezas en 4 tallas solo con teclado toma menos de 30 s (E2E). Reparto de los atajos generalizado y documentado en UI/UX §7.5.
+
+**Siguiente paso:** T3.3 (aviso de agregado, `QuoteBar`, contador del header y "+ Cotizar" en tarjetas).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
@@ -160,10 +162,11 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
   - "valon" muestra resultados con la sugerencia.
   - Accesos grandes de los deportes.
   - Grupo "Deporte" en los filtros.
+  - Reparto de los atajos "Equipo de 12 / 18 / 24" en productos sin tallas CH–XG.
   - Footer sin la frase "Desde 1969".
 
 **Técnicos, con tarea asignada**
-- T3.2–T3.3: contador del header, "+ Cotizar" desde la tarjeta y "En tu cotización" (la lista y `useCommerceMode()` ya existen desde T3.1).
+- T3.3: aviso de agregado, `QuoteBar`, contador del header, "+ Cotizar" desde la tarjeta y "En tu cotización" (la lista existe desde T3.1 y la ficha ya agrega desde T3.2).
 - T3.2: matriz de cantidades, personalización y "Agregar a mi cotización" en la ficha.
 - T3.9: eventos de analítica (`search`, `view_item_list`, `whatsapp_click`…).
 - Fase 5: galería de "Equipos estrenando", Visítanos, Uniformes, aviso de privacidad, 404, sitemap y JSON-LD de la tienda.

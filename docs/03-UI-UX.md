@@ -303,6 +303,19 @@ Dos variantes de la misma página:
 - **Barra de total:** "Total" + número en estilo `number` + botón primary "Agregar a mi cotización". Con 0 piezas, el botón se sustituye por "Indica cuántas piezas necesitas por talla". En móvil es fija al borde inferior mientras se ve la ficha; en escritorio va bajo la matriz sobre `gis`.
 - Teclado: Tab entre inputs; ↑/↓ suman o restan; máximo 9 999 por fila.
 
+**Implementación de VariantMatrix (T3.2, 13-oct-2026).** `components/product/VariantMatrix.tsx`, con reglas en `packages/shared/src/variant-matrix.ts` y pruebas. En E2E, capturar 20 piezas en 4 tallas solo con teclado y agregarlas toma menos de 30 s.
+- **Cómo se arman las filas** (`matrixLayout`):
+  - Tallas y varios colores: selector de color con las piezas de cada uno y, debajo, "Rojo: 3 · Azul: 2".
+  - Un solo color para todas las variantes: se indica como "Color: …".
+  - Solo colores: una fila por color.
+  - Solo la variante por defecto: una fila "Piezas".
+  - El título y el aviso usan el nombre de la opción: "Cantidad por talla", "por tamaño", "por peso".
+- **Atajos "Equipo de 12 / 18 / 24"** (solo en la ficha completa y cuando la opción es talla): el diseño reparte entre CH, M, G y XG en proporción 1 : 2 : 2 : 1 (12 → 2, 4, 4, 2). Se generalizó así: si el producto tiene esas tallas, se reparte entre ellas; si no, entre todas sus tallas, siempre dando más a las del centro y con el total exacto. Se aplican al color elegido y sustituyen las cantidades.
+- **Escritura:** campo numérico de 56 px con "−" y "+" de 44 px. Las flechas ↑/↓ suman o restan, se escribe libre y todo se limpia a 0–9 999.
+- **Personalización:** "Quiero personalizarlo" y el texto (500 caracteres, con contador) solo en la ficha completa.
+- **Barra de total:** en móvil va fija abajo (88 px); la ficha deja ese espacio libre y el botón flotante de WhatsApp sube con `--bottom-bar`. En escritorio va bajo la matriz, sobre `gis`. El botón usa la variante compacta (`dense`) para caber junto a "18 piezas".
+- **Al agregar:** se crea una línea por variante con piezas (`useQuote.add`) y las cantidades vuelven a 0. Hasta T3.3, en vez del aviso de agregado se lee "Agregado a tu cotización: 20 piezas." en una región `status`, o el aviso de 100 renglones si se alcanzó el tope.
+
 **ProductInfo** — orden: badges · marca · nombre · SKU · descripción corta · VariantMatrix · personalización · "Preguntar por este producto" (whatsapp) · Especificaciones (tabla) · "Para: Fútbol" (chips) · VolumeNote · relacionados.
 
 **Implementación (T2.7, 12-oct-2026).** `/producto/[slug]`, una página estática por producto publicado (`app/(public)/producto`, `components/product`: `ProductPage` y `ProductGallery`; datos en `lib/product.ts`; reglas en `packages/shared/src/product-detail.ts`, con pruebas).

@@ -6,8 +6,6 @@ import {
   type CatalogJson,
   type CatalogProduct,
   newProductIds,
-  optionValues,
-  pluralLabel,
   productBadges,
   productSpecs,
   relatedProducts,
@@ -23,14 +21,14 @@ export type GalleryImage = { keyBase: string; alt: string; width: number; height
 
 export type ProductPageData = {
   product: CatalogProduct;
+  /** Full page (shortcuts and personalization) or simple page. */
+  customizable: boolean;
   categoryName: string;
   breadcrumbs: Crumb[];
   badges: ReturnType<typeof productBadges>;
   shortDescription: string;
   description: string;
   images: GalleryImage[];
-  /** Option names and values, where the quantity matrix goes in T3.2. */
-  options: { label: string; values: string[] }[];
   specs: SpecRow[];
   sports: { href: string; label: string }[];
   related: CatalogProduct[];
@@ -82,12 +80,6 @@ export function buildProductPage(
       height: i.height,
     }));
 
-  const { o1, o2 } = optionValues(product.variants);
-  const options = [
-    ...(o1.length ? [{ label: pluralLabel(product.option1Name), values: o1 }] : []),
-    ...(o2.length ? [{ label: pluralLabel(product.option2Name ?? 'Color'), values: o2 }] : []),
-  ];
-
   const sportName = new Map(catalog.sports.map((s) => [s.slug, s.name]));
   const sports = product.sports
     .filter((s) => sportName.has(s))
@@ -128,13 +120,13 @@ export function buildProductPage(
 
   return {
     product,
+    customizable: row.is_customizable,
     categoryName,
     breadcrumbs,
     badges: productBadges(product, newIds.has(product.id)),
     shortDescription: row.short_description,
     description: row.description,
     images,
-    options,
     specs: productSpecs({
       ...product,
       customizable: row.is_customizable,

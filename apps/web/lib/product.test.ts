@@ -14,10 +14,7 @@ describe('buildProductPage', () => {
     expect(page?.product.name).toBe('Uniforme de Básquetbol Completo');
     expect(page?.relatedTitle).toBe('Completa el uniforme');
     expect(page?.badges.map((b) => b.label)).toContain('Personalizable');
-    expect(page?.options[0]).toEqual({
-      label: 'Tallas',
-      values: expect.arrayContaining(['CH', 'M']),
-    });
+    expect(page?.customizable).toBe(true);
     expect(page?.specs.map((s) => s.label)).toEqual(['Marca', 'Tallas', 'Colores', 'Técnicas']);
     expect(page?.breadcrumbs.map((b) => b.label)).toEqual([
       'Inicio',

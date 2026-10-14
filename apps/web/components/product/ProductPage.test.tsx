@@ -23,8 +23,8 @@ describe('ProductPage', () => {
       screen.getByRole('heading', { level: 1, name: 'Uniforme de Básquetbol Completo' }),
     ).toBeVisible();
     expect(screen.getByText('SKU UNI-003')).toBeVisible();
-    const options = screen.getByRole('region', { name: 'Opciones disponibles' });
-    expect(within(options).getByRole('heading', { name: 'Tallas' })).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Cantidad por talla' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Equipo de 12' })).toBeInTheDocument();
     expect(screen.getByText('Técnicas')).toBeVisible();
     expect(screen.getByRole('link', { name: 'Básquetbol' })).toHaveAttribute(
       'href',
