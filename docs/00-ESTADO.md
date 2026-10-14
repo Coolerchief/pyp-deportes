@@ -169,11 +169,11 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 - ☐ Decidir el mapa de Visítanos e Inicio: embebido o imagen.
 - ☐ Definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:setup` para entrar como `admin@pyp.test`.
 - ☐ *Environment* `production` con aprobación y los secretos de Supabase (pospuesto).
-- ☐ Turnstile real: crear el sitio en Cloudflare (dominio `workers.dev` y luego el definitivo) y cargar la llave pública como secreto del repositorio `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (ya la lee `deploy.yml`) y la secreta (`TURNSTILE_SECRET_KEY`) para la función de producción. Hasta entonces, publicar en `main` deja todos los envíos sin folio (WhatsApp funciona). En pyp-dev y en pruebas se usan las llaves de prueba públicas de Cloudflare.
+- ☑ Turnstile real (14-oct-2026): widget *Managed* con los hostnames de `workers.dev`, `pypdeportescoapa.com` y `www`; llave pública en el secreto del repositorio `NEXT_PUBLIC_TURNSTILE_SITE_KEY` y secreta cargada por el usuario directo en las Edge Functions de pyp-prod (nunca pasa por el repositorio). En pyp-dev y en pruebas siguen las llaves de prueba de Cloudflare.
 - ☐ Google Analytics 4: crear la propiedad y el flujo web, poner el ID `G-…` en `.env.local` (`NEXT_PUBLIC_GA_ID`, para verlo en DebugView con `pnpm dev`) y como secreto del repositorio del mismo nombre (producción). Decidir si hace falta aviso de cookies por GA4.
 - ☐ Confirmar los orígenes nuevos de `whatsapp_click`: `home` (portada y asesora) y `listing` (listados).
 - ☐ Confirmar dos detalles de la confirmación: "¡LISTO!" con el tamaño `display` de la escala (el diseño lo dibuja más grande) y la variante sin folio sin eyebrow (UI/UX §7.6).
-- ☐ Desplegar `submit-quote` a producción con sus secretos (`TURNSTILE_SECRET_KEY`, `IP_HASH_SALT` y `ALLOWED_ORIGINS` con el origen de `workers.dev`): falta un paso en `db-production.yml` o un flujo propio; no se lanza sin tu permiso.
+- ☐ Desplegar `submit-quote` a producción con el flujo manual `functions-production.yml` (desde `main`, escribiendo `PRODUCCION`): comprueba que exista `TURNSTILE_SECRET_KEY`, crea `IP_HASH_SALT` una vez, pone `ALLOWED_ORIGINS` (por omisión `workers.dev`, `pypdeportescoapa.com` y `www`), despliega y verifica CORS y el `403` sin token. Orden: fusionar `develop` en `main` (también publica el sitio con la llave de Turnstile) y luego correr el flujo. Mientras la función no esté, los envíos de producción salen sin folio. No se lanza sin tu permiso.
 - ☐ Publicar `develop` en `main` cuando se quiera revisar la fase 2 en `workers.dev` y medir Lighthouse.
 - ☐ Confirmar las decisiones tomadas sin diseño ni documento:
   - Glifo oficial de WhatsApp en lugar de la burbuja del diseño.
