@@ -15,6 +15,7 @@ import { Button, EmptyState, Skeleton } from '@/components/ui';
 import { useCatalog } from '@/lib/catalog-client';
 import { useQuote } from '@/lib/commerce';
 import { useAddedNotice } from '@/lib/commerce/added-notice';
+import { useSubmission } from '@/lib/commerce/submission';
 import type { NavLink } from '@/lib/navigation';
 import { ROUTES } from '@/lib/navigation';
 import { PersonalizationEditor } from './PersonalizationEditor';
@@ -52,11 +53,16 @@ export function QuoteListStep({
     () => new Map(catalog?.categories.map((c) => [c.slug, c.name]) ?? []),
     [catalog],
   );
-  // Only known once catalog.json arrived; until then nothing is marked.
-  const unavailable = useMemo(
-    () => (catalog ? unavailableLineIds(lines, new Set(productById.keys())) : new Set<string>()),
-    [catalog, lines, productById],
-  );
+  // Products gone from catalog.json (known once it arrived) and variants the server rejected
+  // when sending (409).
+  const rejected = useSubmission((s) => s.rejectedVariantIds);
+  const unavailable = useMemo(() => {
+    const ids = catalog
+      ? unavailableLineIds(lines, new Set(productById.keys()))
+      : new Set<string>();
+    for (const line of lines) if (rejected.includes(line.variantId)) ids.add(line.lineId);
+    return ids;
+  }, [catalog, lines, productById, rejected]);
   const blocked = groups.some((g) => g.lines.some((l) => unavailable.has(l.lineId)));
   const back = useAddedNotice((s) => s.lastListing) ?? ROUTES.catalog;
   const dismissUndo = useCallback(() => setUndo(null), []);

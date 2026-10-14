@@ -109,6 +109,4 @@ test('step 2 sums up the missing data with the focus, and accepts a valid form',
   await page.getByRole('button', { name: '1 mes' }).click();
   await page.getByRole('checkbox', { name: /aviso de privacidad/ }).check();
   await expect(page.getByRole('alert').filter({ hasText: 'Faltan' })).toBeHidden();
-  await send.click();
-  await expect(page.getByText('Tus datos están completos.')).toBeVisible();
 });

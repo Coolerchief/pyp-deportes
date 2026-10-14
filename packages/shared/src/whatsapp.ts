@@ -3,6 +3,7 @@
 
 import { whatsappUrl } from './contact.ts';
 import { customerTypeLabels, type CustomerType, type DeliveryMethod } from './labels.ts';
+import { piecesText } from './variant-matrix.ts';
 
 /** Above this URL length the compact format is used (only with a folio). */
 export const WA_URL_MAX = 4000;
@@ -66,7 +67,7 @@ function header(input: QuoteMessageInput): string[] {
 
 function productsTitle(input: QuoteMessageInput): string {
   const pieces = input.products.reduce((sum, p) => sum + piecesOf(p), 0);
-  return `*Productos (${input.products.length} · ${pieces} piezas)*`;
+  return `*Productos (${input.products.length} · ${piecesText(pieces)})*`;
 }
 
 /** "Uniforme (UNI-001) — 20 pzs", or with its only variant: "Balón #5 Blanco/Rojo (BAL-…) — 12 pzs". */

@@ -152,7 +152,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T3.7 (Edge Function `supabase/functions/submit-quote`: CORS con lista, Turnstile, validación con el mismo `QuoteSubmissionSchema` del formulario, límite de 5 por hora por IP y por teléfono leído de `settings`, y `create_quote_request`). Responde 201, 200 (reintento), 400, 403, 409, 429 y 500; 25 pruebas en Deno, una por código de respuesta más la capa de Siteverify y PostgREST (`pnpm test:functions`, dentro de `pnpm test` y de CI). `packages/shared` ahora importa con extensión `.ts` para que Deno lo cargue tal cual. `pnpm functions:deploy` la despliega a pyp-dev. Probada en vivo en pyp-dev el 14-oct-2026 con datos inventados: 204 (CORS), 403 (origen y token), 405, 400, 201, 200 (reintento, mismo folio), 409 y 429 al sexto envío del mismo teléfono; en la base, 5 solicitudes `PYP-2026-000001` a `000005` con IP solo como hash de 64 caracteres, líneas con nombre y SKU tomados del catálogo e historial `new`.
 
-**Siguiente paso:** T3.8 (envío desde el sitio: Turnstile, tiempo máximo de 6 s, respaldo sin folio, paso 3 y botón "Abrir WhatsApp").
+**Hecho:** T3.8 (envío desde `/cotizacion`: Turnstile, POST a `submit-quote` con tope de 6 s, WhatsApp con folio o, si algo falla, sin folio; 409 regresa al paso 1 con el producto marcado; sin conexión avisa; paso 3 "¡Listo!" con copiar folio, "Abrir WhatsApp", "Seguir viendo el catálogo" y "Vaciar mi lista", y su variante sin folio). Pruebas de componentes de cada camino y E2E del camino feliz y del respaldo con la función caída. Probado en vivo contra pyp-dev con el Turnstile de prueba: folio `PYP-2026-000006` y, con el límite por IP agotado, `429` → WhatsApp sin folio. De paso, el título del mensaje dice "1 pieza" en singular.
+
+**Siguiente paso:** T3.9 (analítica: `track()` y los eventos del embudo, incluido `quote_submit_error`).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
@@ -165,7 +167,8 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 - ☐ Decidir el mapa de Visítanos e Inicio: embebido o imagen.
 - ☐ Definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:setup` para entrar como `admin@pyp.test`.
 - ☐ *Environment* `production` con aprobación y los secretos de Supabase (pospuesto).
-- ☐ Turnstile real: crear el sitio en Cloudflare (dominio `workers.dev` y luego el definitivo) y dar la llave pública (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`) y la secreta (`TURNSTILE_SECRET_KEY`). En pyp-dev y en pruebas se usan las llaves de prueba públicas de Cloudflare.
+- ☐ Turnstile real: crear el sitio en Cloudflare (dominio `workers.dev` y luego el definitivo) y cargar la llave pública como secreto del repositorio `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (ya la lee `deploy.yml`) y la secreta (`TURNSTILE_SECRET_KEY`) para la función de producción. Hasta entonces, publicar en `main` deja todos los envíos sin folio (WhatsApp funciona). En pyp-dev y en pruebas se usan las llaves de prueba públicas de Cloudflare.
+- ☐ Confirmar dos detalles de la confirmación: "¡LISTO!" con el tamaño `display` de la escala (el diseño lo dibuja más grande) y la variante sin folio sin eyebrow (UI/UX §7.6).
 - ☐ Desplegar `submit-quote` a producción con sus secretos (`TURNSTILE_SECRET_KEY`, `IP_HASH_SALT` y `ALLOWED_ORIGINS` con el origen de `workers.dev`): falta un paso en `db-production.yml` o un flujo propio; no se lanza sin tu permiso.
 - ☐ Publicar `develop` en `main` cuando se quiera revisar la fase 2 en `workers.dev` y medir Lighthouse.
 - ☐ Confirmar las decisiones tomadas sin diseño ni documento:
@@ -179,7 +182,6 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
   - Footer sin la frase "Desde 1969".
 
 **Técnicos, con tarea asignada**
-- T3.8: Turnstile en el formulario y el envío con folio (la función `submit-quote` y el mensaje de WhatsApp ya existen; hoy un envío válido solo confirma que los datos están completos).
 - T3.2: matriz de cantidades, personalización y "Agregar a mi cotización" en la ficha.
 - T3.9: eventos de analítica (`search`, `view_item_list`, `whatsapp_click`…).
 - Fase 5: galería de "Equipos estrenando", Visítanos, Uniformes, aviso de privacidad, 404, sitemap y JSON-LD de la tienda.

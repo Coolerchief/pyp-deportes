@@ -29,7 +29,7 @@ import { ROUTES } from '@/lib/navigation';
 type QuoteFormProps = {
   id: string;
   privacyVersion: string;
-  /** Called with the validated data; sending arrives in T3.8. */
+  /** Called with the validated data: QuotePage sends it (T3.8). */
   onValid: (values: QuoteRequester) => void;
 };
 

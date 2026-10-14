@@ -250,6 +250,8 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 5. **Error o timeout:** construir el mensaje **sin folio**, abrir WhatsApp igualmente y registrar el error (`track('quote_submit_error')`). Nunca se bloquea la venta.
 6. Apertura de WhatsApp: `window.location.assign(waUrl)` tras la respuesta. La pantalla de confirmación **siempre** muestra el botón "Abrir WhatsApp" (enlace con gesto del usuario) por si el navegador bloqueó la redirección.
 
+**Implementación (T3.8).** `lib/commerce/submit-quote.ts`: `postQuote` (POST con `AbortController` a 6 s; 200/201 → folio, 409 → `variantId` rechazados, todo lo demás → falla con motivo `turnstile`, `timeout`, `network`, `rate_limited`, `server` o `not_configured`) y `sendQuote` (token → POST → enlace de WhatsApp con o sin folio; un 409 no da enlace y regresa al paso 1 con el producto marcado). `lib/commerce/turnstile.ts`: carga `api.js?render=explicit` solo en el paso 2 y deja un widget `interaction-only` con un token listo; cada token se usa una vez y el widget se reinicia para el siguiente intento. Esperar el token también tiene tope de 6 s; sin llave pública o si Cloudflare falla, se envía sin folio. `lib/commerce/submission.ts`: `clientRequestId` (se crea al entrar al paso 2 y se renueva solo tras un folio), variantes rechazadas y el último envío en `sessionStorage` (`pyp.lastQuote.v1`). Sin conexión (`navigator.onLine === false`) no se intenta nada y se avisa. Los eventos (`quote_submit_error` y demás) llegan con T3.9.
+
 ### 6.5 Mensaje de WhatsApp
 
 - Función pura `buildQuoteMessage(input): string`, con pruebas unitarias con *snapshots*. Vive en `packages/shared/src/whatsapp.ts` y no en `lib/whatsapp/`, porque es una regla de negocio (regla 10 de `CLAUDE.md`).
@@ -441,7 +443,7 @@ sequenceDiagram
 | `NEXT_PUBLIC_SITE_URL` | build | `https://pypdeportescoapa.com` |
 | `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | build + cliente | En `deploy.yml`, secretos del repositorio con los valores de producción |
 | `NEXT_PUBLIC_MEDIA_URL` | build + cliente | `https://media.pypdeportescoapa.com` |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | cliente | — |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | cliente | Llave pública de Turnstile. En pyp-dev y CI, la de prueba de Cloudflare `1x00000000000000000000AA` (siempre pasa); en producción, el secreto del repositorio del mismo nombre que lee `deploy.yml`. Sin ella, todo envío sale sin folio |
 | `NEXT_PUBLIC_GA_ID` | cliente | opcional |
 | `SITE_ENV` | build | `local` · `production` |
 | `BUILD_DATA_FILE` | build | Ruta a una copia de las vistas `public_*` (`fixtures/build-data.json` en CI). Si existe, el build no consulta Supabase |
