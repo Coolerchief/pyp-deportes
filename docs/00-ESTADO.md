@@ -138,7 +138,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Fase 2 construida.** Falta su criterio de salida: el catálogo navegable en `workers.dev` con Lighthouse ≥ 90 en Inicio, un listado y una ficha. Para medirlo hay que publicar `develop` en `main`, y esa decisión es del usuario.
 
-**Siguiente paso:** fase 3, T3.1 (almacén de la lista `useQuote` y `lib/commerce`).
+**Hecho:** T3.1 (lista de cotización `useQuote` con Zustand, guardada en `pyp.quote.v1` con versión; reglas de §4.1 y §4.5 en `packages/shared/src/quote-list.ts` (13 pruebas): una línea por variante, suma con tope 9 999, nota nueva que sustituye a la anterior, 100 renglones, quitar con deshacer, editar la personalización de un producto, descartar tras 30 días y marcar "No disponible". Funciona en memoria si el navegador no deja guardar. `lib/commerce` con `CartService`, `PricingService`, `CheckoutProvider`, `useCommerceMode()` y `useQuoteTotals()`. Todavía nada en la página agrega a la lista: eso llega en T3.2 y T3.3.
+
+**Siguiente paso:** T3.2 (`VariantMatrix`, personalización y barra de total en la ficha).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
@@ -161,7 +163,7 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
   - Footer sin la frase "Desde 1969".
 
 **Técnicos, con tarea asignada**
-- T3.1–T3.3: lista de cotización, contador del header, "+ Cotizar" desde la tarjeta, "En tu cotización" y `useCommerceMode()`.
+- T3.2–T3.3: contador del header, "+ Cotizar" desde la tarjeta y "En tu cotización" (la lista y `useCommerceMode()` ya existen desde T3.1).
 - T3.2: matriz de cantidades, personalización y "Agregar a mi cotización" en la ficha.
 - T3.9: eventos de analítica (`search`, `view_item_list`, `whatsapp_click`…).
 - Fase 5: galería de "Equipos estrenando", Visítanos, Uniformes, aviso de privacidad, 404, sitemap y JSON-LD de la tienda.

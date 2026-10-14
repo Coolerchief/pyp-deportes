@@ -13,5 +13,6 @@ export * from './listing';
 export * from './product-card';
 export * from './product-detail';
 export * from './quote';
+export * from './quote-list';
 export * from './text';
 export type { Database, Json } from '../database.types';
