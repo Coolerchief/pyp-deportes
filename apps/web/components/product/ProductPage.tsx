@@ -7,18 +7,18 @@ import { WhatsAppGlyph } from '@/components/layout/WhatsAppGlyph';
 import { Badge, Button } from '@/components/ui';
 import type { ProductPageData } from '@/lib/product';
 import { ProductGallery } from './ProductGallery';
+import { VariantMatrix } from './VariantMatrix';
 
 /**
  * Product page (T2.7, UI/UX §7.5). Customizable products get the full page ("Completa el
- * uniforme"), the rest the simple one ("También te puede interesar"). The quantity matrix,
- * personalization and "Agregar a mi cotización" arrive in T3.2; until then the options block
- * lists what can be chosen.
+ * uniforme", team shortcuts and personalization), the rest the simple one ("También te puede
+ * interesar"). VariantMatrix captures the quantities and adds them to the quote.
  */
 export function ProductPage({ data }: { data: ProductPageData }) {
   const { product } = data;
   const newIds = new Set(data.newIds);
   return (
-    <div className="container-page flex flex-col gap-10 pt-3 pb-16 lg:gap-16 lg:pt-5 lg:pb-20">
+    <div className="container-page flex flex-col gap-10 pt-3 pb-[calc(4rem+88px)] lg:gap-16 lg:pt-5 lg:pb-20">
       <script
         type="application/ld+json"
         // JSON.stringify output with "<" escaped: safe inside a script tag.
@@ -53,25 +53,7 @@ export function ProductPage({ data }: { data: ProductPageData }) {
               )}
             </section>
 
-            {data.options.length > 0 && (
-              <section aria-label="Opciones disponibles" className="bg-gis flex flex-col gap-4 p-4">
-                {data.options.map((option) => (
-                  <div key={option.label} className="flex flex-col gap-2">
-                    <h2 className="type-h4">{option.label}</h2>
-                    <ul className="flex flex-wrap gap-2">
-                      {option.values.map((value) => (
-                        <li
-                          key={value}
-                          className="border-borde-control bg-blanco type-chip inline-flex h-9 items-center rounded-sm border px-3"
-                        >
-                          {value}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </section>
-            )}
+            <VariantMatrix product={product} customizable={data.customizable} />
 
             <Button
               variant="whatsapp"

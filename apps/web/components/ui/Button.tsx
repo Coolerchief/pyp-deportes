@@ -44,6 +44,8 @@ type ButtonProps = {
   /** Leading icon (20 px, aria-hidden). Icon-only buttons need `aria-label`. */
   icon?: ReactNode;
   fullWidth?: boolean;
+  /** Less side padding, for tight rows like the product page's total bar on mobile. */
+  dense?: boolean;
   className?: string;
   'aria-label'?: string;
   children?: ReactNode;
@@ -67,6 +69,7 @@ export function Button({
   loadingText = 'Enviando…',
   icon,
   fullWidth = false,
+  dense = false,
   className,
   'aria-label': ariaLabel,
   children,
@@ -79,7 +82,7 @@ export function Button({
     height,
     ...(placa && {
       '--placa-o': `${offset}px`,
-      paddingInline: `${(size === 'sm' ? 16 : 24) + offset}px`,
+      paddingInline: `${(dense ? 6 : size === 'sm' ? 16 : 24) + offset}px`,
     }),
   } as CSSProperties;
 
