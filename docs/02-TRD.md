@@ -82,7 +82,7 @@ flowchart LR
 | Tipografía | Barlow + Barlow Condensed | vía `next/font/local` (autoalojadas) | Los 8 `woff2` del paquete de diseño (licencia OFL) copiados a `apps/web/app/fonts/`: solo las caras que usa la escala, sin descargar de Google en el build |
 | Estilos (build) | `@tailwindcss/postcss` | 4.x | Plugin de PostCSS de Tailwind v4 |
 | Estado del cliente | Zustand + `persist` | 5.0 (instalado en T3.1) | Lista de cotización y datos del solicitante |
-| Formularios | React Hook Form + Zod | Zod 4.x | Esquemas Zod compartidos con Edge Functions; Zod es dependencia de `packages/shared` |
+| Formularios | React Hook Form + Zod | RHF 7.90 · @hookform/resolvers 5.9 · Zod 4.x (RHF instalado en T3.5) | Esquemas Zod compartidos con Edge Functions; Zod es dependencia de `packages/shared` |
 | Búsqueda | MiniSearch | 7.2 (en `packages/shared`, entrada `@pyp/shared/search`) | Índice construido en el navegador desde `catalog.json`; `autoSuggest` para "¿Quisiste decir…?" |
 | Íconos | lucide-react · simple-icons (solo el glifo de WhatsApp) | 1.55 · 16.35 | Trazo 2 px, 20/24 px (`03-UI-UX.md` §5). `simple-icons` se instaló en T2.2; se importa solo `siWhatsapp` |
 | CSV/Excel | Papa Parse · SheetJS (`xlsx`) | última | Importador del admin |

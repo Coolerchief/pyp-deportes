@@ -83,3 +83,32 @@ test('step 1 lists, edits, removes with undo and continues', async ({ page }) =>
   await page.goBack();
   await expect(page).toHaveURL(/\/cotizacion$/);
 });
+
+test('step 2 sums up the missing data with the focus, and accepts a valid form', async ({
+  page,
+}) => {
+  await page.goto('/catalogo/balones/balones-futbol', { waitUntil: 'networkidle' });
+  await page
+    .getByRole('button', { name: /^Cotizar / })
+    .first()
+    .click();
+  await page.getByRole('dialog').getByRole('link', { name: 'Ver mi cotización' }).click();
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Tus datos' })).toBeVisible();
+
+  const send = page
+    .getByRole('button', { name: 'Enviar cotización por WhatsApp' })
+    .locator('visible=true');
+  await send.click();
+  const summary = page.getByRole('alert').filter({ hasText: 'Faltan 4 datos' });
+  await expect(summary).toBeFocused();
+  await expect(summary).toContainText('nombre, WhatsApp, fecha y aviso de privacidad.');
+
+  await page.getByRole('textbox', { name: 'Nombre', exact: true }).fill('Ana López');
+  await page.getByRole('textbox', { name: /WhatsApp/ }).fill('5512345678');
+  await page.getByRole('button', { name: '1 mes' }).click();
+  await page.getByRole('checkbox', { name: /aviso de privacidad/ }).check();
+  await expect(page.getByRole('alert').filter({ hasText: 'Faltan' })).toBeHidden();
+  await send.click();
+  await expect(page.getByText('Tus datos están completos.')).toBeVisible();
+});

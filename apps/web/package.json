@@ -14,11 +14,13 @@
     "data:snapshot": "node scripts/snapshot-build-data.mjs"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
     "@pyp/shared": "workspace:*",
     "lucide-react": "^1.55.0",
     "next": "16.4.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "react-hook-form": "^7.90.0",
     "simple-icons": "^16.35.0",
     "zustand": "^5.0.15"
   },

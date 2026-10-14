@@ -63,7 +63,7 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   components/product/ ProductPage, ProductGallery y VariantMatrix (cantidades por talla, atajos, personalización, barra de total)
   components/home/   Secciones de Inicio (HomeHero, UniformsBand, HowItWorks, AdvisorCard, StoreInfo)
   components/content/ SitePhoto: foto de site_media o su marcador
-  components/quote/  AddedNotice, QuoteBar, QuickAddButton/InQuoteBadge y la página /cotizacion (QuotePage, StepIndicator, QuoteListStep, QuoteLineCard, PersonalizationEditor)
+  components/quote/  AddedNotice, QuoteBar, QuickAddButton/InQuoteBadge y la página /cotizacion (QuotePage, StepIndicator, QuoteListStep, QuoteLineCard, PersonalizationEditor, QuoteFormStep, QuoteForm)
   lib/               data (catalog.json y settings.json del build), navigation (menús, contacto y rutas), listing (listados estáticos), images/loader (anchos de R2), indexing
   lib/commerce/      useQuote (lista de cotización, pyp.quote.v1), CommerceProvider/useCommerceMode, interfaces CartService/PricingService/CheckoutProvider
   scripts/           Generador de imágenes genéricas (placeholders.json + generate-placeholders.mjs)

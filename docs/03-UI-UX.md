@@ -358,6 +358,15 @@ Dos variantes de la misma página:
 - **Errores** (`cotizacion-2-datos-errores`): resumen arriba con borde 2 px `rojo-profundo` e ícono ("Faltan 3 datos para enviar tu cotización: nombre, WhatsApp y aviso de privacidad.") + cada campo con borde 2 px `rojo-profundo` y mensaje con ícono, que sustituye a la ayuda. La casilla del aviso también marca error. Nunca solo color. El foco va al resumen.
 - Botón final: whatsapp lg "Enviar cotización por WhatsApp". Debajo: "Te contestamos en horario de tienda. Tu lista se guarda aunque cierres esta página."
 
+**Implementación del paso 2 (T3.5, 14-oct-2026).** `QuoteFormStep` y `QuoteForm` (`components/quote`), con React Hook Form y `zodResolver` sobre `createQuoteRequesterSchema` (`packages/shared`, el mismo esquema que validará `submit-quote`). Datos recordados y atajos de fecha en `packages/shared/src/requester.ts`, con pruebas.
+- **Resumen de errores:** aparece al enviar con errores, se actualiza mientras se corrige y desaparece cuando ya no falta nada. El foco va al resumen y no al primer campo (`shouldFocusError: false`). Cada campo marca `aria-invalid` y su mensaje con ícono sustituye a la ayuda. Después del primer envío, los errores se revalidan al escribir.
+- **Valores iniciales:** "Liga o equipo", "Recoger en tienda Coapa" y factura "No", como en el diseño; por eso un formulario vacío marca 4 datos (nombre, WhatsApp, fecha y aviso).
+- **"Soy…":** son botones de radio con forma de placa. "Nombre del equipo o institución" se oculta con "Particular" y no se envía.
+- **Fecha:** la mínima es hoy (Ciudad de México). Los atajos "Esta semana / 2 semanas / 1 mes" ponen hoy + 7, + 14 o + 30 y se marcan si coinciden. El diseño de escritorio no los muestra; se dejan también ahí.
+- **Datos recordados (`pyp.requester.v1`):** al enviar datos válidos se guardan nombre, WhatsApp, tipo, institución, entrega y factura (nunca el aviso, la fecha ni la nota); duran 30 días, como la lista, y prellenan el formulario la siguiente vez.
+- **Botón de envío:** en escritorio va en el panel "Tu lista", fuera del `<form>` (usa el atributo `form`). En móvil hay un resumen plegable arriba.
+- **Pendiente (T3.6–T3.8):** el mensaje de WhatsApp, Turnstile y el envío con folio. Mientras tanto, un envío válido solo muestra "Tus datos están completos.".
+
 **QuoteSummary** (escritorio, paso 1) — panel "Resumen" sobre `gis`: productos, total en `number`, "Continuar" y la nota de guardado.
 
 **QuoteConfirmation** (`cotizacion-3-confirmacion`) — PatrónCancha: eyebrow lima "SOLICITUD ENVIADA" · `display` "¡LISTO!" · folio en Placa lima con botón copiar · "Te contestamos por WhatsApp en horario de tienda. Si WhatsApp no se abrió, toca el botón." · "Abrir WhatsApp" (whatsapp lg) · "Seguir viendo el catálogo" (outline blanco) · "Vaciar mi lista" (ghost lima). Variante **sin folio** (fallback): mismo diseño sin la placa de folio y con el titular "Tu lista está lista para enviarse".

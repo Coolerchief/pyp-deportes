@@ -36,6 +36,8 @@ type ButtonProps = {
   /** `outline` on a dark background (noche, cancha): white border and text. */
   tone?: 'light' | 'dark';
   type?: 'button' | 'submit' | 'reset';
+  /** id of the form a submit button belongs to when it sits outside it. */
+  form?: string;
   onClick?: MouseEventHandler<HTMLElement>;
   disabled?: boolean;
   /** Shows a spinner and `loadingText`, and blocks the action. */
@@ -63,6 +65,7 @@ export function Button({
   external = false,
   tone = 'light',
   type = 'button',
+  form,
   onClick,
   disabled = false,
   loading = false,
@@ -139,6 +142,7 @@ export function Button({
     ) : (
       <button
         type={type}
+        form={form}
         className={classes}
         style={style}
         onClick={onClick}
