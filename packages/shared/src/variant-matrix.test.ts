@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { cleanQuantity, matrixLayout, piecesText, rowPieces, teamPreset } from './variant-matrix';
+import {
+  cleanQuantity,
+  matrixLayout,
+  piecesText,
+  rowPieces,
+  teamPreset,
+} from './variant-matrix.ts';
 
 let n = 0;
 const v = (o1: string | null, o2: string | null = null) => ({

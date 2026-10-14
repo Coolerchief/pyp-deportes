@@ -4,7 +4,7 @@ import {
   quoteErrorSummary,
   quoteFieldOf,
   type QuoteSubmissionInput,
-} from './quote';
+} from './quote.ts';
 
 // Noon on Oct 11, 2026 in Mexico City.
 const schema = createQuoteSubmissionSchema({ now: () => new Date('2026-10-11T18:00:00Z') });

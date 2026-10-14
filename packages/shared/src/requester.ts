@@ -2,10 +2,10 @@
 // shortcuts of the quote form.
 
 import { z } from 'zod';
-import { addDays, mexicoCityDate } from './dates';
-import { CUSTOMER_TYPES, DELIVERY_METHODS } from './labels';
-import { QUOTE_LIMITS, type QuoteRequesterInput } from './quote';
-import { QUOTE_MAX_AGE_DAYS } from './quote-list';
+import { addDays, mexicoCityDate } from './dates.ts';
+import { CUSTOMER_TYPES, DELIVERY_METHODS } from './labels.ts';
+import { QUOTE_LIMITS, type QuoteRequesterInput } from './quote.ts';
+import { QUOTE_MAX_AGE_DAYS } from './quote-list.ts';
 
 /** localStorage key of the requester's data; the privacy box is never saved. */
 export const REQUESTER_STORAGE_KEY = 'pyp.requester.v1';

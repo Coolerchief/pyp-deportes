@@ -2,7 +2,7 @@
 // and the chips and shortcuts around them. The same functions run in the browser for filters
 // and sorting (T2.5).
 
-import type { CatalogJson, CatalogProduct } from './catalog';
+import type { CatalogJson, CatalogProduct } from './catalog.ts';
 
 /** First batch rendered in the HTML of every listing; "Cargar más" adds the same amount. */
 export const LISTING_PAGE_SIZE = 24;

@@ -4,8 +4,8 @@ import {
   quoteErrorSummary,
   quoteFieldOf,
   type QuoteField,
-} from './quote';
-import { neededByDate, requesterDraft, restoreRequester } from './requester';
+} from './quote.ts';
+import { neededByDate, requesterDraft, restoreRequester } from './requester.ts';
 
 const NOW = new Date('2026-10-14T18:00:00.000Z'); // 12:00 in Mexico City
 

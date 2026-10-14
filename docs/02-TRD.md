@@ -89,6 +89,7 @@ flowchart LR
 | Imágenes (subida) | `browser-image-compression` o Canvas API | — | Genera WebP 320/640/1024/1600 |
 | Imágenes genéricas (build) | `sharp` | 0.35.x | Solo desarrollo: `pnpm placeholders` captura `ImagenGenerica` con Playwright y la codifica a WebP en `apps/web/public/img/placeholder/` (misma versión que trae Next) |
 | Backend | Supabase (Postgres 15+, Auth, Edge Functions en Deno) | CLI última | Migraciones en `supabase/migrations` |
+| Edge Functions (desarrollo) | Deno · `@std/assert` (JSR) | 2.9.7 · 1.0.13 | `deno.exe` vive en `.venv/Scripts` (binario oficial de GitHub, verificado con su SHA-256) y en CI con `denoland/setup-deno`. `pnpm test:functions` revisa tipos y prueba `supabase/functions`; `@std/assert` y `zod` (`npm:zod@4.6.5`) salen del `deno.json` de cada función, sin `package.json` |
 | Almacenamiento | Cloudflare R2 (API S3) | — | Firma con `aws4fetch` en la Edge Function |
 | Anti-spam | Cloudflare Turnstile | — | Modo "managed", invisible cuando se puede |
 | Hosting | Cloudflare Workers + static assets | Wrangler 4.x | `_redirects` y `_headers` soportados; `wrangler` es dependencia de desarrollo de `apps/web` y de `workers/cron` |
@@ -336,18 +337,20 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 - **Migraciones SQL versionadas** en `supabase/migrations`; nada se cambia a mano en el dashboard.
 - **RLS activado en todas las tablas.** Lectura pública solo de contenido publicado; escritura solo de personal; `quote_requests` y `customers` sin acceso anónimo directo.
 - Tipos TS generados con `supabase gen types typescript` → `packages/shared/database.types.ts` (se exportan como `Database` y `Json` desde `@pyp/shared`).
-- **`packages/shared` (T1.7)**: `QuoteRequesterSchema` y `QuoteSubmissionSchema` (con `createQuote…Schema({ now })` para fijar el reloj en pruebas), `quoteErrorSummary` (texto del resumen de errores), `ImportRowSchema` e `ImportResultSchema`, `CatalogJsonSchema`, folio (`formatFolio`, `parseFolio`, `isFolio`), fechas de CDMX (`mexicoCityDate`, `mexicoCityYear`), texto (`normalizeText`, `slugify`, `variantSku`, `variantLabel`, idénticos a sus funciones SQL) y los valores y etiquetas de los enums. El código se revisa sin tipos de Node ni DOM (`tsconfig.json`) para que corra en Deno; las pruebas, con Node (`tsconfig.test.json`). Los imports internos no llevan extensión: las Edge Functions lo importarán con el bundler de Supabase o un mapa de imports (T3).
+- **`packages/shared` (T1.7)**: `QuoteRequesterSchema` y `QuoteSubmissionSchema` (con `createQuote…Schema({ now })` para fijar el reloj en pruebas), `quoteErrorSummary` (texto del resumen de errores), `ImportRowSchema` e `ImportResultSchema`, `CatalogJsonSchema`, folio (`formatFolio`, `parseFolio`, `isFolio`), fechas de CDMX (`mexicoCityDate`, `mexicoCityYear`), texto (`normalizeText`, `slugify`, `variantSku`, `variantLabel`, idénticos a sus funciones SQL) y los valores y etiquetas de los enums. El código se revisa sin tipos de Node ni DOM (`tsconfig.json`) para que corra en Deno; las pruebas, con Node (`tsconfig.test.json`). Los imports internos llevan extensión `.ts` (`allowImportingTsExtensions` en `tsconfig.base.json`) para que Deno cargue `packages/shared/src/index.ts` sin bundler; `zod` se resuelve con el `deno.json` de la función (T3.7).
 
 ### 9.2 Edge Functions
 
 | Función | Auth | Entrada | Salida | Reglas |
 |---|---|---|---|---|
-| `submit-quote` | Pública + Turnstile | `QuoteSubmission` (cliente, líneas, nota, `clientRequestId`, `turnstileToken`) | `201 { folio }` · `400` validación · `403` Turnstile · `409` duplicado (devuelve el folio existente) · `429` límite | Verifica Turnstile → valida Zod → límite de 5 envíos/hora por IP (hash) y por teléfono → llama a la RPC `create_quote_request` (transacción: cliente *upsert* por teléfono, solicitud, líneas con snapshot de nombre/SKU) |
+| `submit-quote` | Pública + Turnstile | `QuoteSubmission` (cliente, líneas, nota, `clientRequestId`, `turnstileToken`) | `201 { folio }` · `200` reintento (mismo folio) · `400` validación · `403` Turnstile u origen · `409` producto no disponible · `429` límite · `500` | Verifica Turnstile → valida Zod → límite de 5 envíos/hora por IP (hash) y por teléfono → llama a la RPC `create_quote_request` (transacción: cliente *upsert* por teléfono, solicitud, líneas con snapshot de nombre/SKU) |
 | `sign-upload` | JWT de personal | `{ productId, files: [{ imageId, width, contentType }] }` | `{ uploads: [{ key, url }] }` | Solo `admin`/`editor`; claves bajo `p/{productId}/`, `g/{galleryId}/` o `s/{slot}/`; expira en 600 s |
 | `trigger-publish` | JWT de personal o secreto del cron | `{ reason }` | `202 { runId }` | Inserta en `publish_runs`, llama a GitHub `workflow_dispatch`; si hay un build en curso, el workflow usa `concurrency` con `cancel-in-progress` |
 | `invite-staff` | JWT de admin | `{ email, fullName, role }` | `201` | Invita al usuario con la API de administración de Auth y crea su fila en `staff_members` |
 
 Contratos completos (entradas, validación y códigos de respuesta) en `05-BACKEND-SCHEMA.md` §9. Código compartido de funciones en `supabase/functions/_shared/` (CORS con allowlist del dominio, respuesta de errores uniforme, cliente con service role).
+
+**Implementación de `submit-quote` (T3.7).** `handler.ts` recibe sus dependencias (Turnstile, base de datos, reloj) y es lo que prueban `handler.test.ts` (cada código de respuesta) y `deps.test.ts` (Siteverify, PostgREST y conteos con un `fetch` simulado); `index.ts` solo lee los secretos y llama a `Deno.serve`. `_shared/`: `http.ts` (CORS, JSON, IP del cliente y su hash), `postgrest.ts` (cliente mínimo con `fetch` y la llave `service_role`: `rpc`, `select` y `count` con `HEAD` + `Prefer: count=exact`; sin `supabase-js`) y `turnstile.ts`. Sin JWT (`[functions.submit-quote] verify_jwt = false` en `config.toml`). Si falta un secreto, responde `500` a todo (no guarda nada sin Turnstile ni sal) y el sitio cae al WhatsApp sin folio. Los registros solo dicen dónde falló, sin datos de la solicitud. Despliegue a pyp-dev: `pnpm functions:deploy` (pone los secretos desde un archivo temporal y despliega con `--use-api`, sin Docker); en pyp-dev usa la llave secreta de prueba de Turnstile que siempre pasa, salvo `DEV_TURNSTILE_SECRET_KEY`. El despliegue a producción aún no está en un flujo (pendiente en `00-ESTADO.md`).
 
 ### 9.3 Secretos
 
@@ -359,7 +362,8 @@ Contratos completos (entradas, validación y códigos de respuesta) en `05-BACKE
 | `GITHUB_DISPATCH_TOKEN` (PAT fine-grained, solo `actions:write` del repo) | Edge Functions y Worker cron |
 | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | GitHub Actions (deploy) |
 | `CRON_SHARED_SECRET` | Worker cron ↔ `trigger-publish` |
-| `IP_HASH_SALT` | Edge Functions (`submit-quote`): sal para guardar la IP solo como hash |
+| `IP_HASH_SALT` | Edge Functions (`submit-quote`): sal para guardar la IP solo como hash. En pyp-dev, `DEV_IP_HASH_SALT` de `.env.local` (la crea `pnpm functions:deploy`) |
+| `ALLOWED_ORIGINS` (opcional, lista separada por comas) | Edge Functions: orígenes con CORS. Sin él, los tres de §13. En pyp-dev, `http://localhost:3000,http://localhost:3100` salvo `DEV_ALLOWED_ORIGINS` |
 | `SUPABASE_PROD_PROJECT_REF`, `SUPABASE_PROD_DB_URL` (cadena del *session pooler* con la contraseña codificada) | Secretos del repositorio en GitHub Actions (`db-production.yml`, T1.8) |
 | `SUPABASE_ACCESS_TOKEN` (token personal de Supabase) | Secretos del repositorio en GitHub Actions: desactiva el registro público de Auth con la API de administración |
 | `SUPABASE_PROD_ADMIN_EMAIL`, `SUPABASE_PROD_ADMIN_PASSWORD`, `SUPABASE_PROD_ADMIN_NAME` (opcional) | Secretos del repositorio en GitHub Actions: primer admin. La contraseña es inicial; se cambia al entrar y una segunda corrida no la toca |
@@ -408,7 +412,7 @@ sequenceDiagram
 
 - RLS en todas las tablas; pruebas pgTAP que confirman que `anon` no lee `customers`, `quote_requests`, borradores ni campos comerciales ocultos.
 - **Precios y existencias no salen al sitio público** en modo catálogo: las vistas públicas (`public_products`, etc.) no exponen columnas comerciales, y el build solo lee vistas públicas.
-- CORS de Edge Functions: solo `https://pypdeportescoapa.com`, `https://www.pypdeportescoapa.com` y `http://localhost:3000`.
+- CORS de Edge Functions: solo `https://pypdeportescoapa.com`, `https://www.pypdeportescoapa.com` y `http://localhost:3000` (o la lista de `ALLOWED_ORIGINS`; mientras el sitio viva en `workers.dev`, producción necesita ese origen en la lista). Una petición con `Origin` fuera de la lista recibe `403 forbidden_origin` sin encabezados CORS.
 - Encabezados en `_headers`: `Content-Security-Policy` (self, R2, GA, Turnstile, Supabase), `X-Content-Type-Options`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`.
 - Datos personales: solo nombre, teléfono y datos de la solicitud. IP guardada como hash con sal (para limitar abusos), nunca en claro. Aviso de privacidad LFPDPPP enlazado junto a la casilla de consentimiento; se guarda `privacy_accepted_at` y la versión del aviso.
 - Contraseñas del personal gestionadas por Supabase Auth; se recomienda 2FA (TOTP) para rol `admin`.

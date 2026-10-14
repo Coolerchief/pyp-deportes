@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { hasVariantChoice, newProductIds, productBadges } from './product-card';
+import { hasVariantChoice, newProductIds, productBadges } from './product-card.ts';
 
 const variant = (id: string) => ({ id, sku: id, o1: null, o2: null });
 

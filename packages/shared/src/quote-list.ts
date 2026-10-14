@@ -2,7 +2,7 @@
 // useQuote store applies. A line has the same shape as the future cart line (TRD §19).
 
 import { z } from 'zod';
-import { QUOTE_LIMITS } from './quote';
+import { QUOTE_LIMITS } from './quote.ts';
 
 /** localStorage key and version of the saved list; a new shape means a new version. */
 export const QUOTE_STORAGE_KEY = 'pyp.quote.v1';

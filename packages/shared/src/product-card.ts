@@ -1,6 +1,6 @@
 // Rules behind a product card (UI/UX §7.4): which action it shows and which badges it carries.
 
-import type { CatalogProduct } from './catalog';
+import type { CatalogProduct } from './catalog.ts';
 
 /** Days a product counts as "Nuevo" after it is published. */
 export const NEW_PRODUCT_DAYS = 30;

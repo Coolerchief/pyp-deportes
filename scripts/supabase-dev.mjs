@@ -5,8 +5,17 @@
 // The production project must never be linked from a developer machine.
 
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { randomBytes } from 'node:crypto';
+import {
+  appendFileSync,
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 import { runFolioConcurrency } from './folio-concurrency.mjs';
@@ -109,11 +118,28 @@ async function setDevAdminPassword() {
         where email = $2`,
       [password, DEV_ADMIN_EMAIL],
     );
-    if (rowCount !== 1) fail(`No se encontró ${DEV_ADMIN_EMAIL}; ¿corrió supabase/seeds/dev-admin.sql?`);
+    if (rowCount !== 1)
+      fail(`No se encontró ${DEV_ADMIN_EMAIL}; ¿corrió supabase/seeds/dev-admin.sql?`);
     console.log(`✓ Contraseña de ${DEV_ADMIN_EMAIL} lista (de SUPABASE_DEV_ADMIN_PASSWORD).`);
   } finally {
     await client.end();
   }
+}
+
+/**
+ * Cloudflare's public Turnstile test secret that always passes (TRD §9.2): pyp-dev uses it unless
+ * DEV_TURNSTILE_SECRET_KEY says otherwise. Production gets its real secret from GitHub.
+ */
+export const TURNSTILE_TEST_SECRET = '1x0000000000000000000000000000000AA';
+export const DEV_ALLOWED_ORIGINS = 'http://localhost:3000,http://localhost:3100';
+
+/** Secrets of the Edge Functions on pyp-dev, as an env file (values never printed). */
+export function devFunctionSecrets(env) {
+  return [
+    `TURNSTILE_SECRET_KEY=${env.DEV_TURNSTILE_SECRET_KEY || TURNSTILE_TEST_SECRET}`,
+    `IP_HASH_SALT=${env.DEV_IP_HASH_SALT}`,
+    `ALLOWED_ORIGINS=${env.DEV_ALLOWED_ORIGINS || DEV_ALLOWED_ORIGINS}`,
+  ].join('\n');
 }
 
 function guard(env) {
@@ -171,6 +197,29 @@ const commands = {
     // Security test 8 needs several connections at once, so it lives outside pgTAP.
     const foliosOk = await runFolioConcurrency(poolerConnection());
     if (!foliosOk) fail('next_folio repitió o saltó folios con llamadas simultáneas.');
+  },
+  // Deploys the Edge Functions to pyp-dev with their secrets (T3.7). The salt is created once in
+  // .env.local; the secrets travel in a temporary file, never on the command line.
+  functions(env, args) {
+    guard(env);
+    if (!process.env.DEV_IP_HASH_SALT) {
+      const salt = randomBytes(32).toString('hex');
+      appendFileSync(resolve(root, '.env.local'), `\nDEV_IP_HASH_SALT=${salt}\n`);
+      process.env.DEV_IP_HASH_SALT = salt;
+      console.log('✓ DEV_IP_HASH_SALT creada en .env.local.');
+    }
+    const dir = mkdtempSync(join(tmpdir(), 'pyp-secrets-'));
+    try {
+      const file = join(dir, 'functions.env');
+      writeFileSync(file, devFunctionSecrets(process.env), { mode: 0o600 });
+      supabase(['secrets', 'set', '--project-ref', env.devRef, '--env-file', file]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+    const names = args.length > 0 ? args : ['submit-quote'];
+    for (const name of names) {
+      supabase(['functions', 'deploy', name, '--project-ref', env.devRef, '--use-api']);
+    }
   },
   // CSV importer (T1.5): sends the file to admin_import_products on pyp-dev over the pooler.
   async import(env, args) {

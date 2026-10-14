@@ -1,8 +1,8 @@
 // Product page rules (T2.7, UI/UX §7.5): the specifications table and the related products.
 
-import type { CatalogJson, CatalogProduct, CatalogVariant } from './catalog';
-import { type Technique, techniqueLabels } from './labels';
-import { sortProducts } from './listing';
+import type { CatalogJson, CatalogProduct, CatalogVariant } from './catalog.ts';
+import { type Technique, techniqueLabels } from './labels.ts';
+import { sortProducts } from './listing.ts';
 
 /** How many related products the page shows (4 columns on desktop, a carousel on mobile). */
 export const RELATED_LIMIT = 4;

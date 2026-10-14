@@ -2,8 +2,8 @@
 // point (@pyp/shared/search) so the Edge Functions never bundle MiniSearch.
 
 import MiniSearch, { type SearchResult } from 'minisearch';
-import type { CatalogJson, CatalogProduct } from './catalog';
-import { normalizeText } from './text';
+import type { CatalogJson, CatalogProduct } from './catalog.ts';
+import { normalizeText } from './text.ts';
 
 /** Fuzziness of normal results and of the "¿Quisiste decir…?" correction (TRD §7). */
 export const SEARCH_FUZZY = 0.2;

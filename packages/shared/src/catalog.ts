@@ -2,7 +2,7 @@
 // public_* views (T2.1) and the browser reads it for filters, sorting and search.
 
 import { z } from 'zod';
-import { AUDIENCES } from './labels';
+import { AUDIENCES } from './labels.ts';
 
 const slug = z.string().regex(/^[a-z0-9-]+$/);
 

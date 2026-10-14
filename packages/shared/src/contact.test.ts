@@ -9,7 +9,7 @@ import {
   storeStatus,
   telUrl,
   whatsappUrl,
-} from './contact';
+} from './contact.ts';
 
 describe('formatPhone', () => {
   it('groups a 10-digit number as 2 + 4 + 4', () => {

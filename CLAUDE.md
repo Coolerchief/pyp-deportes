@@ -34,7 +34,8 @@ pnpm --filter @pyp/web data:snapshot   # copia las vistas public_* de pyp-dev a 
 pnpm lint
 pnpm typecheck
 pnpm format         # Prettier sobre todo el repo
-pnpm test           # Vitest + pruebas de scripts/
+pnpm test           # Vitest + pruebas de scripts/ + Edge Functions (Deno)
+pnpm test:functions # deno check + deno test de supabase/functions (deno.exe vive en .venv/Scripts)
 pnpm test:e2e       # Playwright contra el build estático
 pnpm placeholders   # regenera las 10 imágenes genéricas de categoría (public/img/placeholder)
 pnpm db:link        # enlaza la CLI con pyp-dev (solo pyp-dev)
@@ -43,6 +44,7 @@ pnpm db:reset       # migraciones + semilla en pyp-dev (borra sus datos) y contr
 pnpm db:setup       # db:reset + importa docs/data/catalogo-inicial.csv: pyp-dev listo con un comando
 pnpm db:types       # regenera packages/shared/database.types.ts desde pyp-dev
 pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev con admin_import_products (correrlo de nuevo actualiza, no duplica)
+pnpm functions:deploy   # secretos y despliegue de submit-quote en pyp-dev (sin Docker)
 ```
 
 **Despliegue.** `.github/workflows/deploy.yml` publica en Cloudflare Workers (`apps/web/wrangler.jsonc`) con cada push a `main` o a mano desde Actions. No subas ni fusiones nada a `main` sin que el usuario lo pida. `ci.yml` corre los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP) en cada PR. `db-production.yml` (T1.8) aplica migraciones, semilla base, ajustes de Auth y primer admin al proyecto de producción con `supabase db push --db-url` y `scripts/supabase-prod.mjs`, sin enlazarlo; lee secretos del repositorio y solo corre a mano desde `main` (escribiendo `PRODUCCION`). No lo lances sin que el usuario lo pida.
@@ -69,7 +71,7 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   scripts/           Generador de imágenes genéricas (placeholders.json + generate-placeholders.mjs)
   wrangler.jsonc     Worker de static assets que sirve apps/web/out
 packages/shared/     Esquemas Zod, tipos, folio, normalización de texto (sin dependencias de Node); database.types.ts generado
-supabase/            migrations/, functions/, seeds/ (base.sql para todos, dev-admin.sql solo desarrollo), tests/
+supabase/            migrations/, functions/ (submit-quote: handler con dependencias inyectadas + index.ts; _shared/ con CORS, PostgREST y Turnstile), seeds/ (base.sql para todos, dev-admin.sql solo desarrollo), tests/
 scripts/             supabase-dev.mjs (candado pyp-dev), supabase-prod.mjs (solo GitHub Actions), pgtap.mjs, folio-concurrency.mjs (prueba 8) e import-catalog.mjs, con sus pruebas
 workers/cron/        Latido, publicación nocturna, respaldo
 .github/workflows/   ci.yml, deploy.yml y db-production.yml
