@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { DobleDiagonal, Placa } from '@/components/brand';
 import { WhatsAppGlyph } from '@/components/layout/WhatsAppGlyph';
 import { Button } from '@/components/ui';
+import { track } from '@/lib/analytics/track';
 import { useQuote } from '@/lib/commerce';
 import { useAddedNotice } from '@/lib/commerce/added-notice';
 import { type LastQuote, openWhatsApp, useSubmission } from '@/lib/commerce/submission';
@@ -31,7 +32,10 @@ export function QuoteConfirmation({ last }: { last: LastQuote }) {
   useEffect(() => {
     heading.current?.focus();
     const url = useSubmission.getState().takePendingOpen();
-    if (url) openWhatsApp(url);
+    if (url) {
+      track('whatsapp_click', { origin: 'quote' });
+      openWhatsApp(url);
+    }
   }, []);
 
   useEffect(() => {
@@ -56,7 +60,10 @@ export function QuoteConfirmation({ last }: { last: LastQuote }) {
   }
 
   return (
-    <section className="cancha bg-noche text-blanco relative flex min-h-[calc(100svh-64px)] flex-col overflow-hidden lg:min-h-[calc(100svh-72px)]">
+    <section
+      data-wa-origin="confirmation"
+      className="cancha bg-noche text-blanco relative flex min-h-[calc(100svh-64px)] flex-col overflow-hidden lg:min-h-[calc(100svh-72px)]"
+    >
       <div className="container-page flex flex-col gap-4 pt-12 pb-20 lg:gap-5 lg:pt-24">
         {last.folio && <p className="type-eyebrow text-lima">Solicitud enviada</p>}
         <h1

@@ -263,7 +263,7 @@ Si el navegador no permite almacenamiento (modo privado estricto), la lista vive
 | Continuar al paso 2 | `begin_quote_form` | productos, piezas |
 | Enviar con éxito | `submit_quote` | folio, productos, piezas, tipo de cliente |
 | Envío con fallo | `quote_submit_error` | motivo |
-| Cualquier salida a WhatsApp | `whatsapp_click` | origen: `floating`, `product`, `confirmation`, `quote`, `menu`, `uniforms`, `gallery`, `search` |
+| Cualquier salida a WhatsApp | `whatsapp_click` | origen: `floating`, `product`, `confirmation`, `quote`, `menu`, `uniforms`, `gallery`, `search`, `home`, `listing` (`other` si no tiene) |
 
 Embudo a seguir: `view_item` → `add_to_quote` → `view_quote` → `begin_quote_form` → `submit_quote`.
 

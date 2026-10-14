@@ -41,6 +41,8 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           # Public Turnstile key (T3.8). Without it every send goes to WhatsApp without folio.
           NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
+          # GA4 measurement ID (T3.9). Without it there is no analytics script.
+          NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
         run: pnpm build
 
       - name: Deploy with wrangler

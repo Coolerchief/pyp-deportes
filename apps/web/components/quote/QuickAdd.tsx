@@ -4,6 +4,7 @@ import { type CatalogProduct, piecesOf, variantLabel } from '@pyp/shared';
 import { Check } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useQuote } from '@/lib/commerce';
+import { analyticsItem, track } from '@/lib/analytics/track';
 import { useAddedNotice } from '@/lib/commerce/added-notice';
 
 /**
@@ -32,6 +33,17 @@ export function QuickAddButton({
         image: product.image?.keyBase ?? null,
       },
       variants: [{ variantId: variant.id, label, quantity: 1 }],
+    });
+    const lines = [{ label, quantity: 1 }];
+    track('add_to_quote', {
+      items: lines.map((line) =>
+        analyticsItem(product, {
+          category: categoryName,
+          variant: line.label,
+          quantity: line.quantity,
+        }),
+      ),
+      pieces: 1,
     });
     useAddedNotice.getState().show({
       product: { ...product, categoryName },

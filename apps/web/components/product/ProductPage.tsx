@@ -1,10 +1,12 @@
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { TrackOnMount } from '@/components/analytics/Analytics';
 import { ProductCard, VolumeNote } from '@/components/catalog';
 import { chipStyle } from '@/components/catalog/chip-style';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { WhatsAppGlyph } from '@/components/layout/WhatsAppGlyph';
 import { Badge, Button } from '@/components/ui';
+import { analyticsItem } from '@/lib/analytics/events';
 import type { ProductPageData } from '@/lib/product';
 import { ProductGallery } from './ProductGallery';
 import { VariantMatrix } from './VariantMatrix';
@@ -18,7 +20,14 @@ export function ProductPage({ data }: { data: ProductPageData }) {
   const { product } = data;
   const newIds = new Set(data.newIds);
   return (
-    <div className="container-page flex flex-col gap-10 pt-3 pb-[calc(4rem+88px)] lg:gap-16 lg:pt-5 lg:pb-20">
+    <div
+      data-wa-origin="product"
+      className="container-page flex flex-col gap-10 pt-3 pb-[calc(4rem+88px)] lg:gap-16 lg:pt-5 lg:pb-20"
+    >
+      <TrackOnMount
+        event="view_item"
+        params={{ items: [analyticsItem(product, { category: data.categoryName })] }}
+      />
       <script
         type="application/ld+json"
         // JSON.stringify output with "<" escaped: safe inside a script tag.

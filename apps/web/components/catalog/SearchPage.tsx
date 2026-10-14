@@ -10,10 +10,11 @@ import {
 } from '@pyp/shared';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { WhatsAppGlyph } from '@/components/layout/WhatsAppGlyph';
 import { Button } from '@/components/ui';
+import { track } from '@/lib/analytics/track';
 import { useRememberListing } from '@/lib/commerce/added-notice';
 import { serializeCounts } from '@/lib/facets';
 import type { NavLink } from '@/lib/navigation';
@@ -81,6 +82,12 @@ export function SearchPage({ sports, categories, whatsappNumber }: SearchPagePro
     () => (api && search ? api.suggestCorrection(search, q) : null),
     [api, search, q],
   );
+  // One search event per term, once the results are known.
+  const resultCount = results?.length ?? null;
+  useEffect(() => {
+    if (q && resultCount !== null) track('search', { search_term: q, results: resultCount });
+  }, [q, resultCount]);
+
   const ask = whatsappUrl(whatsappNumber, `Hola, busco "${q}" y no lo encontré en el catálogo.`);
 
   const suggestionLine = suggestion && (

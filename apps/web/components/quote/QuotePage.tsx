@@ -1,8 +1,9 @@
 'use client';
 
-import type { QuoteRequester } from '@pyp/shared';
+import { type QuoteRequester, quoteTotals } from '@pyp/shared';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { quoteItems, track } from '@/lib/analytics/track';
 import { useCatalog } from '@/lib/catalog-client';
 import { useQuote } from '@/lib/commerce';
 import { type LastQuote, loadLastQuote, sentParam, useSubmission } from '@/lib/commerce/submission';
@@ -82,8 +83,9 @@ export function QuotePage({
     setNotice(null);
     setSending(true);
     const submission = useSubmission.getState();
+    const lines = useQuote.getState().lines;
     const { result, waUrl } = await sendQuote({
-      lines: useQuote.getState().lines,
+      lines,
       requester,
       catalog,
       whatsappNumber,
@@ -92,6 +94,19 @@ export function QuotePage({
       takeToken,
     });
     setSending(false);
+
+    if (result.kind === 'saved') {
+      track('submit_quote', {
+        folio: result.folio,
+        items: quoteItems(lines),
+        ...quoteTotals(lines),
+        customer_type: requester.customer.type,
+      });
+    } else {
+      track('quote_submit_error', {
+        reason: result.kind === 'invalid_items' ? 'invalid_items' : result.reason,
+      });
+    }
 
     if (result.kind === 'invalid_items' || !waUrl) {
       // Back to the list with the product marked: it has to be removed first.
@@ -113,7 +128,14 @@ export function QuotePage({
       <div className="flex flex-col gap-6">
         {!(step === 1 && hydrated && empty) && <StepIndicator current={step} />}
         {step === 1 ? (
-          <QuoteListStep sports={sports} onContinue={() => router.push(`${ROUTES.quote}?paso=2`)} />
+          <QuoteListStep
+            sports={sports}
+            onContinue={() => {
+              const lines = useQuote.getState().lines;
+              track('begin_quote_form', { items: quoteItems(lines), ...quoteTotals(lines) });
+              router.push(`${ROUTES.quote}?paso=2`);
+            }}
+          />
         ) : (
           <>
             <QuoteFormStep

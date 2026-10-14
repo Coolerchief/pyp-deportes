@@ -154,7 +154,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T3.8 (envío desde `/cotizacion`: Turnstile, POST a `submit-quote` con tope de 6 s, WhatsApp con folio o, si algo falla, sin folio; 409 regresa al paso 1 con el producto marcado; sin conexión avisa; paso 3 "¡Listo!" con copiar folio, "Abrir WhatsApp", "Seguir viendo el catálogo" y "Vaciar mi lista", y su variante sin folio). Pruebas de componentes de cada camino y E2E del camino feliz y del respaldo con la función caída. Probado en vivo contra pyp-dev con el Turnstile de prueba: folio `PYP-2026-000006` y, con el límite por IP agotado, `429` → WhatsApp sin folio. De paso, el título del mensaje dice "1 pieza" en singular.
 
-**Siguiente paso:** T3.9 (analítica: `track()` y los eventos del embudo, incluido `quote_submit_error`).
+**Hecho:** T3.9 (analítica: `track()` con GA4 y sus equivalentes `add_to_cart`, `begin_checkout` y `generate_lead`; los 9 eventos de APP-FLOW §6 en su lugar; `whatsapp_click` con origen desde cualquier enlace a WhatsApp). Pruebas unitarias y E2E del embudo completo `view_item` → `add_to_quote` → `view_quote` → `begin_quote_form` → `submit_quote` → `whatsapp_click`, del error de envío, de la búsqueda y del botón flotante. Comprobado que, con un ID `G-…`, el build carga `gtag.js` con `debug_mode`, y que sin ID no carga nada. Falta verlo en la vista de depuración de GA4: necesita la propiedad real (pendiente abajo).
+
+**Siguiente paso:** fase 4, T4.1 (acceso al panel: login, protección de rutas, cierre de sesión y cuenta sin permiso).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
@@ -168,6 +170,8 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 - ☐ Definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:setup` para entrar como `admin@pyp.test`.
 - ☐ *Environment* `production` con aprobación y los secretos de Supabase (pospuesto).
 - ☐ Turnstile real: crear el sitio en Cloudflare (dominio `workers.dev` y luego el definitivo) y cargar la llave pública como secreto del repositorio `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (ya la lee `deploy.yml`) y la secreta (`TURNSTILE_SECRET_KEY`) para la función de producción. Hasta entonces, publicar en `main` deja todos los envíos sin folio (WhatsApp funciona). En pyp-dev y en pruebas se usan las llaves de prueba públicas de Cloudflare.
+- ☐ Google Analytics 4: crear la propiedad y el flujo web, poner el ID `G-…` en `.env.local` (`NEXT_PUBLIC_GA_ID`, para verlo en DebugView con `pnpm dev`) y como secreto del repositorio del mismo nombre (producción). Decidir si hace falta aviso de cookies por GA4.
+- ☐ Confirmar los orígenes nuevos de `whatsapp_click`: `home` (portada y asesora) y `listing` (listados).
 - ☐ Confirmar dos detalles de la confirmación: "¡LISTO!" con el tamaño `display` de la escala (el diseño lo dibuja más grande) y la variante sin folio sin eyebrow (UI/UX §7.6).
 - ☐ Desplegar `submit-quote` a producción con sus secretos (`TURNSTILE_SECRET_KEY`, `IP_HASH_SALT` y `ALLOWED_ORIGINS` con el origen de `workers.dev`): falta un paso en `db-production.yml` o un flujo propio; no se lanza sin tu permiso.
 - ☐ Publicar `develop` en `main` cuando se quiera revisar la fase 2 en `workers.dev` y medir Lighthouse.
@@ -183,7 +187,6 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Técnicos, con tarea asignada**
 - T3.2: matriz de cantidades, personalización y "Agregar a mi cotización" en la ficha.
-- T3.9: eventos de analítica (`search`, `view_item_list`, `whatsapp_click`…).
 - Fase 5: galería de "Equipos estrenando", Visítanos, Uniformes, aviso de privacidad, 404, sitemap y JSON-LD de la tienda.
 - T6.3:
   - `catalog.json` pasaría de 60 KB gzip con 500 productos.

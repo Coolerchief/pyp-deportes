@@ -93,7 +93,10 @@ export function MobileMenu({
           ))}
         </ul>
       </nav>
-      <div className="bg-noche cancha text-blanco mt-5 flex grow flex-col gap-3 px-4 pt-5 pb-6">
+      <div
+        data-wa-origin="menu"
+        className="bg-noche cancha text-blanco mt-5 flex grow flex-col gap-3 px-4 pt-5 pb-6"
+      >
         <Button
           variant="whatsapp"
           size="lg"
