@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react';
+import { GoogleAnalytics, WhatsAppClickTracker } from '@/components/analytics/Analytics';
+import { gaMeasurementId } from '@/lib/analytics/events';
 import { SiteFooter, SiteHeader, WhatsAppFab } from '@/components/layout';
 import { AddedNotice } from '@/components/quote/AddedNotice';
 import { QuoteBar } from '@/components/quote/QuoteBar';
@@ -26,6 +28,12 @@ export default async function PublicLayout({ children }: { children: ReactNode }
       <QuoteBar />
       <WhatsAppFab href={nav.contact.whatsappUrl} />
       <AddedNotice />
+      <WhatsAppClickTracker />
+      {/* DebugView shows the events of local and staging builds; deploy.yml sets no SITE_ENV. */}
+      <GoogleAnalytics
+        gaId={gaMeasurementId(process.env.NEXT_PUBLIC_GA_ID)}
+        debug={!!process.env.SITE_ENV && process.env.SITE_ENV !== 'production'}
+      />
     </CommerceProvider>
   );
 }

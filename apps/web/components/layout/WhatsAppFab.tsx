@@ -19,6 +19,7 @@ export function WhatsAppFab({ href }: { href: string }) {
       rel="noopener noreferrer"
       // Contains the visible text of the desktop pill (label in name).
       aria-label="¿Dudas? Escríbenos por WhatsApp"
+      data-wa-origin="floating"
       className="bg-whatsapp text-noche shadow-float fixed right-4 bottom-[calc(1rem+var(--bottom-bar,0px))] z-30 inline-flex size-14 items-center justify-center rounded-full no-underline lg:right-8 lg:bottom-8 lg:w-auto lg:gap-2.5 lg:pr-5 lg:pl-4"
     >
       <WhatsAppGlyph size={28} className="lg:size-6" />

@@ -58,7 +58,10 @@ export function ListingPage({
     initialProducts: products.slice(0, LISTING_PAGE_SIZE),
   };
   return (
-    <div className="container-page flex flex-col gap-4 pt-3 pb-16 lg:gap-7 lg:pt-5 lg:pb-20">
+    <div
+      data-wa-origin="listing"
+      className="container-page flex flex-col gap-4 pt-3 pb-16 lg:gap-7 lg:pt-5 lg:pb-20"
+    >
       <Breadcrumbs items={breadcrumbs} />
       <header className="flex flex-col gap-4 lg:grid lg:grid-cols-12 lg:items-end lg:gap-6">
         <div className="flex flex-col gap-2.5 lg:col-span-6 lg:gap-3">

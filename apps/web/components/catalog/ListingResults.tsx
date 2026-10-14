@@ -25,9 +25,10 @@ import {
 } from '@pyp/shared';
 import { SlidersHorizontal } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { WhatsAppGlyph } from '@/components/layout/WhatsAppGlyph';
 import { Button, Chip, EmptyState, Sheet } from '@/components/ui';
+import { analyticsItem, MAX_ITEMS, track } from '@/lib/analytics/track';
 import { useCatalog } from '@/lib/catalog-client';
 import { useRememberListing } from '@/lib/commerce/added-notice';
 import {
@@ -150,6 +151,22 @@ function Results({
   const failed = needsCatalog && status === 'error';
   const products = results ? results.slice(0, visible) : initialProducts;
   const matching = results?.length ?? total;
+
+  // view_item_list once per list and filters (not per "Cargar más"), when the products are
+  // final; the static render (query null) sends nothing.
+  const listKey = query === null || loading ? null : `${basePath}|${stateKey}`;
+  useEffect(() => {
+    if (!listKey) return;
+    track('view_item_list', {
+      item_list_id: basePath,
+      item_list_name: title,
+      items: products
+        .slice(0, MAX_ITEMS)
+        .map((p, index) => analyticsItem(p, { category: categoryNames[p.category], index })),
+    });
+    // Only a new list counts; products follow listKey.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listKey]);
 
   function update(next: ListingState) {
     setState(next);

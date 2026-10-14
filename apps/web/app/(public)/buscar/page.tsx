@@ -14,7 +14,7 @@ export default async function BuscarPage() {
   const { catalog, settings } = await getBuildData();
   const nav = buildSiteNav(catalog, settings);
   return (
-    <div className="container-page pt-3 pb-16 lg:pt-5 lg:pb-20">
+    <div data-wa-origin="search" className="container-page pt-3 pb-16 lg:pt-5 lg:pb-20">
       {/* useSearchParams suspends while prerendering; the shell shows nothing until it runs. */}
       <Suspense>
         <SearchPage

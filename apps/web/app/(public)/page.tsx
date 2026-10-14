@@ -36,7 +36,7 @@ export default async function HomePage() {
   const categoryNames = Object.fromEntries(catalog.categories.map((c) => [c.slug, c.name]));
 
   return (
-    <>
+    <div data-wa-origin="home">
       <HomeHero media={settings.siteMedia.home_hero} whatsappUrl={quoteUrl} />
 
       {nav.sports.length > 0 && (
@@ -118,6 +118,6 @@ export default async function HomePage() {
       )}
 
       <StoreInfo store={settings.store} contact={nav.contact} />
-    </>
+    </div>
   );
 }

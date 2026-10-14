@@ -9,11 +9,12 @@ import {
   unavailableLineIds,
 } from '@pyp/shared';
 import Link from 'next/link';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { chipStyle } from '@/components/catalog/chip-style';
 import { Button, EmptyState, Skeleton } from '@/components/ui';
 import { useCatalog } from '@/lib/catalog-client';
 import { useQuote } from '@/lib/commerce';
+import { quoteItems, track } from '@/lib/analytics/track';
 import { useAddedNotice } from '@/lib/commerce/added-notice';
 import { useSubmission } from '@/lib/commerce/submission';
 import type { NavLink } from '@/lib/navigation';
@@ -66,6 +67,14 @@ export function QuoteListStep({
   const blocked = groups.some((g) => g.lines.some((l) => unavailable.has(l.lineId)));
   const back = useAddedNotice((s) => s.lastListing) ?? ROUTES.catalog;
   const dismissUndo = useCallback(() => setUndo(null), []);
+
+  // view_quote once per visit to step 1, when the saved list was read and has products.
+  const viewed = useRef(false);
+  useEffect(() => {
+    if (viewed.current || !hydrated || lines.length === 0) return;
+    viewed.current = true;
+    track('view_quote', { items: quoteItems(lines), products, pieces });
+  }, [hydrated, lines, products, pieces]);
 
   function remove(lineIds: string[], message: string) {
     const removed = useQuote.getState().remove(lineIds);

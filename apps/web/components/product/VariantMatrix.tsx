@@ -16,6 +16,7 @@ import { chipStyle } from '@/components/catalog/chip-style';
 import { Button } from '@/components/ui';
 import { QuantityInput } from '@/components/ui/QuantityInput';
 import { useQuote } from '@/lib/commerce';
+import { analyticsItem, track } from '@/lib/analytics/track';
 import { useAddedNotice } from '@/lib/commerce/added-notice';
 import { cx } from '@/lib/cx';
 
@@ -136,6 +137,16 @@ export function VariantMatrix({ product, categoryName, customizable }: VariantMa
         image: product.image?.keyBase ?? null,
       },
       variants: lines,
+    });
+    track('add_to_quote', {
+      items: lines.map((line) =>
+        analyticsItem(product, {
+          category: categoryName,
+          variant: line.label,
+          quantity: line.quantity,
+        }),
+      ),
+      pieces: total,
     });
     setQuantities({});
     setPreset(null);
