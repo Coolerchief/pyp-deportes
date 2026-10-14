@@ -13,7 +13,7 @@ import {
   setPersonalization,
   setQuantity,
   unavailableLineIds,
-} from './quote-list';
+} from './quote-list.ts';
 
 const NOW = '2026-10-13T12:00:00.000Z';
 const uuid = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;

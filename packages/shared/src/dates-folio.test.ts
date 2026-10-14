@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, addYears, isIsoDate, mexicoCityDate, mexicoCityYear } from './dates';
-import { formatFolio, isFolio, parseFolio } from './folio';
+import { addDays, addYears, isIsoDate, mexicoCityDate, mexicoCityYear } from './dates.ts';
+import { formatFolio, isFolio, parseFolio } from './folio.ts';
 
 describe('Mexico City dates', () => {
   it('uses the Mexico City calendar day, not UTC', () => {

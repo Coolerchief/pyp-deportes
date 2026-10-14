@@ -6,7 +6,7 @@ import {
   catalogMeta,
   type RawBuildRows,
   validateBuildRows,
-} from './build-data';
+} from './build-data.ts';
 
 const id = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 const NOW = '2026-10-11T12:00:00.000Z';

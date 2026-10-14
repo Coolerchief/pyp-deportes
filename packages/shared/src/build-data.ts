@@ -3,8 +3,8 @@
 // /data/settings.json. Any invalid row stops the build with the view and the row id.
 
 import { z } from 'zod';
-import { type CatalogJson, CatalogJsonSchema, type CatalogProduct } from './catalog';
-import { AUDIENCES, TECHNIQUES } from './labels';
+import { type CatalogJson, CatalogJsonSchema, type CatalogProduct } from './catalog.ts';
+import { AUDIENCES, TECHNIQUES } from './labels.ts';
 
 const slug = z.string().regex(/^[a-z0-9-]+$/, 'slug inválido');
 const timestamp = z.iso.datetime({ offset: true });

@@ -1,8 +1,8 @@
 // The quote message sent to WhatsApp (T3.6, TRD §6.5): full, compact (long lists with a folio)
 // and without folio (the fallback when saving fails, rule 5).
 
-import { whatsappUrl } from './contact';
-import { customerTypeLabels, type CustomerType, type DeliveryMethod } from './labels';
+import { whatsappUrl } from './contact.ts';
+import { customerTypeLabels, type CustomerType, type DeliveryMethod } from './labels.ts';
 
 /** Above this URL length the compact format is used (only with a folio). */
 export const WA_URL_MAX = 4000;

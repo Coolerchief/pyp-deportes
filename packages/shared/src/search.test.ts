@@ -1,14 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { buildCatalog, type RawBuildRows, validateBuildRows } from './build-data';
+import { buildCatalog, type RawBuildRows, validateBuildRows } from './build-data.ts';
 import {
   buildCatalogSearch,
   searchProducts,
   searchSuggestions,
   searchTerm,
   suggestCorrection,
-} from './search';
+} from './search.ts';
 
 // The CI snapshot of pyp-dev: the 56 test products, as the site indexes them.
 const snapshot = JSON.parse(

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { checkLinkedProject } from './supabase-dev.mjs';
+import { checkLinkedProject, devFunctionSecrets, TURNSTILE_TEST_SECRET } from './supabase-dev.mjs';
 
 const DEV = 'devdevdevdevdevdevde';
 const PROD = 'prodprodprodprodprod';
@@ -33,5 +33,22 @@ describe('checkLinkedProject', () => {
   it('requires a well-formed dev ref', () => {
     assert.match(checkLinkedProject({ devRef: '', prodRef: '', linkedRef: DEV }), /Falta/);
     assert.match(checkLinkedProject({ devRef: 'pyp-dev', prodRef: '', linkedRef: DEV }), /válida/);
+  });
+});
+
+describe('devFunctionSecrets', () => {
+  it('uses the Turnstile test secret and localhost origins unless .env.local says otherwise', () => {
+    assert.equal(
+      devFunctionSecrets({ DEV_IP_HASH_SALT: 'sal' }),
+      `TURNSTILE_SECRET_KEY=${TURNSTILE_TEST_SECRET}\nIP_HASH_SALT=sal\nALLOWED_ORIGINS=http://localhost:3000,http://localhost:3100`,
+    );
+    assert.match(
+      devFunctionSecrets({
+        DEV_IP_HASH_SALT: 'sal',
+        DEV_TURNSTILE_SECRET_KEY: 'otro',
+        DEV_ALLOWED_ORIGINS: 'https://a.test',
+      }),
+      /^TURNSTILE_SECRET_KEY=otro\n.*\nALLOWED_ORIGINS=https:\/\/a\.test$/s,
+    );
   });
 });

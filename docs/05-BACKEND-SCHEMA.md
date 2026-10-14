@@ -635,7 +635,9 @@ Orden de ejecución: CORS → verificar Turnstile → validar → límite de env
 | `201 { "folio": "PYP-2026-000123" }` | Creada |
 | `200 { "folio": "…", "duplicate": true }` | Reintento con el mismo `clientRequestId` |
 | `400 validation_error` | Datos inválidos; `fields` indica cuáles |
-| `403 turnstile_failed` | Token inválido o vencido |
+| `403 turnstile_failed` | Token inválido, vencido o ausente |
+| `403 forbidden_origin` | `Origin` fuera de la lista de CORS (TRD §13) |
+| `405 method_not_allowed` | Algo distinto de `POST` u `OPTIONS` |
 | `409 invalid_items` | Algún producto ya no está disponible; `fields.items` trae los `variantId` |
 | `429 rate_limited` | Demasiados envíos |
 | `500 internal_error` | Cualquier otro fallo |
@@ -643,6 +645,12 @@ Orden de ejecución: CORS → verificar Turnstile → validar → límite de env
 En cualquier respuesta distinta de 200/201, el frontend abre WhatsApp sin folio (salvo `409`, donde primero avisa qué producto quitar).
 
 `ipHash = sha256(ip + IP_HASH_SALT)`. La IP nunca se guarda en claro.
+
+Detalles de la implementación (T3.7):
+- Los errores de validación traen `fields` con la ruta del campo y el primer mensaje: `{ "customer.phone": "Faltan dígitos: deben ser 10.", "items.0.quantity": "Indica al menos 1 pieza." }`. Un cuerpo que no es JSON da `fields.body`.
+- El límite lee `settings.quote_rate_limit` (`per_ip_hour`, `per_phone_hour`; 5 y 5 si falta) y cuenta las solicitudes de la última hora **sin la del mismo `clientRequestId`**, así un reintento de la quinta recibe su folio (`200`) en vez de `429`. Sin IP solo se cuenta el teléfono y `ipHash` queda nulo.
+- A `create_quote_request` llegan los datos ya validados (nombre recortado, teléfono de 10 dígitos, notas recortadas), sin `turnstileToken` ni `privacyAccepted`, con `meta.userAgent` recortado a 500 caracteres.
+- Cada token de Turnstile sirve una vez: el sitio pide uno nuevo en cada intento (T3.8).
 
 ### 9.2 `sign-upload` (personal)
 

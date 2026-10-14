@@ -1,9 +1,9 @@
 // Listing filters (T2.5, TRD §7, APP-FLOW §1 and §3.2): URL parameters, AND between filter
 // types and OR inside one, and the counts next to each option, computed in the browser.
 
-import type { CatalogProduct } from './catalog';
-import { AUDIENCES, type Audience } from './labels';
-import { SORT_OPTIONS, type SortOption } from './listing';
+import type { CatalogProduct } from './catalog.ts';
+import { AUDIENCES, type Audience } from './labels.ts';
+import { SORT_OPTIONS, type SortOption } from './listing.ts';
 
 /** Which orders a page accepts and which one it shows without ?orden= (search: Relevancia). */
 export type SortSettings = { options: readonly SortOption[]; default: SortOption };

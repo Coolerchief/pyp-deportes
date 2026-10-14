@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { CatalogJsonSchema, type CatalogJson } from './catalog';
-import { QUOTE_STATUSES, quoteStatusTransitions } from './labels';
+import { CatalogJsonSchema, type CatalogJson } from './catalog.ts';
+import { QUOTE_STATUSES, quoteStatusTransitions } from './labels.ts';
 
 const catalog: CatalogJson = {
   generatedAt: '2026-10-11T07:20:23.478934+00:00',

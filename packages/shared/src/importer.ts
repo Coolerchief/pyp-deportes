@@ -3,7 +3,7 @@
 // applies the same rules in SQL (docs/05-BACKEND-SCHEMA.md §8.2).
 
 import { z } from 'zod';
-import { AUDIENCES, TECHNIQUES, type ProductStatus } from './labels';
+import { AUDIENCES, TECHNIQUES, type ProductStatus } from './labels.ts';
 
 export const IMPORT_BATCH_SIZE = 50;
 

@@ -150,7 +150,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T3.6 (mensaje de WhatsApp en `packages/shared/src/whatsapp.ts`: completo, compacto y sin folio, y `buildWaUrl`, que elige el formato según el largo de la URL; adaptador `quoteMessageInput` en `lib/commerce`). Pruebas con *snapshots* de los tres formatos; una lista de 100 líneas da una URL válida de 4 000 caracteres o menos con folio.
 
-**Siguiente paso:** T3.7 (Edge Function `submit-quote` con Turnstile, validación y límite de envíos).
+**Hecho:** T3.7 (Edge Function `supabase/functions/submit-quote`: CORS con lista, Turnstile, validación con el mismo `QuoteSubmissionSchema` del formulario, límite de 5 por hora por IP y por teléfono leído de `settings`, y `create_quote_request`). Responde 201, 200 (reintento), 400, 403, 409, 429 y 500; 25 pruebas en Deno, una por código de respuesta más la capa de Siteverify y PostgREST (`pnpm test:functions`, dentro de `pnpm test` y de CI). `packages/shared` ahora importa con extensión `.ts` para que Deno lo cargue tal cual. `pnpm functions:deploy` la despliega a pyp-dev.
+
+**Siguiente paso:** T3.8 (envío desde el sitio: Turnstile, tiempo máximo de 6 s, respaldo sin folio, paso 3 y botón "Abrir WhatsApp").
 
 ### F. Pendientes acumulados (13-oct-2026)
 
@@ -163,6 +165,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 - ☐ Decidir el mapa de Visítanos e Inicio: embebido o imagen.
 - ☐ Definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:setup` para entrar como `admin@pyp.test`.
 - ☐ *Environment* `production` con aprobación y los secretos de Supabase (pospuesto).
+- ☐ Renovar la sesión de la CLI de Supabase (`node_modules\.bin\supabase login` en tu terminal; la actual dice "Invalid access token") y correr `pnpm functions:deploy` para publicar `submit-quote` en pyp-dev y probarla de punta a punta.
+- ☐ Turnstile real: crear el sitio en Cloudflare (dominio `workers.dev` y luego el definitivo) y dar la llave pública (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`) y la secreta (`TURNSTILE_SECRET_KEY`). En pyp-dev y en pruebas se usan las llaves de prueba públicas de Cloudflare.
+- ☐ Desplegar `submit-quote` a producción con sus secretos (`TURNSTILE_SECRET_KEY`, `IP_HASH_SALT` y `ALLOWED_ORIGINS` con el origen de `workers.dev`): falta un paso en `db-production.yml` o un flujo propio; no se lanza sin tu permiso.
 - ☐ Publicar `develop` en `main` cuando se quiera revisar la fase 2 en `workers.dev` y medir Lighthouse.
 - ☐ Confirmar las decisiones tomadas sin diseño ni documento:
   - Glifo oficial de WhatsApp en lugar de la burbuja del diseño.
@@ -175,7 +180,7 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
   - Footer sin la frase "Desde 1969".
 
 **Técnicos, con tarea asignada**
-- T3.7–T3.8: Turnstile, la Edge Function `submit-quote` y el envío con folio (el mensaje de WhatsApp ya existe desde T3.6) (los pasos 1 y 2 de `/cotizacion` ya existen; hoy un envío válido solo confirma que los datos están completos).
+- T3.8: Turnstile en el formulario y el envío con folio (la función `submit-quote` y el mensaje de WhatsApp ya existen; hoy un envío válido solo confirma que los datos están completos).
 - T3.2: matriz de cantidades, personalización y "Agregar a mi cotización" en la ficha.
 - T3.9: eventos de analítica (`search`, `view_item_list`, `whatsapp_click`…).
 - Fase 5: galería de "Equipos estrenando", Visítanos, Uniformes, aviso de privacidad, 404, sitemap y JSON-LD de la tienda.

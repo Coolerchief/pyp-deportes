@@ -2,9 +2,9 @@
 // Hook Form) and the submit-quote Edge Function. Messages follow docs/03-UI-UX.md §10.
 
 import { z } from 'zod';
-import { addYears, isIsoDate, mexicoCityDate } from './dates';
-import { CUSTOMER_TYPES, DELIVERY_METHODS } from './labels';
-import { digitsOnly } from './text';
+import { addYears, isIsoDate, mexicoCityDate } from './dates.ts';
+import { CUSTOMER_TYPES, DELIVERY_METHODS } from './labels.ts';
+import { digitsOnly } from './text.ts';
 
 export const QUOTE_LIMITS = {
   nameMin: 2,

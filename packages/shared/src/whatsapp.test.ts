@@ -5,7 +5,7 @@ import {
   buildWaUrl,
   type QuoteMessageInput,
   WA_URL_MAX,
-} from './whatsapp';
+} from './whatsapp.ts';
 
 const NUMBER = '5500000000';
 

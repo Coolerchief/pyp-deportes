@@ -1,9 +1,9 @@
 // Quantity matrix of the product page (T3.2, UI/UX §7.5): how the variants become rows, the
 // "Equipo de 12 / 18 / 24" shortcuts and the totals.
 
-import type { CatalogProduct } from './catalog';
-import { QUOTE_LIMITS } from './quote';
-import { normalizeText, variantLabel } from './text';
+import type { CatalogProduct } from './catalog.ts';
+import { QUOTE_LIMITS } from './quote.ts';
+import { normalizeText, variantLabel } from './text.ts';
 
 export type MatrixRow = { variantId: string; label: string };
 

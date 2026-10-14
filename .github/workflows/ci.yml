@@ -53,6 +53,11 @@ jobs:
           node-version: 24
           cache: pnpm
 
+      # Edge Functions run on Deno; `pnpm test` type-checks and tests them (test:functions).
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.9.7
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { CatalogProduct } from './catalog';
+import type { CatalogProduct } from './catalog.ts';
 import {
   activeFilterCount,
   applyFilters,
@@ -8,7 +8,7 @@ import {
   parseListingParams,
   serializeListingParams,
   toggleFilter,
-} from './filters';
+} from './filters.ts';
 
 let n = 0;
 function product(overrides: Partial<CatalogProduct>): CatalogProduct {

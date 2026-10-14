@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { digitsOnly, normalizeText, slugify, variantLabel, variantSku } from './text';
+import { digitsOnly, normalizeText, slugify, variantLabel, variantSku } from './text.ts';
 
 describe('normalizeText', () => {
   it('lowercases and removes accents, tildes and diaeresis like unaccent', () => {

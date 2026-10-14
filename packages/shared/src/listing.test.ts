@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { CatalogJson, CatalogProduct } from './catalog';
+import type { CatalogJson, CatalogProduct } from './catalog.ts';
 import {
   categoriesIn,
   featuredProducts,
@@ -7,7 +7,7 @@ import {
   productCount,
   sortProducts,
   sportShortcuts,
-} from './listing';
+} from './listing.ts';
 
 let n = 0;
 function product(overrides: Partial<CatalogProduct>): CatalogProduct {

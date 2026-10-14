@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { IMPORT_COLUMNS, ImportRowSchema, splitList, type ImportRowInput } from './importer';
+import { IMPORT_COLUMNS, ImportRowSchema, splitList, type ImportRowInput } from './importer.ts';
 
 const base: ImportRowInput = {
   sku: 'BAL-002',

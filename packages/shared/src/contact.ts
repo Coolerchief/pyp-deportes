@@ -1,7 +1,7 @@
 // How the store's contact data reads on the site: phone, opening hours and WhatsApp links.
 // The values come from settings and stores (rule 4); only the format lives here.
 
-import { digitsOnly } from './text';
+import { digitsOnly } from './text.ts';
 
 /** One opening-hours block of `stores.hours` (days: 1 = lunes … 7 = domingo). */
 export type StoreHoursBlock = { days: number[]; open: string; close: string };

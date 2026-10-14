@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --parallel typecheck",
-    "test": "pnpm -r test && node --test \"scripts/*.test.mjs\"",
+    "test": "pnpm -r test && node --test \"scripts/*.test.mjs\" && pnpm test:functions",
+    "test:functions": "deno check --config supabase/functions/submit-quote/deno.json supabase/functions/submit-quote/index.ts && deno test --config supabase/functions/submit-quote/deno.json supabase/functions",
     "test:e2e": "pnpm --filter @pyp/web test:e2e",
     "placeholders": "pnpm --filter @pyp/web placeholders",
     "test:db": "node scripts/supabase-dev.mjs test",
@@ -19,7 +20,8 @@
     "db:reset": "node scripts/supabase-dev.mjs reset",
     "db:setup": "node scripts/supabase-dev.mjs setup",
     "db:types": "node scripts/supabase-dev.mjs types",
-    "db:import": "node scripts/supabase-dev.mjs import"
+    "db:import": "node scripts/supabase-dev.mjs import",
+    "functions:deploy": "node scripts/supabase-dev.mjs functions"
   },
   "devDependencies": {
     "eslint": "^9.39.5",
