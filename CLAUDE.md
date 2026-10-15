@@ -42,6 +42,8 @@ pnpm db:link        # enlaza la CLI con pyp-dev (solo pyp-dev)
 pnpm test:db        # pgTAP contra pyp-dev (scripts/pgtap.mjs; cada prueba: begin, create extension pgtap, truncate de las tablas, …, rollback) + folios simultáneos
 pnpm db:reset       # migraciones + semilla en pyp-dev (borra sus datos) y contraseña del admin de desarrollo
 pnpm db:setup       # db:reset + importa docs/data/catalogo-inicial.csv: pyp-dev listo con un comando
+pnpm db:migrate     # aplica a pyp-dev solo las migraciones nuevas, sin borrar datos
+pnpm db:admin-password   # pone a admin@pyp.test la contraseña de .env.local sin db:reset
 pnpm db:types       # regenera packages/shared/database.types.ts desde pyp-dev
 pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev con admin_import_products (correrlo de nuevo actualiza, no duplica)
 pnpm functions:deploy   # secretos y despliegue de submit-quote en pyp-dev (sin Docker)
@@ -66,9 +68,9 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   components/home/   Secciones de Inicio (HomeHero, UniformsBand, HowItWorks, AdvisorCard, StoreInfo)
   components/content/ SitePhoto: foto de site_media o su marcador
   components/analytics/ GoogleAnalytics (GA4), WhatsAppClickTracker (data-wa-origin) y TrackOnMount
-  components/admin/  LoginPage, AdminGate (useAdminSession), AdminShell (AdminHeader + AdminNav: barra lateral y barra inferior), AdminHome (Inicio), SectionPlaceholder; ui/ con los componentes de shadcn (button, card) hechos con los tokens
+  components/admin/  LoginPage, AdminGate (useAdminSession), AdminShell (AdminHeader + AdminNav: barra lateral y barra inferior), AdminHome (Inicio), SectionPlaceholder, products/ (ProductsPage, ProductEditor, CommerceSection, StatusBadge); ui/ con los componentes de shadcn (button, card, select) hechos con los tokens
   components/quote/  AddedNotice, QuoteBar, QuickAddButton/InQuoteBadge y la página /cotizacion (QuotePage, StepIndicator, QuoteListStep, QuoteLineCard, PersonalizationEditor, QuoteFormStep, QuoteForm, QuoteConfirmation)
-  lib/admin/         access.ts (fetchStaff, safeNext, mensajes de login), navigation.ts (secciones por rol), dashboard.ts (fetchDashboard del Inicio)
+  lib/admin/         access.ts (fetchStaff, safeNext, mensajes de login), navigation.ts (secciones por rol), dashboard.ts (fetchDashboard del Inicio), products.ts (lista, editor y escrituras de productos)
   lib/supabase/      browser.ts: cliente de Supabase solo para /admin
   lib/analytics/     track() y los eventos del embudo (TRD §12); se usan solo a través de track()
   lib/               data (catalog.json y settings.json del build), navigation (menús, contacto y rutas), listing (listados estáticos), images/loader (anchos de R2), indexing

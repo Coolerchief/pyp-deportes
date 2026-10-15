@@ -345,6 +345,13 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 - Secciones en `lib/admin/navigation.ts` (`sectionsFor(role)`, `activeSection(pathname)` para `aria-current`). Ajustes solo para `admin`; la UI lo oculta y su página lo dice, pero la seguridad sigue en RLS. Las secciones que llegan después (T4.3–T4.9) ya tienen su página con "Esta sección estará disponible pronto." para que la navegación funcione.
 - Inicio (`AdminHome`): `fetchDashboard` pide en paralelo `admin_dashboard_stats()`, `has_unpublished_changes()` y la última fila de `publish_runs`, y valida la forma con `DashboardStatsSchema`/`LastPublishSchema` de `packages/shared` (`dashboard.ts`, con `publishTone`). Cualquier falla muestra un solo error con "Reintentar"; "Actualizar" vuelve a pedir los números. El botón **Publicar cambios** se ve deshabilitado hasta T4.10.
 
+**Productos (T4.3, 14-oct-2026).**
+- Rutas estáticas: `/admin/productos` (lista), `/admin/productos/nuevo` y `/admin/productos/editar?id=…` (parámetro y no `[id]`: el export es estático y los productos solo se conocen en el navegador), `/admin/productos/importar` (llega en T4.6).
+- `lib/admin/products.ts`: `listProducts` (búsqueda sobre `search_text` con `ilike`, filtros de estado, categoría y "sin foto" con el anti-join de PostgREST `product_images!left(id)` + `is null`, orden por nombre, 50 por página con `count: 'exact'`), `fetchTaxonomy`, `fetchProduct` (producto, deportes, fotos y variantes activas con precios y existencias), `saveProduct`, `duplicateProduct`, `saveCommerce` y `productErrorMessage` (lleva SKU o slug repetidos a su campo). Los filtros viven en la URL (`?q=&estado=&categoria=&foto=sin&pagina=`).
+- El formulario usa React Hook Form con `ProductFormSchema` y `CommerceFormSchema` de `packages/shared/src/admin-product.ts` (también `productPayload`, `commercePayload`, `proposeSlug`, `pesosToCents`). La base vuelve a revisar las mismas reglas en `admin_save_product` y `admin_save_commerce`.
+- Variantes (generador) y fotos llegan en T4.4 y T4.5; por ahora el editor las muestra de solo lectura. La vista previa con la ficha real llega con las fotos (T4.5).
+- `pnpm db:migrate` aplica a pyp-dev solo las migraciones nuevas, sin borrar datos (`supabase db push --linked`), y `pnpm db:admin-password` pone la contraseña de `admin@pyp.test` sin `db:reset`.
+
 ## 9. Backend (Supabase)
 
 ### 9.1 Principios

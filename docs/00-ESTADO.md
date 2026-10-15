@@ -160,7 +160,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T4.2 (estructura del panel: encabezado, barra lateral desde `lg` y barra inferior con "Más" en móvil; Ajustes solo para administradores; páginas de las secciones que llegan después con "Esta sección estará disponible pronto."; Inicio con solicitudes nuevas, de la semana y de 30 días, productos sin foto, estado de publicación, solicitudes por estado y lo más pedido, desde `admin_dashboard_stats`, `has_unpublished_changes` y `publish_runs`). Pruebas de componentes y E2E en móvil y escritorio. El botón "Publicar cambios" se ve deshabilitado hasta T4.10.
 
-**Siguiente paso:** T4.3 (Productos: lista con búsqueda y filtros, editor por secciones y estados: crear, editar, duplicar, publicar y archivar).
+**Hecho:** T4.3 (Productos en el panel: lista con búsqueda, filtros por estado, categoría y "sin foto" en la URL, 50 por página; editor con Básico, Clasificación, Personalización y Comercial oculto; crear, editar, publicar, pasar a borrador, archivar, restaurar y duplicar). Funciones nuevas `admin_save_product`, `admin_duplicate_product` y `admin_save_commerce` con 29 pruebas pgTAP; esquemas Zod compartidos en `packages/shared/src/admin-product.ts`. Probado de punta a punta contra pyp-dev en `pnpm dev` (los productos de prueba se borraron). Comandos nuevos: `pnpm db:migrate` y `pnpm db:admin-password`.
+
+**Siguiente paso:** T4.4 (Variantes: generador de tallas × colores con `admin_replace_variants`, sin cambiar los `id` existentes).
 
 ### F. Pendientes acumulados (13-oct-2026)
 

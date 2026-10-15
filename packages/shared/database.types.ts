@@ -1804,11 +1804,17 @@ export type Database = {
     Functions: {
       admin_anonymize_customer: { Args: { id: string }; Returns: undefined }
       admin_dashboard_stats: { Args: never; Returns: Json }
+      admin_duplicate_product: { Args: { id: string }; Returns: string }
       admin_import_products: { Args: { rows: Json }; Returns: Json }
       admin_replace_variants: {
         Args: { option1: string[]; option2: string[]; product_id: string }
         Returns: Json
       }
+      admin_save_commerce: {
+        Args: { product_id: string; variants: Json }
+        Returns: undefined
+      }
+      admin_save_product: { Args: { product: Json }; Returns: string }
       admin_set_quote_note: {
         Args: { id: string; internal_note: string }
         Returns: undefined

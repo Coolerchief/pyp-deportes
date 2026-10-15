@@ -531,6 +531,9 @@ La prueba 7 está en `supabase/tests/040_functions.test.sql`. La 8 necesita vari
 | `admin_replace_variants(product_id uuid, option1 text[], option2 text[])` | Personal | Regenera variantes conservando las que ya existen (no cambia sus `id`) y desactivando las que sobran |
 | `admin_dashboard_stats()` → `jsonb` | Personal | Solicitudes nuevas, de los últimos 7 y 30 días, por estado, productos sin foto, top 10 productos solicitados |
 | `has_unpublished_changes()` → `boolean` | Personal | `true` si algún `updated_at` del contenido público es posterior al último `publish_runs` con `success` |
+| `admin_save_product(product jsonb)` → `uuid` | Personal | Crea o actualiza un producto y reemplaza sus deportes (editor del panel, T4.3) |
+| `admin_duplicate_product(id uuid)` → `uuid` | Personal | Copia en borrador con SKU y slug libres, mismos deportes, variantes y precios |
+| `admin_save_commerce(product_id uuid, variants jsonb)` | Personal | Reemplaza precios por volumen y existencias por tienda de las variantes enviadas |
 | `admin_anonymize_customer(id uuid)` | Admin | Derecho de cancelación (ARCO): sustituye nombre y teléfono por valores anónimos en el cliente y en sus solicitudes |
 | `mark_publish_run(id uuid, status publish_status, run_url text, error text)` | Solo `service_role` | La llama GitHub Actions al iniciar y al terminar el build |
 | `ping()` | `anon` | Inserta en `system_heartbeats` y borra latidos de más de 90 días. Mantiene activo el proyecto |
@@ -592,6 +595,15 @@ Pasos, en una transacción:
 - `option1_name` toma el `size_label` de la categoría al crear el producto y no se toca al actualizar. Sin la semilla, las categorías creadas por el importador tienen `Talla`; con la semilla (T1.6), `balones` y `material-entrenamiento` dan `Tamaño` y `box-y-combate` da `Peso`.
 - `tallas = unitalla` y `colores = A elegir` funcionan como dice `data/sitio-actual.md` §4. `option2_name` es `Color` cuando hay colores.
 - La llaman el personal y `service_role`. Para eso `require_staff()` deja pasar a `service_role` (el servidor, que ya salta RLS); las funciones solo de admin siguen exigiendo admin. El script entra por el pooler de pyp-dev y, dentro de cada transacción, actúa como `service_role`.
+
+### 8.3 Productos desde el panel (T4.3)
+
+**Implementación (T4.3, 14-oct-2026).** Migraciones `20261014120000_admin_products.sql` y `20261014130000_admin_products_sku.sql`; pruebas en `supabase/tests/070_admin_products.test.sql`. Guardar, duplicar y lo comercial corren cada uno en una transacción, así un error nunca deja un producto sin sus deportes o con la mitad de sus precios.
+- `admin_save_product(product jsonb)`: llaves en camelCase (`id` opcional, `sku`, `slug`, `name`, `brandId`, `categoryId`, `subcategoryId`, `sportIds`, `audience`, `shortDescription`, `description`, `specs`, `tags`, `isCustomizable`, `techniques`, `minSuggestedQty`, `isFeatured`, `status`). Sin `id` crea; con `id` actualiza. El SKU se guarda en mayúsculas y la categoría debe ser principal, con la subcategoría dentro de ella. Al crear, `option1_name` toma el `size_label` de la categoría y `created_by` es quien llama. Reemplaza los deportes. Errores con `errcode` `invalid_parameter_value` (22023) y el texto en español; SKU o slug repetidos salen como `unique_violation` (23505) con el nombre de la restricción.
+- El SKU cambia solo mientras el producto nunca se ha publicado (`published_at` nulo); sus variantes se renombran con `variant_sku()`. Una vez publicado, ni el SKU ni el slug cambian (enlaces, solicitudes e importaciones dependen de ellos).
+- Al final ejecuta `set constraints ensure_default_variant, validate_product_publish immediate`: un producto nuevo recibe su variante por defecto en la misma llamada y un "No se puede publicar…" (23514) sale en esa llamada y no al confirmar.
+- `admin_duplicate_product(id)`: nombre con "(copia)", SKU `{sku}-COPIA` y slug `{slug}-copia` (o `-2`, `-3`… si ya existen), estado borrador, no destacado, mismos deportes, las variantes activas (con `admin_replace_variants`, SKU nuevos) y sus precios. No copia fotos (son del producto en R2) ni existencias.
+- `admin_save_commerce(product_id, variants)`: `[{ variantId, prices: [{ minQty, unitPriceCents }], stock: [{ storeId, quantity }] }]`. Cada variante debe ser del producto; precios con cantidad mínima ≥ 1, importe ≥ 0 y sin cantidades repetidas; existencias ≥ 0 de tiendas registradas. Reemplaza lo de cada variante enviada.
 
 ## 9. Edge Functions
 
