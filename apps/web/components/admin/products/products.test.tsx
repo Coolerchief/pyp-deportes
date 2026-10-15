@@ -77,6 +77,7 @@ const PUBLISHED: EditorProduct = {
   option2Name: null,
   colorNote: null,
   photoCount: 0,
+  images: [],
   variants: [
     {
       id: 'v1',

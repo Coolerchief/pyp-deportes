@@ -87,7 +87,7 @@ flowchart LR
 | Búsqueda | MiniSearch | 7.2 (en `packages/shared`, entrada `@pyp/shared/search`) | Índice construido en el navegador desde `catalog.json`; `autoSuggest` para "¿Quisiste decir…?" |
 | Íconos | lucide-react · simple-icons (solo el glifo de WhatsApp) | 1.55 · 16.35 | Trazo 2 px, 20/24 px (`03-UI-UX.md` §5). `simple-icons` se instaló en T2.2; se importa solo `siWhatsapp` |
 | CSV/Excel | Papa Parse · SheetJS (`xlsx`) | última | Importador del admin |
-| Imágenes (subida) | `browser-image-compression` o Canvas API | — | Genera WebP 320/640/1024/1600 |
+| Imágenes (subida) | Canvas API · `@jsquash/webp` · `heic-to` | — · 1.5.0 · 1.5.2 (T4.5) | Canvas recorta y genera los WebP 320/640/1024/1600. Safari no codifica WebP desde canvas: ahí entra `@jsquash/webp` (Apache-2.0, libwebp en wasm). Un HEIC que el navegador no abre pasa por `heic-to` (LGPL-3.0, libheif en wasm). Las dos se cargan solo cuando hacen falta y nunca en el sitio público |
 | Imágenes genéricas (build) | `sharp` | 0.35.x | Solo desarrollo: `pnpm placeholders` captura `ImagenGenerica` con Playwright y la codifica a WebP en `apps/web/public/img/placeholder/` (misma versión que trae Next) |
 | Backend | Supabase (Postgres 15+, Auth, Edge Functions en Deno) | CLI última | Migraciones en `supabase/migrations` |
 | Edge Functions (desarrollo) | Deno · `@std/assert` (JSR) | 2.9.7 · 1.0.13 | `deno.exe` vive en `.venv/Scripts` (binario oficial de GitHub, verificado con su SHA-256) y en CI con `denoland/setup-deno`. `pnpm test:functions` revisa tipos y prueba `supabase/functions`; `@std/assert` y `zod` (`npm:zod@4.6.5`) salen del `deno.json` de cada función, sin `package.json` |
@@ -320,12 +320,16 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 - **Auth:** Supabase Auth con correo + contraseña (y enlace mágico opcional). Sin registro público; el Admin invita usuarios.
 - **Autorización:** tabla `staff_members(user_id, role)` con roles `admin | editor`. Toda la seguridad real está en **RLS y RPCs** (ver `05-BACKEND-SCHEMA.md`). La UI solo oculta lo que el rol no puede hacer.
 - **Formularios:** React Hook Form + los mismos esquemas Zod del importador.
-- **Vista previa:** la ficha de producto del admin reutiliza el componente público `ProductDetail` con datos en vivo (incluidos borradores).
+- **Vista previa:** la ficha de producto del admin reutiliza el componente público (`ProductPage`) con datos en vivo (incluidos borradores).
 - **Subida de fotos:**
-  1. El navegador valida (JPG, PNG, WebP o HEIC; ≤ 15 MB), ofrece el **recorte 4:5** y genera 4 WebP (320, 640, 1024, 1600 px de ancho, calidad 0.8).
+  1. El navegador valida (JPG, PNG, WebP o HEIC; ≤ 15 MB), ofrece el **recorte 4:5** y genera 4 WebP (320, 640, 1024, 1600 px de ancho, calidad 0.8; cada tamaño se reduce del anterior).
   2. Pide URLs firmadas a `sign-upload` (una por tamaño, expiran en 10 min).
   3. Sube con `PUT` directo a R2.
-  4. Inserta la fila en `product_images` (RLS).
+  4. Registra la foto con `admin_add_product_image` (la clave la arma la base).
+  - **Implementación (T4.5, 14-oct-2026).** `lib/admin/photos.ts`: `cropRect` (matemática del recorte, probada aparte), `decodePhoto` (`createImageBitmap` con la rotación EXIF; si falla y es HEIC, `heic-to` con 30 s de límite, porque la biblioteca a veces registra el error sin rechazar), `renderWidths` y `uploadProductPhoto` (firma con `supabase.functions.invoke('sign-upload')`, `PUT` de los 4 archivos con los encabezados firmados `Content-Type` y `Cache-Control`, y `admin_add_product_image`). Cada error tiene su mensaje: sin R2 configurado, sesión vencida, sin permiso, subida fallida, foto muy pequeña, más de 15 MB o HEIC que no se pudo convertir.
+  - `PhotosSection`: "Agregar fotos" (en el celular abre cámara o galería), recorte en `PhotoCropper` (arrastrar, zoom con deslizador o + / −, flechas; texto alternativo), barra de progreso por foto con "Reintentar", orden con botones (la primera es la portada, `admin_reorder_product_images`), texto alternativo que se guarda al salir del campo y "Quitar" con confirmación. Máximo 12 fotos. Quitar una foto borra su fila; los archivos se quedan en R2 (sus nombres no se reutilizan).
+  - `ProductPreview`: arma las filas `public_*` con lo guardado y usa `buildCatalog` + `buildProductPage` + `ProductPage`, lo mismo que el build, dentro de un contenedor `inert`. Lee categorías, marcas y deportes de las vistas `public_*`.
+  - `sign-upload` (`supabase/functions/sign-upload`): firma SigV4 propia con WebCrypto (`_shared/sigv4.ts`, probada con el ejemplo publicado por AWS), sin SDK. Secretos `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` y `R2_BUCKET`; en pyp-dev salen de `DEV_R2_*` de `.env.local` con `pnpm functions:deploy`, en producción se cargan a mano en Supabase y `functions-production.yml` avisa si faltan.
 - **Importador (FR-M5-3):** parseo en cliente (CSV/XLSX) → validación por fila con Zod → vista previa con errores → envío por lotes de 50 filas a la RPC `admin_import_products(jsonb)`, que hace *upsert* por SKU dentro de una transacción por lote y devuelve un reporte. Fotos en lote: el nombre del archivo (`BAL-001.jpg`, `BAL-001-2.jpg`) se asocia al SKU.
 - **Fotos del sitio:** pantalla con un espacio por cada clave de `site_media` (§6.2); mismo flujo de subida firmada, con recorte a la proporción del espacio.
 - **Textos del sitio:** preguntas frecuentes, historia, referencias para llegar, asesora y aviso de privacidad se guardan en `settings`/`site_texts` y se leen en el build.
@@ -368,7 +372,7 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 | Función | Auth | Entrada | Salida | Reglas |
 |---|---|---|---|---|
 | `submit-quote` | Pública + Turnstile | `QuoteSubmission` (cliente, líneas, nota, `clientRequestId`, `turnstileToken`) | `201 { folio }` · `200` reintento (mismo folio) · `400` validación · `403` Turnstile u origen · `409` producto no disponible · `429` límite · `500` | Verifica Turnstile → valida Zod → límite de 5 envíos/hora por IP (hash) y por teléfono → llama a la RPC `create_quote_request` (transacción: cliente *upsert* por teléfono, solicitud, líneas con snapshot de nombre/SKU) |
-| `sign-upload` | JWT de personal | `{ productId, files: [{ imageId, width, contentType }] }` | `{ uploads: [{ key, url }] }` | Solo `admin`/`editor`; claves bajo `p/{productId}/`, `g/{galleryId}/` o `s/{slot}/`; expira en 600 s |
+| `sign-upload` | JWT de personal | `{ scope: 'product' \| 'gallery' \| 'site', ownerId, imageId, widths, contentType: 'image/webp' }` (como `05-BACKEND-SCHEMA.md` §9.2) | `{ keyBase, uploads: [{ width, key, url }], headers, expiresIn }` | Solo `admin`/`editor` (revisa `is_staff()` con el token del usuario); claves bajo `p/{productId}/`, `g/{galleryId}/` o `s/{slot}/`; expira en 600 s. Sin los secretos de R2 responde 503 `not_configured` |
 | `trigger-publish` | JWT de personal o secreto del cron | `{ reason }` | `202 { runId }` | Inserta en `publish_runs`, llama a GitHub `workflow_dispatch`; si hay un build en curso, el workflow usa `concurrency` con `cancel-in-progress` |
 | `invite-staff` | JWT de admin | `{ email, fullName, role }` | `201` | Invita al usuario con la API de administración de Auth y crea su fila en `staff_members` |
 

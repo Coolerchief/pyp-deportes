@@ -47,6 +47,8 @@ import { Card, CardDescription, CardTitle } from '../ui/card';
 import { cn } from '../ui/cn';
 import { SelectField } from '../ui/select';
 import { CommerceSection } from './CommerceSection';
+import { PhotosSection } from './PhotosSection';
+import { ProductPreview } from './ProductPreview';
 import { VariantsSection } from './VariantsSection';
 import { NoPhotoBadge, StatusBadge } from './StatusBadge';
 
@@ -526,17 +528,6 @@ function ProductEditorForm({
         />
       </Section>
 
-      <Section
-        title="Fotos"
-        description={
-          product && product.photoCount > 0
-            ? `${product.photoCount === 1 ? '1 foto' : `${product.photoCount} fotos`}. Subir y ordenar fotos estará disponible pronto.`
-            : 'Sin foto: en el sitio se ve la imagen genérica de su categoría. Subir fotos estará disponible pronto.'
-        }
-      >
-        {null}
-      </Section>
-
       <Section title="Personalización">
         <label className="type-body text-noche flex cursor-pointer items-center gap-3">
           <input
@@ -758,6 +749,10 @@ export function ProductEditorPage({ mode }: { mode: 'new' | 'edit' }) {
       />
       {state.product ? (
         <>
+          <PhotosSection
+            product={state.product}
+            onSaved={(product) => setState({ ...state, product })}
+          />
           <VariantsSection
             product={state.product}
             onSaved={(product) => setState({ ...state, product })}
@@ -768,13 +763,14 @@ export function ProductEditorPage({ mode }: { mode: 'new' | 'edit' }) {
             product={state.product}
             stores={state.taxonomy.stores}
           />
+          <ProductPreview product={state.product} />
         </>
       ) : (
         <Card>
-          <CardTitle>Variantes y datos comerciales</CardTitle>
+          <CardTitle>Fotos, variantes y datos comerciales</CardTitle>
           <CardDescription>
-            Guarda el producto para generar sus tallas y colores y capturar precios y existencias.
-            Mientras, tiene una variante única con su SKU.
+            Guarda el producto para subir sus fotos, generar sus tallas y colores y capturar precios
+            y existencias. Mientras, tiene una variante única con su SKU.
           </CardDescription>
         </Card>
       )}
