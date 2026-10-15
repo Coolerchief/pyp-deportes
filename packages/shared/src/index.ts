@@ -19,6 +19,7 @@ export * from './product-card.ts';
 export * from './product-detail.ts';
 export * from './quote.ts';
 export * from './quote-list.ts';
+export * from './requests.ts';
 export * from './requester.ts';
 export * from './text.ts';
 export * from './variant-matrix.ts';

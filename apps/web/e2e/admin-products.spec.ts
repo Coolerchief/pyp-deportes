@@ -110,7 +110,10 @@ async function stubCatalog(page: Page) {
         product_images: [],
       },
     ];
-    return route.fulfill({ json: rows, headers: { 'content-range': '0-0/1' } });
+    return route.fulfill({
+      json: rows,
+      headers: { 'content-range': '0-0/1', 'access-control-expose-headers': 'content-range' },
+    });
   });
   await page.route('**/rest/v1/rpc/admin_save_product', (route) => {
     saved = route.request().postDataJSON().product as Saved;
