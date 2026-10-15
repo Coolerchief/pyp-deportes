@@ -1,7 +1,14 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type CommerceForm, CommerceFormSchema, commercePayload, variantLabel } from '@pyp/shared';
+import {
+  centsToPesos,
+  type CommerceForm,
+  CommerceFormSchema,
+  commercePayload,
+  pesosToCents,
+  variantLabel,
+} from '@pyp/shared';
 import { CircleAlert, CircleCheck, EyeOff, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import {
@@ -124,6 +131,8 @@ export function CommerceSection({ product, stores }: { product: EditorProduct; s
     register,
     handleSubmit,
     reset,
+    getValues,
+    setValue,
     formState: { errors, isDirty },
   } = useForm<CommerceForm>({
     resolver: zodResolver(CommerceFormSchema),
@@ -149,6 +158,30 @@ export function CommerceSection({ product, stores }: { product: EditorProduct; s
 
   const Icon = notice?.tone === 'error' ? CircleAlert : CircleCheck;
 
+  // Same price per piece (from 1 piece) for every variant; the volume tiers stay as they are.
+  const [allPrice, setAllPrice] = useState('');
+  const [allPriceError, setAllPriceError] = useState<string>();
+  function applyToAll() {
+    const cents = pesosToCents(allPrice);
+    if (cents === null) {
+      setAllPriceError('Escribe un importe, por ejemplo 450.00.');
+      return;
+    }
+    setAllPriceError(undefined);
+    const price = centsToPesos(cents);
+    product.variants.forEach((_, index) => {
+      const rows = getValues(`variants.${index}.prices`);
+      const next = rows.some((row) => Number(row.minQty) === 1)
+        ? rows.map((row) => (Number(row.minQty) === 1 ? { ...row, price } : row))
+        : [{ minQty: '1', price }, ...rows];
+      setValue(`variants.${index}.prices`, next, { shouldDirty: true });
+    });
+    setNotice({
+      tone: 'ok',
+      text: `Precio de $${price} aplicado a ${product.variants.length} variantes. Falta guardar.`,
+    });
+  }
+
   return (
     <Card className="gap-4">
       <form
@@ -167,6 +200,29 @@ export function CommerceSection({ product, stores }: { product: EditorProduct; s
             cuando haya tienda en línea.
           </CardDescription>
         </div>
+        {product.variants.length > 1 && (
+          <div className="bg-gis flex flex-wrap items-start gap-2 rounded-sm p-3">
+            <FormField
+              label="Precio por pieza para todas las variantes"
+              name="precio-todas"
+              inputMode="decimal"
+              prefix="$"
+              className="min-w-0 flex-1"
+              value={allPrice}
+              error={allPriceError}
+              onChange={(event) => setAllPrice(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  applyToAll();
+                }
+              }}
+            />
+            <Button variant="outline" className="mt-6" onClick={applyToAll}>
+              Aplicar a todas
+            </Button>
+          </div>
+        )}
         {product.variants.map((variant, index) => (
           <VariantCommerce
             key={variant.id}

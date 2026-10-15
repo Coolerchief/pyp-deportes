@@ -88,6 +88,7 @@ const PUBLISHED: EditorProduct = {
       stock: [],
     },
   ],
+  allVariants: [{ id: 'v1', option1: null, option2: null, isActive: true }],
   form: {
     ...EMPTY_PRODUCT_FORM,
     name: 'Balón de Fútbol No. 5',

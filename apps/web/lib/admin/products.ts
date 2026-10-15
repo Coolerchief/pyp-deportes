@@ -4,12 +4,15 @@ import {
   type CommercePayload,
   type Database,
   EMPTY_PRODUCT_FORM,
+  type ExistingVariant,
   type ProductFormInput,
   type ProductPayload,
   type ProductStatus,
   PRODUCT_STATUSES,
+  type ReplaceResult,
   type Technique,
   TECHNIQUES,
+  type variantsPayload,
 } from '@pyp/shared';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
@@ -203,6 +206,8 @@ export type EditorProduct = {
   photoCount: number;
   /** Active variants, in their order. */
   variants: EditorVariant[];
+  /** Every variant, active or not: regenerating reactivates the ones that come back. */
+  allVariants: ExistingVariant[];
   form: ProductFormInput;
 };
 
@@ -280,6 +285,15 @@ export async function fetchProduct(supabase: Client, id: string): Promise<Editor
     option2Name: row.option2_name,
     colorNote: row.color_note,
     photoCount: row.product_images.length,
+    allVariants: row.product_variants
+      .slice()
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((v) => ({
+        id: v.id,
+        option1: v.option1_value,
+        option2: v.option2_value,
+        isActive: v.is_active,
+      })),
     variants: row.product_variants
       .filter((v) => v.is_active)
       .sort((a, b) => a.sort_order - b.sort_order)
@@ -361,6 +375,15 @@ export async function saveCommerce(
     variants,
   });
   if (error) throw error;
+}
+
+export async function saveVariants(
+  supabase: Client,
+  payload: ReturnType<typeof variantsPayload>,
+): Promise<ReplaceResult> {
+  const { data, error } = await supabase.rpc('admin_save_variants', payload);
+  if (error) throw error;
+  return data as ReplaceResult;
 }
 
 type DbError = { code?: string; message?: string; details?: string; name?: string };

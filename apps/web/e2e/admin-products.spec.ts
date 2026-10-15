@@ -175,3 +175,94 @@ test('staff create, publish, archive and duplicate a product', async ({ page }) 
   await expect(page.getByLabel(/^SKU/)).not.toHaveAttribute('readonly', '');
   expect(calls.duplicates).toBe(1);
 });
+
+test('regenerating sizes keeps the existing variants and updates the commerce rows', async ({
+  page,
+}) => {
+  await stubSupabase(page, { role: 'editor', full_name: 'Beto Ruiz', is_active: true });
+  await stubCatalog(page);
+  const variant = (id: string, size: string | null, active = true, order = 0) => ({
+    id,
+    sku: size ? `UNI-T44-${size}` : 'UNI-T44',
+    option1_value: size,
+    option2_value: null,
+    is_default: !size,
+    is_active: active,
+    sort_order: order,
+    variant_prices: [],
+    inventory_levels: [],
+  });
+  let variants = [
+    variant('f0000000-0000-4000-8000-0000000000c0', null, false),
+    variant('f0000000-0000-4000-8000-0000000000c1', 'CH', true, 0),
+    variant('f0000000-0000-4000-8000-0000000000c2', 'M', true, 1),
+  ];
+  const product = () => ({
+    ...productRow(
+      {
+        sku: 'UNI-T44',
+        slug: 'uniforme-t44',
+        name: 'Uniforme T44',
+        brandId: BRAND.id,
+        categoryId: CATEGORY.id,
+        subcategoryId: null,
+        audience: 'unisex',
+        shortDescription: '',
+        description: '',
+        specs: [],
+        tags: [],
+        isCustomizable: false,
+        techniques: [],
+        minSuggestedQty: null,
+        isFeatured: false,
+        status: 'published',
+        sportIds: [],
+      },
+      NEW_ID,
+    ),
+    option1_name: 'Talla',
+    product_variants: variants,
+  });
+  // Registered last, so it answers before the catalog stub.
+  await page.route(`**/rest/v1/products?**id=eq.${NEW_ID}**`, (route) => {
+    const single = (route.request().headers()['accept'] ?? '').includes('vnd.pgrst.object');
+    return route.fulfill({ json: single ? product() : [product()] });
+  });
+  const generated: unknown[] = [];
+  await page.route('**/rest/v1/rpc/admin_save_variants', (route) => {
+    generated.push(route.request().postDataJSON());
+    variants = [
+      variant('f0000000-0000-4000-8000-0000000000c0', null, false),
+      variant('f0000000-0000-4000-8000-0000000000c1', 'CH', false, 0),
+      variant('f0000000-0000-4000-8000-0000000000c2', 'M', true, 0),
+      variant('f0000000-0000-4000-8000-0000000000c3', 'G', true, 1),
+    ];
+    return route.fulfill({ json: { created: 1, kept: 1, deactivated: 1 } });
+  });
+
+  await page.goto('/admin/login');
+  await logIn(page);
+  await page.goto(`/admin/productos/editar?id=${NEW_ID}`);
+  const section = page.getByRole('form', { name: 'Variantes' });
+  await expect(section.getByLabel(/^Valores de Talla/)).toHaveValue('CH, M');
+  await section.getByLabel(/^Valores de Talla/).fill('M, G');
+  const preview = section.getByRole('region', { name: 'Vista previa de variantes' });
+  await expect(preview.getByText('2 variantes · 1 se desactiva')).toBeVisible();
+  await expect(preview.getByText('UNI-T44-G')).toBeAttached();
+  await section.getByRole('button', { name: 'Generar variantes' }).click();
+  await expect(
+    section.getByText('Variantes listas: 1 nueva, 1 se conserva y 1 desactivada.'),
+  ).toBeVisible();
+  expect(generated[0]).toEqual({
+    product_id: NEW_ID,
+    option1_name: 'Talla',
+    option2_name: '',
+    color_note: '',
+    option1: ['M', 'G'],
+    option2: [],
+  });
+  const commerce = page.getByRole('form', { name: 'Comercial' });
+  await expect(commerce.getByRole('group', { name: /^M/ })).toBeVisible();
+  await expect(commerce.getByRole('group', { name: /^G/ })).toBeVisible();
+  await expect(commerce.getByRole('group', { name: /^CH/ })).toHaveCount(0);
+});
