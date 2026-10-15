@@ -168,7 +168,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T4.6 (importador en `/admin/productos/importar`: plantilla CSV, CSV o Excel, vista previa con errores por fila y SKU repetidos, nuevos contra actualizados, lotes de 50 con progreso y continuación si se corta, resultado y errores en CSV; fotos en lote por SKU con recorte 4:5 centrado). El CSV se lee con el mismo `parseCsv` que `pnpm db:import`. Probado contra pyp-dev: importar `catalogo-inicial.csv` desde el panel da 0 creados y 56 actualizados y deja la base igual que `pnpm db:import` (mismo hash). Las fotos en lote esperan a R2 como las de T4.5.
 
-**Siguiente paso:** T4.7 (Solicitudes: bandeja, filtros, detalle, cambio de estado, nota interna, "Abrir chat" y exportar CSV).
+**Hecho:** T4.7 (solicitudes: bandeja con búsqueda, periodo en hora de CDMX y estado en la URL, número de cada estado y resumen "Este mes: n solicitudes · n ganadas", detalle con cliente, productos, "Abrir chat", cambio de estado en un toque con motivo para "Perdida", historial y nota interna, y "Exportar CSV" con los filtros). Probado contra pyp-dev en `pnpm dev` con 3 solicitudes de prueba creadas por `submit-quote` (datos inventados; quedan en pyp-dev): cotizada → ganada, nota, chat y exportación.
+
+**Siguiente paso:** T4.8 (Galería con casillas de autorización).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
