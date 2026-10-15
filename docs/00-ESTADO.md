@@ -156,7 +156,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T3.9 (analítica: `track()` con GA4 y sus equivalentes `add_to_cart`, `begin_checkout` y `generate_lead`; los 9 eventos de APP-FLOW §6 en su lugar; `whatsapp_click` con origen desde cualquier enlace a WhatsApp). Pruebas unitarias y E2E del embudo completo `view_item` → `add_to_quote` → `view_quote` → `begin_quote_form` → `submit_quote` → `whatsapp_click`, del error de envío, de la búsqueda y del botón flotante. Comprobado que, con un ID `G-…`, el build carga `gtag.js` con `debug_mode`, y que sin ID no carga nada. Falta verlo en la vista de depuración de GA4: necesita la propiedad real (pendiente abajo).
 
-**Siguiente paso:** fase 4, T4.1 (acceso al panel: login, protección de rutas, cierre de sesión y cuenta sin permiso).
+**Hecho:** T4.1 (acceso al panel: `/admin/login` con correo y contraseña o enlace mágico, `AdminGate` en todas las rutas del panel, cierre de sesión y "Tu cuenta no tiene acceso" para quien no está activo en `staff_members`). Pruebas de componentes y E2E: sin sesión va al login, un usuario que no es personal sale con el aviso y sin sesión guardada, credenciales incorrectas, y personal que entra, recarga y cierra sesión. Dependencias nuevas: `@supabase/supabase-js` y las utilidades de shadcn (TRD §3).
+
+**Siguiente paso:** T4.2 (estructura del panel con navegación móvil y de escritorio, e Inicio con `admin_dashboard_stats`).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
@@ -167,7 +169,8 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 - ☐ Descripciones, especificaciones y etiquetas de productos: hoy solo existe la descripción corta.
 - ☐ Decidir si se quieren textos por deporte o categoría bajo el título de los listados (requiere una columna nueva).
 - ☐ Decidir el mapa de Visítanos e Inicio: embebido o imagen.
-- ☐ Definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:setup` para entrar como `admin@pyp.test`.
+- ☐ Definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:setup` (o solo `pnpm db:reset`) para entrar al panel como `admin@pyp.test` en `pnpm dev`. Hasta entonces el acceso solo está probado con Supabase simulado.
+- ☐ Supabase Auth → URL Configuration, para que el enlace mágico regrese al panel: en pyp-dev, *Redirect URLs* con `http://localhost:3000/admin**`; en producción, *Site URL* del sitio y *Redirect URLs* con `https://pyp-deportes.gael-marroquin2004.workers.dev/admin**` (y el dominio cuando llegue).
 - ☐ *Environment* `production` con aprobación y los secretos de Supabase (pospuesto).
 - ☑ Turnstile real (14-oct-2026): widget *Managed* con los hostnames de `workers.dev`, `pypdeportescoapa.com` y `www`; llave pública en el secreto del repositorio `NEXT_PUBLIC_TURNSTILE_SITE_KEY` y secreta cargada por el usuario directo en las Edge Functions de pyp-prod (nunca pasa por el repositorio). En pyp-dev y en pruebas siguen las llaves de prueba de Cloudflare.
 - ☐ Google Analytics 4: crear la propiedad y el flujo web, poner el ID `G-…` en `.env.local` (`NEXT_PUBLIC_GA_ID`, para verlo en DebugView con `pnpm dev`) y como secreto del repositorio del mismo nombre (producción). Decidir si hace falta aviso de cookies por GA4.
