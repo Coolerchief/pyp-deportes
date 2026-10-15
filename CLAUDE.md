@@ -45,7 +45,7 @@ pnpm db:setup       # db:reset + importa docs/data/catalogo-inicial.csv: pyp-dev
 pnpm db:migrate     # aplica a pyp-dev solo las migraciones nuevas, sin borrar datos
 pnpm db:admin-password   # pone a admin@pyp.test la contraseña de .env.local sin db:reset
 pnpm db:types       # regenera packages/shared/database.types.ts desde pyp-dev
-pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev con admin_import_products (correrlo de nuevo actualiza, no duplica)
+pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev con admin_import_products (correrlo de nuevo actualiza, no duplica); lee el CSV con el parseCsv compartido del panel
 pnpm functions:deploy   # secretos (incluidos DEV_R2_*) y despliegue de submit-quote y sign-upload en pyp-dev (sin Docker)
 ```
 
@@ -68,9 +68,9 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   components/home/   Secciones de Inicio (HomeHero, UniformsBand, HowItWorks, AdvisorCard, StoreInfo)
   components/content/ SitePhoto: foto de site_media o su marcador
   components/analytics/ GoogleAnalytics (GA4), WhatsAppClickTracker (data-wa-origin) y TrackOnMount
-  components/admin/  LoginPage, AdminGate (useAdminSession), AdminShell (AdminHeader + AdminNav: barra lateral y barra inferior), AdminHome (Inicio), SectionPlaceholder, products/ (ProductsPage, ProductEditor, PhotosSection, PhotoCropper, VariantsSection, CommerceSection, ProductPreview, StatusBadge); ui/ con los componentes de shadcn (button, card, select) hechos con los tokens
+  components/admin/  LoginPage, AdminGate (useAdminSession), AdminShell (AdminHeader + AdminNav: barra lateral y barra inferior), AdminHome (Inicio), SectionPlaceholder, products/ (ProductsPage, ProductEditor, PhotosSection, PhotoCropper, VariantsSection, CommerceSection, ProductPreview, StatusBadge, ImportPage, BulkPhotos); ui/ con los componentes de shadcn (button, card, select) hechos con los tokens
   components/quote/  AddedNotice, QuoteBar, QuickAddButton/InQuoteBadge y la página /cotizacion (QuotePage, StepIndicator, QuoteListStep, QuoteLineCard, PersonalizationEditor, QuoteFormStep, QuoteForm, QuoteConfirmation)
-  lib/admin/         access.ts (fetchStaff, safeNext, mensajes de login), navigation.ts (secciones por rol), dashboard.ts (fetchDashboard del Inicio), products.ts (lista, editor y escrituras de productos), photos.ts (recorte, WebP, HEIC y subida a R2), preview.ts (vista previa con buildCatalog/buildProductPage)
+  lib/admin/         access.ts (fetchStaff, safeNext, mensajes de login), navigation.ts (secciones por rol), dashboard.ts (fetchDashboard del Inicio), products.ts (lista, editor y escrituras de productos), photos.ts (recorte, WebP, HEIC y subida a R2), preview.ts (vista previa con buildCatalog/buildProductPage), importer.ts y bulk-photos.ts (importador y fotos en lote por SKU)
   lib/supabase/      browser.ts: cliente de Supabase solo para /admin
   lib/analytics/     track() y los eventos del embudo (TRD §12); se usan solo a través de track()
   lib/               data (catalog.json y settings.json del build), navigation (menús, contacto y rutas), listing (listados estáticos), images/loader (anchos de R2), indexing
