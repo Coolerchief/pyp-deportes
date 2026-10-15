@@ -13,7 +13,6 @@ import {
   proposeSlug,
   TECHNIQUES,
   techniqueLabels,
-  variantLabel,
 } from '@pyp/shared';
 import {
   ArrowLeft,
@@ -48,6 +47,7 @@ import { Card, CardDescription, CardTitle } from '../ui/card';
 import { cn } from '../ui/cn';
 import { SelectField } from '../ui/select';
 import { CommerceSection } from './CommerceSection';
+import { VariantsSection } from './VariantsSection';
 import { NoPhotoBadge, StatusBadge } from './StatusBadge';
 
 type Notice = { tone: 'ok' | 'error'; text: string };
@@ -527,28 +527,6 @@ function ProductEditorForm({
       </Section>
 
       <Section
-        title="Variantes"
-        description={
-          isNew
-            ? 'Al guardar se crea una variante única con el SKU del producto.'
-            : 'El generador de tallas y colores estará disponible pronto.'
-        }
-      >
-        {product && (
-          <ul className="divide-linea flex flex-col divide-y">
-            {product.variants.map((variant) => (
-              <li key={variant.id} className="flex items-center justify-between gap-3 py-2">
-                <span className="type-body text-noche">
-                  {variantLabel(variant.option1, variant.option2) ?? 'Única'}
-                </span>
-                <span className="type-small text-grafito">{variant.sku}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Section>
-
-      <Section
         title="Fotos"
         description={
           product && product.photoCount > 0
@@ -778,7 +756,28 @@ export function ProductEditorPage({ mode }: { mode: 'new' | 'edit' }) {
         arrival={arrival}
         onSaved={(product) => setState({ ...state, product })}
       />
-      {state.product && <CommerceSection product={state.product} stores={state.taxonomy.stores} />}
+      {state.product ? (
+        <>
+          <VariantsSection
+            product={state.product}
+            onSaved={(product) => setState({ ...state, product })}
+          />
+          {/* Remounted when the variants change, so its rows follow them. */}
+          <CommerceSection
+            key={state.product.variants.map((variant) => variant.id).join()}
+            product={state.product}
+            stores={state.taxonomy.stores}
+          />
+        </>
+      ) : (
+        <Card>
+          <CardTitle>Variantes y datos comerciales</CardTitle>
+          <CardDescription>
+            Guarda el producto para generar sus tallas y colores y capturar precios y existencias.
+            Mientras, tiene una variante única con su SKU.
+          </CardDescription>
+        </Card>
+      )}
     </div>
   );
 }

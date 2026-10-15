@@ -194,6 +194,12 @@ describe('fetchProduct', () => {
       sportIds: ['s1'],
     });
     expect(product.variants.map((v) => v.id)).toEqual(['v1', 'v2']);
+    // The generator also needs the inactive ones (regenerating can bring them back).
+    expect(product.allVariants.map((v) => [v.id, v.isActive]).sort()).toEqual([
+      ['v0', false],
+      ['v1', true],
+      ['v2', true],
+    ]);
     expect(product.photoCount).toBe(0);
 
     expect(commerceForm(product, [{ id: 't1', name: 'Coapa' }])).toEqual({

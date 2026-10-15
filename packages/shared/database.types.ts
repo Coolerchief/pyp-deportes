@@ -1815,6 +1815,17 @@ export type Database = {
         Returns: undefined
       }
       admin_save_product: { Args: { product: Json }; Returns: string }
+      admin_save_variants: {
+        Args: {
+          color_note: string
+          option1: string[]
+          option1_name: string
+          option2: string[]
+          option2_name: string
+          product_id: string
+        }
+        Returns: Json
+      }
       admin_set_quote_note: {
         Args: { id: string; internal_note: string }
         Returns: undefined

@@ -534,6 +534,7 @@ La prueba 7 está en `supabase/tests/040_functions.test.sql`. La 8 necesita vari
 | `admin_save_product(product jsonb)` → `uuid` | Personal | Crea o actualiza un producto y reemplaza sus deportes (editor del panel, T4.3) |
 | `admin_duplicate_product(id uuid)` → `uuid` | Personal | Copia en borrador con SKU y slug libres, mismos deportes, variantes y precios |
 | `admin_save_commerce(product_id uuid, variants jsonb)` | Personal | Reemplaza precios por volumen y existencias por tienda de las variantes enviadas |
+| `admin_save_variants(product_id uuid, option1_name text, option2_name text, color_note text, option1 text[], option2 text[])` → `jsonb` | Personal | Guarda los nombres de las opciones y regenera tallas × colores con `admin_replace_variants` (generador del panel, T4.4) |
 | `admin_anonymize_customer(id uuid)` | Admin | Derecho de cancelación (ARCO): sustituye nombre y teléfono por valores anónimos en el cliente y en sus solicitudes |
 | `mark_publish_run(id uuid, status publish_status, run_url text, error text)` | Solo `service_role` | La llama GitHub Actions al iniciar y al terminar el build |
 | `ping()` | `anon` | Inserta en `system_heartbeats` y borra latidos de más de 90 días. Mantiene activo el proyecto |
@@ -604,6 +605,11 @@ Pasos, en una transacción:
 - Al final ejecuta `set constraints ensure_default_variant, validate_product_publish immediate`: un producto nuevo recibe su variante por defecto en la misma llamada y un "No se puede publicar…" (23514) sale en esa llamada y no al confirmar.
 - `admin_duplicate_product(id)`: nombre con "(copia)", SKU `{sku}-COPIA` y slug `{slug}-copia` (o `-2`, `-3`… si ya existen), estado borrador, no destacado, mismos deportes, las variantes activas (con `admin_replace_variants`, SKU nuevos) y sus precios. No copia fotos (son del producto en R2) ni existencias.
 - `admin_save_commerce(product_id, variants)`: `[{ variantId, prices: [{ minQty, unitPriceCents }], stock: [{ storeId, quantity }] }]`. Cada variante debe ser del producto; precios con cantidad mínima ≥ 1, importe ≥ 0 y sin cantidades repetidas; existencias ≥ 0 de tiendas registradas. Reemplaza lo de cada variante enviada.
+
+**Generador de variantes (T4.4, 14-oct-2026).** Migración `20261014140000_admin_save_variants.sql`; pruebas en `supabase/tests/080_admin_save_variants.test.sql`.
+- `admin_save_variants` actualiza `option1_name`, `option2_name` (solo si hay valores de la opción 2; si no, `null`) y `color_note` (solo cuando no hay colores) y llama a `admin_replace_variants` en la misma transacción. Devuelve `{ created, kept, deactivated }`.
+- Las combinaciones que ya existían conservan su `id` (las líneas de solicitudes, precios y existencias apuntan a él); las inactivas que vuelven se reactivan y las que sobran se desactivan, nunca se borran. Sin valores queda solo la variante por defecto.
+- Reglas: nombre de la opción 1 (y de la 2 si hay colores) de 1 a 30 caracteres, valores de hasta 40, nota de hasta 60 y como máximo 200 combinaciones. Un producto publicado no puede quedarse sin variante activa (se revisa en la llamada).
 
 ## 9. Edge Functions
 

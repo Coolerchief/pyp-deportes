@@ -2,6 +2,7 @@
 // Pure TypeScript with no Node dependencies so it can be imported from Deno (Edge Functions).
 
 export * from './admin-product.ts';
+export * from './admin-variants.ts';
 export * from './build-data.ts';
 export * from './catalog.ts';
 export * from './contact.ts';

@@ -162,7 +162,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T4.3 (Productos en el panel: lista con búsqueda, filtros por estado, categoría y "sin foto" en la URL, 50 por página; editor con Básico, Clasificación, Personalización y Comercial oculto; crear, editar, publicar, pasar a borrador, archivar, restaurar y duplicar). Funciones nuevas `admin_save_product`, `admin_duplicate_product` y `admin_save_commerce` con 29 pruebas pgTAP; esquemas Zod compartidos en `packages/shared/src/admin-product.ts`. Probado de punta a punta contra pyp-dev en `pnpm dev` (los productos de prueba se borraron). Comandos nuevos: `pnpm db:migrate` y `pnpm db:admin-password`.
 
-**Siguiente paso:** T4.4 (Variantes: generador de tallas × colores con `admin_replace_variants`, sin cambiar los `id` existentes).
+**Hecho:** T4.4 (generador de variantes: tallas × colores con vista previa de SKU y de lo que se conserva, reactiva o desactiva; función `admin_save_variants` con 13 pruebas pgTAP; "Aplicar a todas" en Comercial). Probado contra pyp-dev en `pnpm dev`: al regenerar, las combinaciones que se quedan conservan su `id`.
+
+**Siguiente paso:** T4.5 (Fotos: Edge Function `sign-upload`, recorte 4:5 y redimensionado en el navegador, subida a R2, orden y texto alternativo).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
