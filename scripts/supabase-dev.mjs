@@ -166,6 +166,16 @@ const commands = {
     supabase(['db', 'reset', '--linked', ...args]);
     await setDevAdminPassword();
   },
+  // Gives admin@pyp.test the password of .env.local without resetting pyp-dev.
+  async 'admin-password'(env) {
+    guard(env);
+    await setDevAdminPassword();
+  },
+  // Applies only the migrations pyp-dev does not have yet; its data stays (no seeds, no wipe).
+  migrate(env, args) {
+    guard(env);
+    supabase(['db', 'push', '--linked', ...args]);
+  },
   // One command for a ready development database: reset + seed + initial catalog.
   async setup(env, args) {
     await commands.reset(env, args);
