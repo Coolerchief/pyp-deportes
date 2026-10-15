@@ -195,6 +195,14 @@ export type EditorVariant = {
   stock: { storeId: string; quantity: number }[];
 };
 
+export type EditorImage = {
+  id: string;
+  keyBase: string;
+  alt: string;
+  width: number;
+  height: number;
+};
+
 export type EditorProduct = {
   id: string;
   status: ProductStatus;
@@ -204,6 +212,8 @@ export type EditorProduct = {
   option2Name: string | null;
   colorNote: string | null;
   photoCount: number;
+  /** Photos in their order; the first one is the cover. */
+  images: EditorImage[];
   /** Active variants, in their order. */
   variants: EditorVariant[];
   /** Every variant, active or not: regenerating reactivates the ones that come back. */
@@ -215,7 +225,7 @@ const PRODUCT_SELECT = `id, sku, slug, name, brand_id, category_id, subcategory_
   short_description, description, specs, tags, option1_name, option2_name, color_note,
   is_customizable, techniques, min_suggested_qty, is_featured, status, published_at, updated_at,
   product_sports(sport_id),
-  product_images(id),
+  product_images(id, key_base, alt, width, height, sort_order),
   product_variants(id, sku, option1_value, option2_value, is_default, is_active, sort_order,
     variant_prices(min_qty, unit_price_cents), inventory_levels(store_id, quantity))`;
 
@@ -253,7 +263,14 @@ export async function fetchProduct(supabase: Client, id: string): Promise<Editor
     published_at: string | null;
     updated_at: string;
     product_sports: { sport_id: string }[];
-    product_images: { id: string }[];
+    product_images: {
+      id: string;
+      key_base: string;
+      alt: string;
+      width: number;
+      height: number;
+      sort_order: number;
+    }[];
     product_variants: {
       id: string;
       sku: string;
@@ -285,6 +302,16 @@ export async function fetchProduct(supabase: Client, id: string): Promise<Editor
     option2Name: row.option2_name,
     colorNote: row.color_note,
     photoCount: row.product_images.length,
+    images: row.product_images
+      .slice()
+      .sort((a, b) => a.sort_order - b.sort_order || a.id.localeCompare(b.id))
+      .map((image) => ({
+        id: image.id,
+        keyBase: image.key_base,
+        alt: image.alt,
+        width: image.width,
+        height: image.height,
+      })),
     allVariants: row.product_variants
       .slice()
       .sort((a, b) => a.sort_order - b.sort_order)

@@ -135,12 +135,24 @@ export const DEV_ALLOWED_ORIGINS = 'http://localhost:3000,http://localhost:3100'
 
 /** Secrets of the Edge Functions on pyp-dev, as an env file (values never printed). */
 export function devFunctionSecrets(env) {
-  return [
+  const lines = [
     `TURNSTILE_SECRET_KEY=${env.DEV_TURNSTILE_SECRET_KEY || TURNSTILE_TEST_SECRET}`,
     `IP_HASH_SALT=${env.DEV_IP_HASH_SALT}`,
     `ALLOWED_ORIGINS=${env.DEV_ALLOWED_ORIGINS || DEV_ALLOWED_ORIGINS}`,
-  ].join('\n');
+  ];
+  // sign-upload (T4.5): the dev bucket's R2 keys, only when .env.local has them.
+  for (const name of DEV_R2_SECRETS) {
+    if (env[`DEV_${name}`]?.trim()) lines.push(`${name}=${env[`DEV_${name}`].trim()}`);
+  }
+  return lines.join('\n');
 }
+
+export const DEV_R2_SECRETS = [
+  'R2_ACCOUNT_ID',
+  'R2_ACCESS_KEY_ID',
+  'R2_SECRET_ACCESS_KEY',
+  'R2_BUCKET',
+];
 
 function guard(env) {
   const error = checkLinkedProject({ ...env, linkedRef: readLinkedRef() });
@@ -226,7 +238,13 @@ const commands = {
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
-    const names = args.length > 0 ? args : ['submit-quote'];
+    const names = args.length > 0 ? args : ['submit-quote', 'sign-upload'];
+    const missingR2 = DEV_R2_SECRETS.filter((name) => !process.env[`DEV_${name}`]?.trim());
+    if (missingR2.length) {
+      console.log(
+        `⚠ Sin ${missingR2.map((n) => `DEV_${n}`).join(', ')} en .env.local: sign-upload responderá 503 (no se pueden subir fotos).`,
+      );
+    }
     for (const name of names) {
       supabase(['functions', 'deploy', name, '--project-ref', env.devRef, '--use-api']);
     }

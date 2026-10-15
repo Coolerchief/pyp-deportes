@@ -1802,10 +1802,24 @@ export type Database = {
       }
     }
     Functions: {
+      admin_add_product_image: {
+        Args: {
+          alt?: string
+          height: number
+          image_id: string
+          product_id: string
+          width: number
+        }
+        Returns: string
+      }
       admin_anonymize_customer: { Args: { id: string }; Returns: undefined }
       admin_dashboard_stats: { Args: never; Returns: Json }
       admin_duplicate_product: { Args: { id: string }; Returns: string }
       admin_import_products: { Args: { rows: Json }; Returns: Json }
+      admin_reorder_product_images: {
+        Args: { image_ids: string[]; product_id: string }
+        Returns: undefined
+      }
       admin_replace_variants: {
         Args: { option1: string[]; option2: string[]; product_id: string }
         Returns: Json

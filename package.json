@@ -12,7 +12,7 @@
     "format": "prettier --write .",
     "typecheck": "pnpm -r --parallel typecheck",
     "test": "pnpm -r test && node --test \"scripts/*.test.mjs\" && pnpm test:functions",
-    "test:functions": "deno check --config supabase/functions/submit-quote/deno.json supabase/functions/submit-quote/index.ts && deno test --config supabase/functions/submit-quote/deno.json supabase/functions",
+    "test:functions": "deno check --config supabase/functions/submit-quote/deno.json supabase/functions/submit-quote/index.ts && deno check --config supabase/functions/sign-upload/deno.json supabase/functions/sign-upload/index.ts && deno test --config supabase/functions/submit-quote/deno.json supabase/functions/submit-quote supabase/functions/_shared && deno test --config supabase/functions/sign-upload/deno.json supabase/functions/sign-upload",
     "test:e2e": "pnpm --filter @pyp/web test:e2e",
     "placeholders": "pnpm --filter @pyp/web placeholders",
     "test:db": "node scripts/supabase-dev.mjs test",

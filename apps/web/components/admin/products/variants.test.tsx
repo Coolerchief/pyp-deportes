@@ -38,6 +38,7 @@ const PRODUCT: EditorProduct = {
   option2Name: null,
   colorNote: 'A elegir',
   photoCount: 0,
+  images: [],
   variants: [variant('v1', 'CH'), variant('v2', 'M'), variant('v3', 'G')],
   allVariants: [
     { id: 'v0', option1: null, option2: null, isActive: false },

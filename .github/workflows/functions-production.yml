@@ -1,10 +1,12 @@
 name: Functions production
 
-# Deploys the Edge Functions (today submit-quote, T3.7) to the production Supabase project and
-# checks them. Production is never linked (CLAUDE.md, rule 8): every CLI call uses
+# Deploys the Edge Functions (submit-quote, T3.7, and sign-upload, T4.5) to the production
+# Supabase project and checks them. Production is never linked (CLAUDE.md, rule 8): every CLI call uses
 # --project-ref. TURNSTILE_SECRET_KEY is loaded by hand in Supabase (Edge Functions → Secrets),
 # never through the repository; scripts/functions-prod.mjs only checks that it exists, creates
-# IP_HASH_SALT once and sets ALLOWED_ORIGINS from the input below. Safe to run again.
+# IP_HASH_SALT once and sets ALLOWED_ORIGINS from the input below. The R2 secrets of sign-upload
+# are loaded by hand the same way; if they are missing the run warns and sign-upload answers 503.
+# Safe to run again.
 #
 # Repository secrets: SUPABASE_PROD_PROJECT_REF and SUPABASE_ACCESS_TOKEN.
 #
@@ -31,7 +33,7 @@ permissions:
 
 jobs:
   deploy:
-    name: submit-quote
+    name: Edge Functions
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -67,6 +69,9 @@ jobs:
       # verify_jwt = false and the import map come from supabase/config.toml.
       - name: Deploy submit-quote
         run: supabase functions deploy submit-quote --project-ref "$SUPABASE_PROD_PROJECT_REF" --use-api
+
+      - name: Deploy sign-upload
+        run: supabase functions deploy sign-upload --project-ref "$SUPABASE_PROD_PROJECT_REF" --use-api
 
       - name: Verify
         run: node scripts/functions-prod.mjs verify

@@ -35,7 +35,7 @@ pnpm lint
 pnpm typecheck
 pnpm format         # Prettier sobre todo el repo
 pnpm test           # Vitest + pruebas de scripts/ + Edge Functions (Deno)
-pnpm test:functions # deno check + deno test de supabase/functions (deno.exe vive en .venv/Scripts)
+pnpm test:functions # deno check + deno test de cada función y de _shared (deno.exe vive en .venv/Scripts)
 pnpm test:e2e       # Playwright contra el build estático
 pnpm placeholders   # regenera las 10 imágenes genéricas de categoría (public/img/placeholder)
 pnpm db:link        # enlaza la CLI con pyp-dev (solo pyp-dev)
@@ -46,7 +46,7 @@ pnpm db:migrate     # aplica a pyp-dev solo las migraciones nuevas, sin borrar d
 pnpm db:admin-password   # pone a admin@pyp.test la contraseña de .env.local sin db:reset
 pnpm db:types       # regenera packages/shared/database.types.ts desde pyp-dev
 pnpm db:import docs/data/catalogo-inicial.csv   # importa a pyp-dev con admin_import_products (correrlo de nuevo actualiza, no duplica)
-pnpm functions:deploy   # secretos y despliegue de submit-quote en pyp-dev (sin Docker)
+pnpm functions:deploy   # secretos (incluidos DEV_R2_*) y despliegue de submit-quote y sign-upload en pyp-dev (sin Docker)
 ```
 
 **Despliegue.** `.github/workflows/deploy.yml` publica en Cloudflare Workers (`apps/web/wrangler.jsonc`) con cada push a `main` o a mano desde Actions. No subas ni fusiones nada a `main` sin que el usuario lo pida. `ci.yml` corre los trabajos `web` (lint, typecheck, pruebas, build, Playwright) y `db` (pgTAP) en cada PR. `db-production.yml` (T1.8) aplica migraciones, semilla base, ajustes de Auth y primer admin al proyecto de producción con `supabase db push --db-url` y `scripts/supabase-prod.mjs`, sin enlazarlo; lee secretos del repositorio y solo corre a mano desde `main` (escribiendo `PRODUCCION`). No lo lances sin que el usuario lo pida. `functions-production.yml` despliega las Edge Functions a producción con `--project-ref` y `scripts/functions-prod.mjs` (misma regla: manual, desde `main`, con `PRODUCCION`, nunca sin permiso).
@@ -68,9 +68,9 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   components/home/   Secciones de Inicio (HomeHero, UniformsBand, HowItWorks, AdvisorCard, StoreInfo)
   components/content/ SitePhoto: foto de site_media o su marcador
   components/analytics/ GoogleAnalytics (GA4), WhatsAppClickTracker (data-wa-origin) y TrackOnMount
-  components/admin/  LoginPage, AdminGate (useAdminSession), AdminShell (AdminHeader + AdminNav: barra lateral y barra inferior), AdminHome (Inicio), SectionPlaceholder, products/ (ProductsPage, ProductEditor, VariantsSection, CommerceSection, StatusBadge); ui/ con los componentes de shadcn (button, card, select) hechos con los tokens
+  components/admin/  LoginPage, AdminGate (useAdminSession), AdminShell (AdminHeader + AdminNav: barra lateral y barra inferior), AdminHome (Inicio), SectionPlaceholder, products/ (ProductsPage, ProductEditor, PhotosSection, PhotoCropper, VariantsSection, CommerceSection, ProductPreview, StatusBadge); ui/ con los componentes de shadcn (button, card, select) hechos con los tokens
   components/quote/  AddedNotice, QuoteBar, QuickAddButton/InQuoteBadge y la página /cotizacion (QuotePage, StepIndicator, QuoteListStep, QuoteLineCard, PersonalizationEditor, QuoteFormStep, QuoteForm, QuoteConfirmation)
-  lib/admin/         access.ts (fetchStaff, safeNext, mensajes de login), navigation.ts (secciones por rol), dashboard.ts (fetchDashboard del Inicio), products.ts (lista, editor y escrituras de productos)
+  lib/admin/         access.ts (fetchStaff, safeNext, mensajes de login), navigation.ts (secciones por rol), dashboard.ts (fetchDashboard del Inicio), products.ts (lista, editor y escrituras de productos), photos.ts (recorte, WebP, HEIC y subida a R2), preview.ts (vista previa con buildCatalog/buildProductPage)
   lib/supabase/      browser.ts: cliente de Supabase solo para /admin
   lib/analytics/     track() y los eventos del embudo (TRD §12); se usan solo a través de track()
   lib/               data (catalog.json y settings.json del build), navigation (menús, contacto y rutas), listing (listados estáticos), images/loader (anchos de R2), indexing
@@ -78,7 +78,7 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   scripts/           Generador de imágenes genéricas (placeholders.json + generate-placeholders.mjs)
   wrangler.jsonc     Worker de static assets que sirve apps/web/out
 packages/shared/     Esquemas Zod, tipos, folio, normalización de texto (sin dependencias de Node); database.types.ts generado
-supabase/            migrations/, functions/ (submit-quote: handler con dependencias inyectadas + index.ts; _shared/ con CORS, PostgREST y Turnstile), seeds/ (base.sql para todos, dev-admin.sql solo desarrollo), tests/
+supabase/            migrations/, functions/ (submit-quote y sign-upload: handler con dependencias inyectadas + index.ts; _shared/ con CORS, PostgREST, Turnstile y firma SigV4 de R2), seeds/ (base.sql para todos, dev-admin.sql solo desarrollo), tests/
 scripts/             supabase-dev.mjs (candado pyp-dev), supabase-prod.mjs y functions-prod.mjs (solo GitHub Actions), pgtap.mjs, folio-concurrency.mjs (prueba 8) e import-catalog.mjs, con sus pruebas
 workers/cron/        Latido, publicación nocturna, respaldo
 .github/workflows/   ci.yml, deploy.yml, db-production.yml y functions-production.yml

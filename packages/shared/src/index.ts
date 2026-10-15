@@ -13,6 +13,7 @@ export * from './folio.ts';
 export * from './importer.ts';
 export * from './labels.ts';
 export * from './listing.ts';
+export * from './media.ts';
 export * from './product-card.ts';
 export * from './product-detail.ts';
 export * from './quote.ts';

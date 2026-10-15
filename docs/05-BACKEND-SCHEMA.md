@@ -535,6 +535,8 @@ La prueba 7 está en `supabase/tests/040_functions.test.sql`. La 8 necesita vari
 | `admin_duplicate_product(id uuid)` → `uuid` | Personal | Copia en borrador con SKU y slug libres, mismos deportes, variantes y precios |
 | `admin_save_commerce(product_id uuid, variants jsonb)` | Personal | Reemplaza precios por volumen y existencias por tienda de las variantes enviadas |
 | `admin_save_variants(product_id uuid, option1_name text, option2_name text, color_note text, option1 text[], option2 text[])` → `jsonb` | Personal | Guarda los nombres de las opciones y regenera tallas × colores con `admin_replace_variants` (generador del panel, T4.4) |
+| `admin_add_product_image(product_id uuid, image_id uuid, width int, height int, alt text)` → `uuid` | Personal | Registra una foto ya subida a R2: arma `key_base`, exige 4:5 y la pone al final (T4.5) |
+| `admin_reorder_product_images(product_id uuid, image_ids uuid[])` | Personal | Ordena todas las fotos del producto; la primera es la portada (T4.5) |
 | `admin_anonymize_customer(id uuid)` | Admin | Derecho de cancelación (ARCO): sustituye nombre y teléfono por valores anónimos en el cliente y en sus solicitudes |
 | `mark_publish_run(id uuid, status publish_status, run_url text, error text)` | Solo `service_role` | La llama GitHub Actions al iniciar y al terminar el build |
 | `ping()` | `anon` | Inserta en `system_heartbeats` y borra latidos de más de 90 días. Mantiene activo el proyecto |
@@ -673,6 +675,11 @@ Detalles de la implementación (T3.7):
 ### 9.2 `sign-upload` (personal)
 
 `POST` con el JWT del usuario. Entrada: `{ "scope": "product" | "gallery" | "site", "ownerId": "uuid o slot", "imageId": "uuid", "widths": [320, 640, 1024, 1600], "contentType": "image/webp" }`. Verifica `is_staff()`. Devuelve una URL firmada `PUT` por ancho, con 600 s de vigencia y `Cache-Control` inmutable. Claves: `p/{productId}/{imageId}-{w}.webp`, `g/{galleryId}/…`, `s/{slot}/…`.
+
+**Implementación (T4.5, 14-oct-2026).** `supabase/functions/sign-upload` (handler con dependencias inyectadas, `deps.ts`, `index.ts`); el esquema de la entrada y las claves viven en `packages/shared/src/media.ts` (`SignUploadRequestSchema`, `mediaKeyBase`, `MEDIA_WIDTHS`: `site` usa 640/1024/1600/2400).
+- Quién llama: `rpc/is_staff` en PostgREST con la llave anónima y el token del usuario (sin `service_role`); un token vencido o falso da 401 y quien no es personal, 403. `verify_jwt = false` en `config.toml` para que pase el preflight de CORS.
+- Respuesta 200: `{ keyBase, uploads: [{ width, key, url }], headers: { Content-Type, Cache-Control }, expiresIn: 600 }`; el navegador manda esos dos encabezados en cada `PUT` porque van firmados. Errores: 400 `invalid_request` con `fields`, 401 `unauthenticated`, 403 `forbidden` o `forbidden_origin`, 405, 500 `internal_error` y 503 `not_configured` (faltan secretos de R2; responde CORS para que el panel lo explique).
+- Fotos de producto: migración `20261014150000_admin_product_images.sql`, pruebas en `supabase/tests/090_admin_product_images.test.sql`. `admin_add_product_image` usa el `imageId` como `id` de la fila, arma `key_base = p/{productId}/{imageId}`, exige al menos 320 × 400 y 4:5 (con un píxel de redondeo) y un máximo de 12 fotos. `admin_reorder_product_images` exige la lista completa sin repetidos. El texto alternativo se cambia y la foto se quita directo con RLS.
 
 ### 9.3 `trigger-publish` (personal o cron)
 

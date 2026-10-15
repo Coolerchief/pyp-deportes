@@ -6,8 +6,11 @@
 //   secrets  TURNSTILE_SECRET_KEY must already exist (it is loaded by hand, never through the
 //            repository); IP_HASH_SALT is created once if missing; ALLOWED_ORIGINS is set from
 //            PROD_ALLOWED_ORIGINS
+//            The R2 secrets of sign-upload (R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY,
+//            R2_BUCKET) are loaded by hand too; missing ones are a warning (photos wait for them)
 //   verify   the deployed submit-quote answers CORS for each origin and rejects a request
-//            without a Turnstile token (403): deployed, secrets in place, nothing saved
+//            without a Turnstile token (403): deployed, secrets in place, nothing saved; and
+//            sign-upload answers CORS and rejects a request without a session (401)
 //
 // Actions logs are public: this script prints secret names only, never values.
 
@@ -61,6 +64,19 @@ export function parseOrigins(value) {
   return { origins };
 }
 
+/** Secrets of sign-upload, loaded by hand in Supabase (Edge Functions → Secrets). */
+export const R2_SECRETS = [
+  'R2_ACCOUNT_ID',
+  'R2_ACCESS_KEY_ID',
+  'R2_SECRET_ACCESS_KEY',
+  'R2_BUCKET',
+];
+
+/** The R2 secrets that do not exist yet. */
+export function missingR2(existing) {
+  return R2_SECRETS.filter((name) => !existing.includes(name));
+}
+
 /** The env file of the secrets to set; the salt only when it does not exist yet. */
 export function secretsToSet({ existing, origins, salt }) {
   const lines = [`ALLOWED_ORIGINS=${origins.join(',')}`];
@@ -97,6 +113,12 @@ const commands = {
       );
     }
     console.log('✓ TURNSTILE_SECRET_KEY existe.');
+    const r2 = missingR2(existing);
+    if (r2.length) {
+      console.log(
+        `::warning::Faltan ${r2.join(', ')} en las Edge Functions de producción: sign-upload responderá 503 y el panel no podrá subir fotos hasta que las cargues (Edge Functions → Secrets).`,
+      );
+    } else console.log('✓ Secretos de R2 presentes.');
     const dir = mkdtempSync(join(tmpdir(), 'pyp-prod-secrets-'));
     try {
       const file = join(dir, 'functions.env');
@@ -145,6 +167,34 @@ const commands = {
     } else console.log('✓ Sin token de Turnstile responde 403 (secretos cargados, nada guardado).');
     if (problems.length) fail(`submit-quote no quedó bien:\n  - ${problems.join('\n  - ')}`);
     console.log('\n✓ submit-quote lista en producción.');
+
+    // sign-upload: CORS for the panel and 401 without a session (503 = R2 secrets missing).
+    const signUrl = `https://${ref}.supabase.co/functions/v1/sign-upload`;
+    const signProblems = [];
+    const signPreflight = await fetch(signUrl, {
+      method: 'OPTIONS',
+      headers: { origin: origins[0], 'access-control-request-method': 'POST' },
+    });
+    if (
+      signPreflight.status !== 204 ||
+      signPreflight.headers.get('access-control-allow-origin') !== origins[0]
+    ) {
+      signProblems.push(`CORS de ${origins[0]}: ${signPreflight.status}.`);
+    } else console.log(`✓ sign-upload: CORS permite ${origins[0]}.`);
+    const signPost = await fetch(signUrl, {
+      method: 'POST',
+      headers: { origin: origins[0], 'content-type': 'application/json' },
+      body: '{}',
+    });
+    if (signPost.status === 503) {
+      console.log('::warning::sign-upload responde 503: faltan los secretos de R2.');
+    } else if (signPost.status !== 401) {
+      signProblems.push(`Una petición sin sesión debía dar 401 y dio ${signPost.status}.`);
+    } else console.log('✓ sign-upload: sin sesión responde 401.');
+    if (signProblems.length) {
+      fail(`sign-upload no quedó bien:\n  - ${signProblems.join('\n  - ')}`);
+    }
+    console.log('✓ sign-upload lista en producción.');
   },
 };
 

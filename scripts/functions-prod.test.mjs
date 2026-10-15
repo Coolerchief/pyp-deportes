@@ -1,6 +1,13 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { checkFunctionsEnv, parseOrigins, secretNames, secretsToSet } from './functions-prod.mjs';
+import {
+  checkFunctionsEnv,
+  missingR2,
+  parseOrigins,
+  R2_SECRETS,
+  secretNames,
+  secretsToSet,
+} from './functions-prod.mjs';
 
 const REF = 'prodprodprodprodprod';
 
@@ -56,5 +63,16 @@ describe('secretsToSet', () => {
       }),
       'ALLOWED_ORIGINS=https://a.com,https://b.com',
     );
+  });
+});
+
+describe('missingR2', () => {
+  it('lists the R2 secrets of sign-upload that are not loaded yet', () => {
+    assert.deepEqual(missingR2(['R2_BUCKET', 'TURNSTILE_SECRET_KEY']), [
+      'R2_ACCOUNT_ID',
+      'R2_ACCESS_KEY_ID',
+      'R2_SECRET_ACCESS_KEY',
+    ]);
+    assert.deepEqual(missingR2(R2_SECRETS), []);
   });
 });

@@ -164,7 +164,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T4.4 (generador de variantes: tallas × colores con vista previa de SKU y de lo que se conserva, reactiva o desactiva; función `admin_save_variants` con 13 pruebas pgTAP; "Aplicar a todas" en Comercial). Probado contra pyp-dev en `pnpm dev`: al regenerar, las combinaciones que se quedan conservan su `id`.
 
-**Siguiente paso:** T4.5 (Fotos: Edge Function `sign-upload`, recorte 4:5 y redimensionado en el navegador, subida a R2, orden y texto alternativo).
+**Hecho:** T4.5 (fotos de producto: Edge Function `sign-upload` con URLs firmadas de R2, recorte 4:5 y WebP en 4 tamaños en el navegador, HEIC con `heic-to`, subida directa a R2 con progreso, orden, portada, texto alternativo y quitar; vista previa con la ficha pública real). Funciones `admin_add_product_image` y `admin_reorder_product_images` con 12 pruebas pgTAP; `sign-upload` desplegada en pyp-dev (responde 503 hasta que existan los secretos de R2). E2E con Chromium: una foto real se recorta, se codifica en WebP y se sube con los encabezados firmados.
+
+**Siguiente paso:** T4.6 (Importador: plantilla, vista previa con errores, lotes, resultado y fotos en lote por SKU).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
@@ -176,6 +178,8 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 - ☐ Decidir si se quieren textos por deporte o categoría bajo el título de los listados (requiere una columna nueva).
 - ☐ Decidir el mapa de Visítanos e Inicio: embebido o imagen.
 - ☐ Definir `SUPABASE_DEV_ADMIN_PASSWORD` en `.env.local` y correr `pnpm db:setup` (o solo `pnpm db:reset`) para entrar al panel como `admin@pyp.test` en `pnpm dev`. Hasta entonces el acceso solo está probado con Supabase simulado.
+- ☐ **R2 para las fotos (T4.5).** En Cloudflare → R2: (1) crea un bucket de desarrollo (p. ej. `pyp-media-dev`) y otro de producción; (2) en cada uno, *Settings → CORS policy* con `AllowedOrigins` (desarrollo: `http://localhost:3000` y `http://localhost:3100`; producción: `https://pyp-deportes.gael-marroquin2004.workers.dev` y, después, el dominio), `AllowedMethods` `PUT` y `GET`, `AllowedHeaders` `content-type` y `cache-control`; (3) activa el acceso público (en desarrollo la URL `r2.dev`; en producción, el dominio `media.pypdeportescoapa.com` cuando llegue); (4) *Manage API tokens* → token con *Object Read & Write* solo para ese bucket. Desarrollo: en `.env.local` pon `DEV_R2_ACCOUNT_ID`, `DEV_R2_ACCESS_KEY_ID`, `DEV_R2_SECRET_ACCESS_KEY`, `DEV_R2_BUCKET` y `NEXT_PUBLIC_MEDIA_URL` (la URL pública del bucket) y corre `pnpm functions:deploy`. Producción: carga `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` y `R2_BUCKET` en Supabase (Edge Functions → Secrets) y el secreto del repositorio `NEXT_PUBLIC_MEDIA_URL`; luego, cuando subamos a `main`, correr *Functions production*.
+- ☐ Probar una foto HEIC real de iPhone en Chrome de escritorio (las pruebas automáticas solo cubren el aviso cuando no se puede convertir; `sharp` no genera HEIC con HEVC).
 - ☐ Supabase Auth → URL Configuration, para que el enlace mágico regrese al panel: en pyp-dev, *Redirect URLs* con `http://localhost:3000/admin**`; en producción, *Site URL* del sitio y *Redirect URLs* con `https://pyp-deportes.gael-marroquin2004.workers.dev/admin**` (y el dominio cuando llegue).
 - ☐ *Environment* `production` con aprobación y los secretos de Supabase (pospuesto).
 - ☑ Turnstile real (14-oct-2026): widget *Managed* con los hostnames de `workers.dev`, `pypdeportescoapa.com` y `www`; llave pública en el secreto del repositorio `NEXT_PUBLIC_TURNSTILE_SITE_KEY` y secreta cargada por el usuario directo en las Edge Functions de pyp-prod (nunca pasa por el repositorio). En pyp-dev y en pruebas siguen las llaves de prueba de Cloudflare.
@@ -211,6 +215,7 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 - Fase 7, pasos 1 y 5: hacer que el build de producción falle con el WhatsApp de ejemplo y con textos entre corchetes; todavía no está implementado.
 
 **Técnicos menores, sin tarea**
+- ☐ Limpiar en R2 los archivos de fotos quitadas en el panel (sus filas se borran; los archivos quedan). Candidato: el respaldo nocturno de la fase 5.
 - `has_unpublished_changes` no detecta productos borrados.
 - Los nombres de las imágenes genéricas van dentro de los archivos: si se renombra una categoría hay que regenerarlas (`pnpm placeholders`).
 - `prettier --check` marca unos 49 archivos por finales de línea (CRLF en Windows); conviene un `.gitattributes` con `eol=lf`.

@@ -418,3 +418,9 @@ enabled = true
 [functions.submit-quote]
 verify_jwt = false
 import_map = "./functions/submit-quote/deno.json"
+
+# Staff only: the function checks the session itself with is_staff() (the gateway check would
+# also block the CORS preflight of the panel).
+[functions.sign-upload]
+verify_jwt = false
+import_map = "./functions/sign-upload/deno.json"

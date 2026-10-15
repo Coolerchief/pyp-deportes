@@ -52,3 +52,20 @@ describe('devFunctionSecrets', () => {
     );
   });
 });
+
+describe('devFunctionSecrets · R2', () => {
+  it('adds the R2 keys of sign-upload only when .env.local has them', () => {
+    assert.doesNotMatch(devFunctionSecrets({ DEV_IP_HASH_SALT: 'sal' }), /R2_/);
+    const secrets = devFunctionSecrets({
+      DEV_IP_HASH_SALT: 'sal',
+      DEV_R2_ACCOUNT_ID: 'cuenta',
+      DEV_R2_ACCESS_KEY_ID: 'id',
+      DEV_R2_SECRET_ACCESS_KEY: 'secreto',
+      DEV_R2_BUCKET: 'pyp-media-dev',
+    });
+    assert.match(
+      secrets,
+      /\nR2_ACCOUNT_ID=cuenta\nR2_ACCESS_KEY_ID=id\nR2_SECRET_ACCESS_KEY=secreto\nR2_BUCKET=pyp-media-dev$/,
+    );
+  });
+});
