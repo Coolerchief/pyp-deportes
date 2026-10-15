@@ -4,6 +4,7 @@
 export * from './build-data.ts';
 export * from './catalog.ts';
 export * from './contact.ts';
+export * from './dashboard.ts';
 export * from './dates.ts';
 export * from './filters.ts';
 export * from './folio.ts';

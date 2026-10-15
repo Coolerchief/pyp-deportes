@@ -64,3 +64,12 @@ export const techniqueLabels: Record<Technique, string> = {
   bordado: 'Bordado',
   serigrafia: 'Serigrafía',
 };
+
+export const PUBLISH_STATUSES = ['queued', 'running', 'success', 'failed'] as const;
+export type PublishStatus = (typeof PUBLISH_STATUSES)[number];
+export const publishStatusLabels: Record<PublishStatus, string> = {
+  queued: 'En cola',
+  running: 'Publicando',
+  success: 'Publicado',
+  failed: 'Falló',
+};

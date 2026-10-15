@@ -19,6 +19,17 @@ function fakeJwt() {
   })}.firma`;
 }
 
+const STATS = {
+  newCount: 3,
+  last7Days: 5,
+  last30Days: 12,
+  byStatus: { new: 3, in_progress: 2, quoted: 4, won: 2, lost: 1 },
+  productsWithoutPhoto: 56,
+  topProducts: [
+    { productId: 'p1', name: 'Balón de Fútbol No. 5', sku: 'BAL-001', pieces: 40, requests: 2 },
+  ],
+};
+
 type StaffRow = { role: 'admin' | 'editor'; full_name: string; is_active: boolean };
 
 async function stubSupabase(
@@ -69,6 +80,20 @@ async function stubSupabase(
         : route.fulfill({ status: 406, json: { code: 'PGRST116', message: 'no rows' } });
     }
     return route.fulfill({ json: row ? [row] : [] });
+  });
+  // Panel home (T4.2).
+  await page.route('**/rest/v1/rpc/admin_dashboard_stats', (route) =>
+    route.fulfill({ json: STATS }),
+  );
+  await page.route('**/rest/v1/rpc/has_unpublished_changes', (route) =>
+    route.fulfill({ json: true }),
+  );
+  // No publish yet: an empty list (or "no rows" when asked for one object).
+  await page.route('**/rest/v1/publish_runs**', (route) => {
+    const single = (route.request().headers()['accept'] ?? '').includes('vnd.pgrst.object');
+    return single
+      ? route.fulfill({ status: 406, json: { code: 'PGRST116', message: 'no rows' } })
+      : route.fulfill({ json: [] });
   });
   return calls;
 }
@@ -122,6 +147,14 @@ test('staff log in, see the panel, and sign out', async ({ page }) => {
   await logIn(page);
   await expect(page).toHaveURL(/\/admin$/);
   await expect(page.getByRole('heading', { name: 'Hola, Ana López' })).toBeVisible();
+  // The owner sees new requests and the week's (T4.2).
+  const fresh = page.locator('section', {
+    has: page.getByRole('heading', { name: 'Solicitudes nuevas' }),
+  });
+  await expect(fresh.getByText('3', { exact: true })).toBeVisible();
+  const week = page.locator('section', { has: page.getByRole('heading', { name: 'Esta semana' }) });
+  await expect(week.getByText('5', { exact: true })).toBeVisible();
+  await expect(page.getByText('Hay cambios sin publicar.')).toBeVisible();
 
   // The session survives a reload.
   await page.reload();
@@ -133,4 +166,42 @@ test('staff log in, see the panel, and sign out', async ({ page }) => {
   expect(calls.logout).toBe(1);
   await page.goto('/admin', { waitUntil: 'commit' });
   await expect(page).toHaveURL(/\/admin\/login/);
+});
+
+test('the panel sections are one tap away on mobile and in the side bar on desktop', async ({
+  page,
+}, testInfo) => {
+  await stubSupabase(page, { role: 'editor', full_name: 'Beto Ruiz', is_active: true });
+  await page.goto('/admin/login');
+  await logIn(page);
+  await expect(page.getByRole('heading', { name: 'Hola, Beto Ruiz' })).toBeVisible();
+
+  const nav = page.getByRole('navigation', { name: 'Secciones del panel' });
+  await expect(nav).toHaveCount(1);
+  await expect(nav.getByRole('link', { name: 'Inicio' })).toHaveAttribute('aria-current', 'page');
+  await nav.getByRole('link', { name: 'Productos' }).click();
+  await expect(page).toHaveURL(/\/admin\/productos$/);
+  await expect(page.getByRole('heading', { name: 'Productos', level: 1 })).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'Productos' })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+
+  if (testInfo.project.name === 'movil') {
+    // The bottom bar keeps three sections; the others are under "Más". No Ajustes for editors.
+    await nav.getByRole('button', { name: 'Más' }).click();
+    const sheet = page.getByRole('dialog', { name: 'Más secciones' });
+    await expect(sheet.getByRole('link', { name: 'Ajustes' })).toHaveCount(0);
+    await sheet.getByRole('link', { name: 'Fotos del sitio' }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+  } else {
+    await expect(nav.getByRole('link', { name: 'Ajustes' })).toHaveCount(0);
+    await nav.getByRole('link', { name: 'Fotos del sitio' }).click();
+  }
+  await expect(page).toHaveURL(/\/admin\/fotos$/);
+  await expect(page.getByRole('heading', { name: 'Fotos del sitio', level: 1 })).toBeVisible();
+
+  // Typing the address of Ajustes as an editor says it is for admins.
+  await page.goto('/admin/ajustes');
+  await expect(page.getByText('Solo un administrador puede abrir Ajustes.')).toBeVisible();
 });

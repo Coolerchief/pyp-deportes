@@ -66,9 +66,9 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   components/home/   Secciones de Inicio (HomeHero, UniformsBand, HowItWorks, AdvisorCard, StoreInfo)
   components/content/ SitePhoto: foto de site_media o su marcador
   components/analytics/ GoogleAnalytics (GA4), WhatsAppClickTracker (data-wa-origin) y TrackOnMount
-  components/admin/  LoginPage, AdminGate (useAdminSession), AdminHeader, AdminHome; ui/ con los componentes de shadcn hechos con los tokens
+  components/admin/  LoginPage, AdminGate (useAdminSession), AdminShell (AdminHeader + AdminNav: barra lateral y barra inferior), AdminHome (Inicio), SectionPlaceholder; ui/ con los componentes de shadcn (button, card) hechos con los tokens
   components/quote/  AddedNotice, QuoteBar, QuickAddButton/InQuoteBadge y la página /cotizacion (QuotePage, StepIndicator, QuoteListStep, QuoteLineCard, PersonalizationEditor, QuoteFormStep, QuoteForm, QuoteConfirmation)
-  lib/admin/         access.ts: fetchStaff (staff_members activo), safeNext, mensajes de login
+  lib/admin/         access.ts (fetchStaff, safeNext, mensajes de login), navigation.ts (secciones por rol), dashboard.ts (fetchDashboard del Inicio)
   lib/supabase/      browser.ts: cliente de Supabase solo para /admin
   lib/analytics/     track() y los eventos del embudo (TRD §12); se usan solo a través de track()
   lib/               data (catalog.json y settings.json del build), navigation (menús, contacto y rutas), listing (listados estáticos), images/loader (anchos de R2), indexing

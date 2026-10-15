@@ -78,7 +78,7 @@ flowchart LR
 | UI | React | 19.x | |
 | Lenguaje | TypeScript | 5.x, `strict: true` | Fijado en `~5.9` (TypeScript 7 aún no se adopta) |
 | Estilos | Tailwind CSS | 4.x | Tokens de marca en `@theme` (ver `03-UI-UX.md`) |
-| Componentes admin | shadcn/ui + Radix | `class-variance-authority` 0.7 · `clsx` 2.1 · `tailwind-merge` 3.7 (T4.1) | Solo en `/admin`; el sitio público usa componentes propios de marca. Los componentes de shadcn se escriben en `components/admin/ui` con los tokens de marca (sin colores semánticos nuevos en el tema); Radix entra cuando un componente lo necesite (T4.2) |
+| Componentes admin | shadcn/ui + Radix | `class-variance-authority` 0.7 · `clsx` 2.1 · `tailwind-merge` 3.7 (T4.1) | Solo en `/admin`; el sitio público usa componentes propios de marca. Los componentes de shadcn se escriben en `components/admin/ui` con los tokens de marca (sin colores semánticos nuevos en el tema); Radix entra cuando un componente lo necesite: en T4.2 el menú "Más" reutiliza `Sheet` de `components/ui` (trampa de foco, Escape), así que aún no se instala |
 | Cliente de Supabase (navegador) | `@supabase/supabase-js` | 2.117 (T4.1) | Solo en `/admin` (`lib/supabase/browser.ts`); el sitio público nunca consulta la base al visitarse |
 | Tipografía | Barlow + Barlow Condensed | vía `next/font/local` (autoalojadas) | Los 8 `woff2` del paquete de diseño (licencia OFL) copiados a `apps/web/app/fonts/`: solo las caras que usa la escala, sin descargar de Google en el build |
 | Estilos (build) | `@tailwindcss/postcss` | 4.x | Plugin de PostCSS de Tailwind v4 |
@@ -339,6 +339,11 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 - `app/admin/(panel)/layout.tsx` envuelve todo en `AdminGate`: sin sesión → `/admin/login?next=…`; sesión sin acceso → cierra sesión y `?motivo=sin-acceso`; cerrar sesión en otra pestaña → `?motivo=sesion`; "Cerrar sesión" del encabezado → `?motivo=salida`. `/admin` lleva `noindex` siempre y `robots.txt` ya lo excluye.
 - La seguridad real sigue en RLS y en las funciones `admin_*`: la puerta solo decide qué se muestra.
 - E2E con `supabase-js` real y Auth/PostgREST interceptados (`e2e/admin.spec.ts`); CI compila con una llave anónima ficticia.
+
+**Estructura e Inicio (T4.2, 14-oct-2026).**
+- `AdminShell` (en `app/admin/(panel)/layout.tsx`, dentro de `AdminGate`): encabezado fijo arriba; desde `lg`, barra lateral con todas las secciones; abajo de `lg`, barra inferior con Inicio, Solicitudes y Productos al alcance del pulgar y "Más" con el resto en una hoja.
+- Secciones en `lib/admin/navigation.ts` (`sectionsFor(role)`, `activeSection(pathname)` para `aria-current`). Ajustes solo para `admin`; la UI lo oculta y su página lo dice, pero la seguridad sigue en RLS. Las secciones que llegan después (T4.3–T4.9) ya tienen su página con "Esta sección estará disponible pronto." para que la navegación funcione.
+- Inicio (`AdminHome`): `fetchDashboard` pide en paralelo `admin_dashboard_stats()`, `has_unpublished_changes()` y la última fila de `publish_runs`, y valida la forma con `DashboardStatsSchema`/`LastPublishSchema` de `packages/shared` (`dashboard.ts`, con `publishTone`). Cualquier falla muestra un solo error con "Reintentar"; "Actualizar" vuelve a pedir los números. El botón **Publicar cambios** se ve deshabilitado hasta T4.10.
 
 ## 9. Backend (Supabase)
 

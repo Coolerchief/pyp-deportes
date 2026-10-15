@@ -8,12 +8,12 @@ import { ADMIN_ROUTES, roleLabels } from '@/lib/admin/access';
 import { useAdminSession } from './AdminGate';
 import { Button } from './ui/button';
 
-/** Panel bar: logo, who is signed in and "Cerrar sesión". Navigation arrives in T4.2. */
+/** Panel bar: logo, who is signed in and "Cerrar sesión"; the sections are in AdminNav. */
 export function AdminHeader() {
   const { staff, signOut } = useAdminSession();
   const [leaving, setLeaving] = useState(false);
   return (
-    <header className="border-linea flex h-16 items-center justify-between gap-3 border-b bg-blanco px-4 lg:px-8">
+    <header className="border-linea sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b bg-blanco px-4 lg:px-8">
       <Link href={ADMIN_ROUTES.home} aria-label="Inicio del panel" className="shrink-0">
         <Logo width={132} />
       </Link>
