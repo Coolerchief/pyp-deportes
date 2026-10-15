@@ -158,7 +158,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T4.1 (acceso al panel: `/admin/login` con correo y contraseña o enlace mágico, `AdminGate` en todas las rutas del panel, cierre de sesión y "Tu cuenta no tiene acceso" para quien no está activo en `staff_members`). Pruebas de componentes y E2E: sin sesión va al login, un usuario que no es personal sale con el aviso y sin sesión guardada, credenciales incorrectas, y personal que entra, recarga y cierra sesión. Dependencias nuevas: `@supabase/supabase-js` y las utilidades de shadcn (TRD §3).
 
-**Siguiente paso:** T4.2 (estructura del panel con navegación móvil y de escritorio, e Inicio con `admin_dashboard_stats`).
+**Hecho:** T4.2 (estructura del panel: encabezado, barra lateral desde `lg` y barra inferior con "Más" en móvil; Ajustes solo para administradores; páginas de las secciones que llegan después con "Esta sección estará disponible pronto."; Inicio con solicitudes nuevas, de la semana y de 30 días, productos sin foto, estado de publicación, solicitudes por estado y lo más pedido, desde `admin_dashboard_stats`, `has_unpublished_changes` y `publish_runs`). Pruebas de componentes y E2E en móvil y escritorio. El botón "Publicar cambios" se ve deshabilitado hasta T4.10.
+
+**Siguiente paso:** T4.3 (Productos: lista con búsqueda y filtros, editor por secciones y estados: crear, editar, duplicar, publicar y archivar).
 
 ### F. Pendientes acumulados (13-oct-2026)
 
