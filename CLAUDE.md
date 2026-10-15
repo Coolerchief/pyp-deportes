@@ -66,7 +66,10 @@ apps/web/            Next.js: sitio público en app/(public), panel en app/admin
   components/home/   Secciones de Inicio (HomeHero, UniformsBand, HowItWorks, AdvisorCard, StoreInfo)
   components/content/ SitePhoto: foto de site_media o su marcador
   components/analytics/ GoogleAnalytics (GA4), WhatsAppClickTracker (data-wa-origin) y TrackOnMount
+  components/admin/  LoginPage, AdminGate (useAdminSession), AdminHeader, AdminHome; ui/ con los componentes de shadcn hechos con los tokens
   components/quote/  AddedNotice, QuoteBar, QuickAddButton/InQuoteBadge y la página /cotizacion (QuotePage, StepIndicator, QuoteListStep, QuoteLineCard, PersonalizationEditor, QuoteFormStep, QuoteForm, QuoteConfirmation)
+  lib/admin/         access.ts: fetchStaff (staff_members activo), safeNext, mensajes de login
+  lib/supabase/      browser.ts: cliente de Supabase solo para /admin
   lib/analytics/     track() y los eventos del embudo (TRD §12); se usan solo a través de track()
   lib/               data (catalog.json y settings.json del build), navigation (menús, contacto y rutas), listing (listados estáticos), images/loader (anchos de R2), indexing
   lib/commerce/      useQuote (lista de cotización, pyp.quote.v1), CommerceProvider/useCommerceMode, interfaces CartService/PricingService/CheckoutProvider, envío (submit-quote, turnstile, submission)

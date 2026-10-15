@@ -78,12 +78,14 @@ jobs:
           BUILD_DATA_FILE: fixtures/build-data-empty.json
         run: pnpm build
 
-      # Playwright intercepts submit-quote and Turnstile (e2e/submit.spec.ts): a fake project URL
-      # and Cloudflare's public test site key are enough for the send to run.
+      # Playwright intercepts submit-quote, Turnstile and Supabase (e2e/submit.spec.ts,
+      # e2e/admin.spec.ts): a fake project URL and Cloudflare's public test site key are enough.
       - name: Build
         env:
           BUILD_DATA_FILE: fixtures/build-data.json
           NEXT_PUBLIC_SUPABASE_URL: https://pyp-e2e.supabase.co
+          # Not a key: Playwright stubs Auth and PostgREST for /admin (e2e/admin.spec.ts).
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: e2e-anon-key
           NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
         run: pnpm build
 

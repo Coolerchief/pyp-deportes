@@ -78,7 +78,8 @@ flowchart LR
 | UI | React | 19.x | |
 | Lenguaje | TypeScript | 5.x, `strict: true` | Fijado en `~5.9` (TypeScript 7 aún no se adopta) |
 | Estilos | Tailwind CSS | 4.x | Tokens de marca en `@theme` (ver `03-UI-UX.md`) |
-| Componentes admin | shadcn/ui + Radix | última | Solo en `/admin`; el sitio público usa componentes propios de marca |
+| Componentes admin | shadcn/ui + Radix | `class-variance-authority` 0.7 · `clsx` 2.1 · `tailwind-merge` 3.7 (T4.1) | Solo en `/admin`; el sitio público usa componentes propios de marca. Los componentes de shadcn se escriben en `components/admin/ui` con los tokens de marca (sin colores semánticos nuevos en el tema); Radix entra cuando un componente lo necesite (T4.2) |
+| Cliente de Supabase (navegador) | `@supabase/supabase-js` | 2.117 (T4.1) | Solo en `/admin` (`lib/supabase/browser.ts`); el sitio público nunca consulta la base al visitarse |
 | Tipografía | Barlow + Barlow Condensed | vía `next/font/local` (autoalojadas) | Los 8 `woff2` del paquete de diseño (licencia OFL) copiados a `apps/web/app/fonts/`: solo las caras que usa la escala, sin descargar de Google en el build |
 | Estilos (build) | `@tailwindcss/postcss` | 4.x | Plugin de PostCSS de Tailwind v4 |
 | Estado del cliente | Zustand + `persist` | 5.0 (instalado en T3.1) | Lista de cotización y datos del solicitante |
@@ -330,6 +331,14 @@ Secuencia detallada en `04-APP-FLOW.md`. Resumen técnico:
 - **Textos del sitio:** preguntas frecuentes, historia, referencias para llegar, asesora y aviso de privacidad se guardan en `settings`/`site_texts` y se leen en el build.
 - **Publicar cambios:** botón visible con indicador "Hay cambios sin publicar". Llama a `trigger-publish`; el estado del último build se muestra desde `publish_runs`.
 - Diseño móvil primero: el personal usará el celular para subir fotos desde la tienda.
+
+**Implementación del acceso (T4.1, 14-oct-2026).**
+- `lib/supabase/browser.ts`: un cliente con la llave anónima (`storageKey` `pyp.admin.auth`, sesión en `localStorage` que se renueva sola, `detectSessionInUrl` para el enlace mágico). Sin URL o llave en el build, el panel lo dice en vez de romperse.
+- `lib/admin/access.ts`: `fetchStaff` lee la fila propia de `staff_members` (RLS solo deja ver la propia; quien no es personal recibe nada) y exige `is_active`; `safeNext` solo acepta rutas dentro de `/admin` (sin redirecciones abiertas); mensajes de error de Auth en español.
+- `/admin/login` (`LoginPage`): correo y contraseña, o enlace mágico con `shouldCreateUser: false` y el mismo aviso exista o no la cuenta. Quien entra sin ser personal activo sale al instante: "Tu cuenta no tiene acceso al panel…".
+- `app/admin/(panel)/layout.tsx` envuelve todo en `AdminGate`: sin sesión → `/admin/login?next=…`; sesión sin acceso → cierra sesión y `?motivo=sin-acceso`; cerrar sesión en otra pestaña → `?motivo=sesion`; "Cerrar sesión" del encabezado → `?motivo=salida`. `/admin` lleva `noindex` siempre y `robots.txt` ya lo excluye.
+- La seguridad real sigue en RLS y en las funciones `admin_*`: la puerta solo decide qué se muestra.
+- E2E con `supabase-js` real y Auth/PostgREST interceptados (`e2e/admin.spec.ts`); CI compila con una llave anónima ficticia.
 
 ## 9. Backend (Supabase)
 

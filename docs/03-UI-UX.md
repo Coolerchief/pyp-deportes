@@ -507,7 +507,7 @@ Sistema visual: **shadcn/ui** con los tokens de §2 (fuente Barlow, primario `no
 
 | Pantalla | Contenido clave |
 |---|---|
-| Login | Logo positivo, correo + contraseña, "Enviar enlace mágico" |
+| Login | Logo positivo, correo + contraseña, "Enviar enlace mágico". Hecho en T4.1: tarjeta blanca sobre `gis`, título "Panel de administración", errores por campo con ícono, aviso arriba (con el foco) para credenciales, cuenta sin acceso, sesión cerrada o vencida, y "Volver al sitio" |
 | Inicio | Tarjetas: solicitudes nuevas (número grande), solicitudes de la semana, productos sin foto, "Cambios sin publicar" + botón **Publicar cambios** con estado del último build |
 | Productos | Tabla (escritorio) / lista (móvil) con miniatura, nombre, SKU, categoría, estado (Borrador/Publicado/Archivado), "SIN FOTO"; búsqueda y filtros; acciones: nuevo, importar |
 | Editor de producto | Secciones: Básico · Clasificación (categoría, deportes, público, marca) · Variantes (tallas × colores con generador y SKU automático) · Fotos (arrastrar/soltar o cámara, **recorte 4:5**, reordenar, texto alternativo) · Personalización · **Comercial (oculto en el sitio)**: precio, escalas por volumen, existencias · Vista previa (ProductDetail real) · Guardar / Publicar |
