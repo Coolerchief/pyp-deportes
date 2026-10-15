@@ -10,6 +10,7 @@ export * from './dashboard.ts';
 export * from './dates.ts';
 export * from './filters.ts';
 export * from './folio.ts';
+export * from './import-file.ts';
 export * from './importer.ts';
 export * from './labels.ts';
 export * from './listing.ts';

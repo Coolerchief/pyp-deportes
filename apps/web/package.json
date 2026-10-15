@@ -28,6 +28,7 @@
     "react-hook-form": "^7.90.0",
     "simple-icons": "^16.35.0",
     "tailwind-merge": "^3.7.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zustand": "^5.0.15"
   },
   "devDependencies": {

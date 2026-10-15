@@ -166,7 +166,9 @@ En curso. El detalle está en `06-IMPLEMENTATION-PLAN.md`.
 
 **Hecho:** T4.5 (fotos de producto: Edge Function `sign-upload` con URLs firmadas de R2, recorte 4:5 y WebP en 4 tamaños en el navegador, HEIC con `heic-to`, subida directa a R2 con progreso, orden, portada, texto alternativo y quitar; vista previa con la ficha pública real). Funciones `admin_add_product_image` y `admin_reorder_product_images` con 12 pruebas pgTAP; `sign-upload` desplegada en pyp-dev (responde 503 hasta que existan los secretos de R2). E2E con Chromium: una foto real se recorta, se codifica en WebP y se sube con los encabezados firmados.
 
-**Siguiente paso:** T4.6 (Importador: plantilla, vista previa con errores, lotes, resultado y fotos en lote por SKU).
+**Hecho:** T4.6 (importador en `/admin/productos/importar`: plantilla CSV, CSV o Excel, vista previa con errores por fila y SKU repetidos, nuevos contra actualizados, lotes de 50 con progreso y continuación si se corta, resultado y errores en CSV; fotos en lote por SKU con recorte 4:5 centrado). El CSV se lee con el mismo `parseCsv` que `pnpm db:import`. Probado contra pyp-dev: importar `catalogo-inicial.csv` desde el panel da 0 creados y 56 actualizados y deja la base igual que `pnpm db:import` (mismo hash). Las fotos en lote esperan a R2 como las de T4.5.
+
+**Siguiente paso:** T4.7 (Solicitudes: bandeja, filtros, detalle, cambio de estado, nota interna, "Abrir chat" y exportar CSV).
 
 ### F. Pendientes acumulados (13-oct-2026)
 

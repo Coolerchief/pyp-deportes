@@ -1,15 +1,9 @@
 import type { Metadata } from 'next';
-import { SectionPlaceholder } from '@/components/admin/SectionPlaceholder';
+import { ImportPage } from '@/components/admin/products/ImportPage';
 
 export const metadata: Metadata = { title: 'Importar productos · Panel · P&P Deportes Coapa' };
 
-/** /admin/productos/importar: the importer arrives in T4.6. */
+/** /admin/productos/importar (T4.6): catalog file and photos in bulk by SKU. */
 export default function Page() {
-  return (
-    <SectionPlaceholder
-      id="productos"
-      title="Importar productos"
-      summary="Aquí subirás un archivo CSV o Excel con el catálogo, verás los errores por fila antes de importar y subirás fotos en lote por SKU."
-    />
-  );
+  return <ImportPage />;
 }
